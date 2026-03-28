@@ -2,7 +2,20 @@ namespace Web.Features.Schedule.Models.Enums;
 
 public enum TaskType
 {
-    TypeA,
-    TypeB,
-    TypeC
+    Physical,
+    Intellectual,
+    Creative,
+    Social,
+    Routine,
+    DeepWork,
+    Outdoor,
+    Indoor,
+    Digital,
+    Fun,
+    Boring,
+    Collaborative,
+    Solo,
+    HighEnergy,
+    LowEnergy,
+    Meditative
 }

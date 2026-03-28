@@ -1,7 +1,36 @@
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const TASK_TYPES      = ['TypeA', 'TypeB', 'TypeC'];
-const CATEGORIES      = ['CategoryA', 'CategoryB', 'CategoryC'];
+const TASK_TYPES = [
+  { value: 'Physical',      label: 'Physical' },
+  { value: 'Intellectual',  label: 'Intellectual' },
+  { value: 'Creative',      label: 'Creative' },
+  { value: 'Social',        label: 'Social' },
+  { value: 'Routine',       label: 'Routine' },
+  { value: 'DeepWork',      label: 'Deep work' },
+  { value: 'Outdoor',       label: 'Outdoor' },
+  { value: 'Indoor',        label: 'Indoor' },
+  { value: 'Digital',       label: 'Digital' },
+  { value: 'Fun',           label: 'Fun' },
+  { value: 'Boring',        label: 'Boring' },
+  { value: 'Collaborative', label: 'Collaborative' },
+  { value: 'Solo',          label: 'Solo' },
+  { value: 'HighEnergy',    label: 'High-energy' },
+  { value: 'LowEnergy',     label: 'Low-energy' },
+  { value: 'Meditative',    label: 'Meditative' },
+];
+
+const CATEGORIES = [
+  { value: 'Work',      label: 'Work' },
+  { value: 'Study',     label: 'Study' },
+  { value: 'Home',      label: 'Home' },
+  { value: 'Health',    label: 'Health' },
+  { value: 'Social',    label: 'Social' },
+  { value: 'FreeTime',  label: 'Free time' },
+  { value: 'Transport', label: 'Transport' },
+  { value: 'Morning',   label: 'Morning' },
+  { value: 'Evening',   label: 'Evening' },
+  { value: 'Weekend',   label: 'Weekend' },
+];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -130,8 +159,8 @@ function addFixedTask(data = {}, suppressSync = false) {
       <label>Types
         <div class="checkbox-group">
           ${TASK_TYPES.map(t => `
-            <label><input class="ft-type" type="checkbox" value="${t}"
-              ${(data.types ?? []).includes(t) ? 'checked' : ''}> ${t}</label>
+            <label><input class="ft-type" type="checkbox" value="${t.value}"
+              ${(data.types ?? []).includes(t.value) ? 'checked' : ''}> ${t.label}</label>
           `).join('')}
         </div>
       </label>
@@ -176,8 +205,8 @@ function addDynamicTask(data = {}, suppressSync = false) {
       <label>Types
         <div class="checkbox-group">
           ${TASK_TYPES.map(t => `
-            <label><input class="dt-type" type="checkbox" value="${t}"
-              ${(data.types ?? []).includes(t) ? 'checked' : ''}> ${t}</label>
+            <label><input class="dt-type" type="checkbox" value="${t.value}"
+              ${(data.types ?? []).includes(t.value) ? 'checked' : ''}> ${t.label}</label>
           `).join('')}
         </div>
       </label>
@@ -202,8 +231,8 @@ function addDynamicTask(data = {}, suppressSync = false) {
       <label>Categories
         <div class="checkbox-group">
           ${CATEGORIES.map(c => `
-            <label><input class="dt-category" type="checkbox" value="${c}"
-              ${(data.categories ?? []).includes(c) ? 'checked' : ''}> ${c}</label>
+            <label><input class="dt-category" type="checkbox" value="${c.value}"
+              ${(data.categories ?? []).includes(c.value) ? 'checked' : ''}> ${c.label}</label>
           `).join('')}
         </div>
       </label>
@@ -254,7 +283,7 @@ function addCategoryWindow(data = {}, suppressSync = false) {
     <div class="row">
       <label>Category
         <select class="cw-category">
-          ${CATEGORIES.map(c => `<option value="${c}" ${data.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+          ${CATEGORIES.map(c => `<option value="${c.value}" ${data.category === c.value ? 'selected' : ''}>${c.label}</option>`).join('')}
         </select>
       </label>
       <label>Start
@@ -322,7 +351,7 @@ function typeWeightHTML(data = {}) {
     <div class="tw-row row">
       <label>Type
         <select class="tw-type">
-          ${TASK_TYPES.map(t => `<option value="${t}" ${data.type === t ? 'selected' : ''}>${t}</option>`).join('')}
+          ${TASK_TYPES.map(t => `<option value="${t.value}" ${data.type === t.value ? 'selected' : ''}>${t.label}</option>`).join('')}
         </select>
       </label>
       <label>Weight
