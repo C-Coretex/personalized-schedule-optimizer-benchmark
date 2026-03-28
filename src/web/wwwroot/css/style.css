@@ -31,7 +31,7 @@ h2 {
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr 400px 260px;
   gap: 1.5rem;
   align-items: start;
 }
@@ -244,4 +244,60 @@ button {
   background: #fee2e2;
   color: #991b1b;
   border: 1px solid #fca5a5;
+}
+
+/* ── Generated IDs panel ───────────────────────────────────── */
+
+.ids-panel {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.ids-panel h2 {
+  margin-bottom: 0.5rem;
+}
+
+.ids-list {
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+}
+
+.ids-list li {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.78rem;
+  font-family: monospace;
+  border-bottom: 1px solid #f0f0f0;
+  color: #374151;
+  word-break: break-all;
+  cursor: default;
+}
+
+.ids-list li:last-child {
+  border-bottom: none;
+}
+
+.ids-list li:hover {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.ids-empty {
+  font-family: system-ui, sans-serif !important;
+  color: #9ca3af !important;
+  font-style: italic;
+  cursor: default !important;
+}
+
+.ids-list li.ids-new {
+  animation: ids-flash 0.8s ease-out;
+}
+
+@keyframes ids-flash {
+  from { background: #d1fae5; }
+  to   { background: transparent; }
 }

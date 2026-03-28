@@ -393,6 +393,34 @@ function renderForm(s) {
   // Don't call syncJson — textarea already has the parsed value.
 }
 
+// ─── Generated IDs Panel ─────────────────────────────────────────────────────
+
+async function loadGeneratedIds() {
+  const list = document.getElementById('generated-ids-list');
+  try {
+    const res = await fetch('/schedule/generated');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const ids = await res.json();
+
+    list.innerHTML = '';
+    if (!ids || ids.length === 0) {
+      list.innerHTML = '<li class="ids-empty">No schedules generated yet.</li>';
+      return;
+    }
+
+    // Render newest first
+    for (let i = ids.length - 1; i >= 0; i--) {
+      const li = document.createElement('li');
+      li.textContent = ids[i];
+      li.title = 'Click to copy';
+      li.addEventListener('click', () => navigator.clipboard?.writeText(ids[i]));
+      list.appendChild(li);
+    }
+  } catch {
+    list.innerHTML = '<li class="ids-empty">Failed to load IDs.</li>';
+  }
+}
+
 // ─── Submit ───────────────────────────────────────────────────────────────────
 
 async function submit() {
@@ -425,6 +453,12 @@ async function submit() {
     const text = await res.text();
     if (res.ok) {
       showResponse(`Schedule generated. ID: ${text.replace(/"/g, '')}`, true);
+      await loadGeneratedIds();
+      const firstItem = document.querySelector('#generated-ids-list li:first-child');
+      if (firstItem && !firstItem.classList.contains('ids-empty')) {
+        firstItem.classList.add('ids-new');
+        firstItem.addEventListener('animationend', () => firstItem.classList.remove('ids-new'), { once: true });
+      }
     } else {
       showResponse(`Error: ${text}`, false);
     }
@@ -453,6 +487,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-type-preference').addEventListener('click', () => addTypePreference());
 
   document.getElementById('submit-btn').addEventListener('click', submit);
+  document.getElementById('refresh-ids-btn').addEventListener('click', loadGeneratedIds);
+
+  loadGeneratedIds();
 
   // JSON textarea → form (debounced to avoid cursor jumping while typing)
   let jsonDebounce = null;
