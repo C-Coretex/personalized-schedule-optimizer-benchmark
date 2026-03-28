@@ -9,11 +9,93 @@
 <body>
   <main>
     <h1>Schedule Optimizer</h1>
-    <section id="forecast-section">
-      <h2>Weather Forecast</h2>
-      <div id="forecast-output">Loading...</div>
-    </section>
+    <div class="layout">
+
+      <div class="form-panel">
+
+        <div class="submit-row">
+          <button type="button" id="submit-btn" class="btn-primary">Generate Schedule</button>
+        </div>
+
+        <div id="response-output"></div>
+
+        <section class="card">
+          <h2>Planning Horizon</h2>
+          <div class="row">
+            <label>Start Date
+              <input type="date" id="horizon-start" required />
+            </label>
+            <label>End Date
+              <input type="date" id="horizon-end" required />
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Difficult Task Scheduling Strategy</h2>
+          <div class="row">
+            <label>Strategy
+              <select id="strategy">
+                <option value="StrategyA">Strategy A</option>
+                <option value="StrategyB">Strategy B</option>
+                <option value="StrategyC">Strategy C</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <h2>Fixed Tasks</h2>
+            <button type="button" id="add-fixed-task" class="btn-add">+ Add</button>
+          </div>
+          <div id="fixed-tasks-list"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <h2>Dynamic Tasks</h2>
+            <button type="button" id="add-dynamic-task" class="btn-add">+ Add</button>
+          </div>
+          <div id="dynamic-tasks-list"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <h2>Category Windows</h2>
+            <button type="button" id="add-category-window" class="btn-add">+ Add</button>
+          </div>
+          <div id="category-windows-list"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <h2>Difficulty Capacities</h2>
+            <button type="button" id="add-difficulty-capacity" class="btn-add">+ Add</button>
+          </div>
+          <div id="difficulty-capacities-list"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <h2>Task Type Preferences</h2>
+            <button type="button" id="add-type-preference" class="btn-add">+ Add</button>
+          </div>
+          <div id="type-preferences-list"></div>
+        </section>
+
+
+      </div>
+
+      <div class="json-panel">
+        <div class="section-header">
+          <h2>JSON Payload</h2>
+        </div>
+        <textarea id="json-preview" spellcheck="false"></textarea>
+      </div>
+
+    </div>
   </main>
-  <script src="js/app.js"></script>
+  <script src="js/schedule.js"></script>
 </body>
 </html>
