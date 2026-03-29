@@ -1,11 +1,17 @@
 ﻿using Specialized.Optimizer.Models;
+using Specialized.Optimizer.Optimizer.Models.Domain;
 
 namespace Specialized.Optimizer.Optimizer;
 
-public static class Solver
+public class Solver
 {
-    public static GenerateScheduleResponse Solve(GenerateScheduleRequest request)
+    public Score? BestScore { get; private set; }
+
+    public GenerateScheduleResponse Solve(GenerateScheduleRequest request)
     {
+        //init
+        var domain = new Domain(request);
+
         //construction
 
         //optimization stage 1.
@@ -14,4 +20,5 @@ public static class Solver
 
         return new GenerateScheduleResponse() { TasksTimeline = [] };
     }
+
 }

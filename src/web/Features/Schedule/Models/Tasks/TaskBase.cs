@@ -4,6 +4,8 @@ namespace Web.Features.Schedule.Models.Tasks;
 
 public abstract record TaskBase
 {
+    public required string Name { get; init; }
+
     /// <summary>Priority from 1 (lowest) to 5 (highest).</summary>
     public required int Priority { get; init; }
 

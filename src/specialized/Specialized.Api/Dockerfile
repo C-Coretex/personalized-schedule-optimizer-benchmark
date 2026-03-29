@@ -12,16 +12,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Specialized.Api.csproj", "."]
-RUN dotnet restore "./Specialized.Api.csproj"
+COPY ["Specialized.Api/Specialized.Api.csproj", "Specialized.Api/"]
+COPY ["Specialized.Optimizer/Specialized.Optimizer.csproj", "Specialized.Optimizer/"]
+RUN dotnet restore "Specialized.Api/Specialized.Api.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./Specialized.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Specialized.Api"
+RUN dotnet build "Specialized.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Specialized.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Specialized.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final

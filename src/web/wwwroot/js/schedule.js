@@ -32,6 +32,179 @@ const CATEGORIES = [
   { value: 'Weekend',   label: 'Weekend' },
 ];
 
+// ─── API Schema ───────────────────────────────────────────────────────────────
+
+let schemaJson = null;
+
+function extractGenerateSchema(full) {
+  const generatePath = full?.paths?.['/schedule/generate'];
+  if (!generatePath) return full;
+
+  const usedRefs = new Set();
+
+  function collectRefs(node) {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node)) { node.forEach(collectRefs); return; }
+    for (const [k, v] of Object.entries(node)) {
+      if (k === '$ref' && typeof v === 'string') {
+        const name = v.replace('#/components/schemas/', '');
+        if (!usedRefs.has(name)) {
+          usedRefs.add(name);
+          collectRefs(full?.components?.schemas?.[name]);
+        }
+      } else {
+        collectRefs(v);
+      }
+    }
+  }
+
+  collectRefs(generatePath);
+
+  const filteredSchemas = {};
+  for (const name of usedRefs) {
+    if (full?.components?.schemas?.[name]) {
+      filteredSchemas[name] = full.components.schemas[name];
+    }
+  }
+
+  return {
+    openapi: full.openapi,
+    info: full.info,
+    paths: { '/schedule/generate': generatePath },
+    components: { schemas: filteredSchemas },
+  };
+}
+
+async function fetchSchema() {
+  const pre = document.getElementById('schema-pre');
+  try {
+    const res = await fetch('/openapi/v1.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    schemaJson = extractGenerateSchema(await res.json());
+    pre.textContent = JSON.stringify(schemaJson, null, 2);
+  } catch (err) {
+    pre.textContent = `Failed to load schema: ${err.message}`;
+  }
+}
+
+function buildLlmPrompt() {
+  const lines = [
+    'You are a JSON generation assistant for a Schedule Optimizer API.',
+    '',
+    'Your task is to generate a valid JSON request body for the POST /schedule/generate endpoint.',
+    'The complete OpenAPI schema for this endpoint is provided at the end of this prompt.',
+    '',
+    '## Validation Rules',
+    '',
+    '### planningHorizon',
+    '- startDate must be strictly before endDate',
+    '- Format: "YYYY-MM-DD"',
+    '',
+    '### fixedTasks',
+    '- priority: integer 1\u20135',
+    '- difficulty: integer 1\u201310',
+    '- startTime must be strictly before endTime',
+    '- Both startTime and endTime must fall within planningHorizon (startDate..endDate)',
+    '- startTime and endTime must be on the same calendar day',
+    '- Fixed tasks must not overlap each other',
+    '- Format: "YYYY-MM-DDTHH:MM:SS"',
+    '',
+    '### dynamicTasks',
+    '- priority: integer 1\u20135',
+    '- difficulty: integer 1\u201310',
+    '- duration: integer > 0 (minutes)',
+    '- windowStart and windowEnd: if both present, windowStart < windowEnd; format "HH:MM:SS"',
+    '- deadline: if present, must be within planningHorizon; format "YYYY-MM-DDTHH:MM:SS"',
+    '- repeating counts (minDayCount, optDayCount, minWeekCount, optWeekCount): each >= 0',
+    '',
+    '### categoryWindows',
+    '- startDateTime must be strictly before endDateTime',
+    '- Format: "YYYY-MM-DDTHH:MM:SS"',
+    '',
+    '### difficultyCapacities',
+    '- capacity: integer >= 0',
+    '- date: format "YYYY-MM-DD"',
+    '',
+    '### taskTypePreferences',
+    '- weight: number >= 0',
+    '- date: format "YYYY-MM-DD"',
+    '',
+    '## Enum Values',
+    '',
+    '### TaskType — used in the "types" field of fixedTasks, dynamicTasks, and taskTypePreferences',
+    'ONLY these exact string values are valid for "types" and "type" (taskTypePreferences):',
+    'Physical, Intellectual, Creative, Social, Routine, DeepWork, Outdoor, Indoor, Digital, Fun, Boring, Collaborative, Solo, HighEnergy, LowEnergy, Meditative',
+    '',
+    '### Category — used in the "categories" field of dynamicTasks and the "category" field of categoryWindows',
+    'ONLY these exact string values are valid for "categories" and "category":',
+    'Work, Study, Home, Health, Social, FreeTime, Transport, Morning, Evening, Weekend',
+    '',
+    'IMPORTANT: TaskType and Category are separate enums. "Work", "Health", "Home" etc. are Categories — do NOT put them in "types". "Physical", "DeepWork" etc. are TaskTypes — do NOT put them in "categories".',
+    '',
+    '### difficultTaskSchedulingStrategy',
+    '"Cluster" \u2014 group hard tasks together in the schedule',
+    '"Even"    \u2014 spread hard tasks evenly across available time slots',
+    '',
+    '## Date / Time Format Summary',
+    '- Date only:   "YYYY-MM-DD"',
+    '- Time only:   "HH:MM:SS"',
+    '- Date + time: "YYYY-MM-DDTHH:MM:SS"',
+    '',
+    '## Scheduling Domain Knowledge',
+    '',
+    '### Dynamic task placement',
+    'Dynamic tasks are scheduled ONLY within categoryWindows that match their "categories" list.',
+    'If a dynamic task has categories: ["Work", "Morning"], the optimizer will only place it inside',
+    'time windows defined for the "Work" or "Morning" category.',
+    'Therefore: every category referenced in a dynamic task\'s "categories" must have at least one',
+    'corresponding categoryWindow entry, otherwise the task cannot be scheduled.',
+    '',
+    '### Multiple windows per category',
+    'A single category can (and often should) have multiple categoryWindow entries:',
+    '- Several windows on the same day (e.g. two "Work" blocks: 09:00-12:00 and 14:00-17:00)',
+    '- Windows on different days (repeat the category entry for each day it applies)',
+    'There is no restriction on the number of windows per category.',
+    '',
+    '## Instructions',
+    'Generate realistic, diverse test data. Return ONLY the raw JSON object \u2014 no explanation, no markdown code fences.',
+    '',
+    '## OpenAPI Schema',
+    schemaJson !== null ? JSON.stringify(schemaJson, null, 2) : '(schema not loaded)',
+  ];
+  return lines.join('\n');
+}
+
+function showCopiedFeedback(btn) {
+  const original = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = original;
+    btn.disabled = false;
+  }, 1500);
+}
+
+async function copySchemaToClipboard(e) {
+  e.stopPropagation();
+  if (schemaJson === null) return;
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(schemaJson, null, 2));
+    showCopiedFeedback(document.getElementById('copy-schema-btn'));
+  } catch (err) {
+    console.error('Copy schema failed:', err);
+  }
+}
+
+async function copyPromptToClipboard(e) {
+  e.stopPropagation();
+  try {
+    await navigator.clipboard.writeText(buildLlmPrompt());
+    showCopiedFeedback(document.getElementById('copy-prompt-btn'));
+  } catch (err) {
+    console.error('Copy prompt failed:', err);
+  }
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Escape a value for use in an HTML attribute */
@@ -72,6 +245,7 @@ function readState() {
     difficultTaskSchedulingStrategy: document.getElementById('strategy').value,
 
     fixedTasks: [...document.querySelectorAll('#fixed-tasks-list .task-item')].map(el => ({
+      name:       el.querySelector('.ft-name').value || '',
       priority:   parseInt(el.querySelector('.ft-priority').value)   || 1,
       difficulty: parseInt(el.querySelector('.ft-difficulty').value) || 1,
       types:      [...el.querySelectorAll('.ft-type:checked')].map(cb => cb.value),
@@ -80,6 +254,7 @@ function readState() {
     })),
 
     dynamicTasks: [...document.querySelectorAll('#dynamic-tasks-list .task-item')].map(el => ({
+      name:        el.querySelector('.dt-name').value || '',
       priority:    parseInt(el.querySelector('.dt-priority').value)   || 1,
       difficulty:  parseInt(el.querySelector('.dt-difficulty').value) || 1,
       types:       [...el.querySelectorAll('.dt-type:checked')].map(cb => cb.value),
@@ -148,6 +323,11 @@ function addFixedTask(data = {}, suppressSync = false) {
       <button type="button" class="btn-remove" onclick="removeItem(this)">Remove</button>
     </div>
     <div class="row">
+      <label>Name
+        <input class="ft-name" type="text" value="${esc(data.name ?? '')}" required>
+      </label>
+    </div>
+    <div class="row">
       <label>Priority (1–5)
         <input class="ft-priority" type="number" min="1" max="5" value="${esc(data.priority ?? 1)}" required>
       </label>
@@ -189,6 +369,11 @@ function addDynamicTask(data = {}, suppressSync = false) {
     <div class="item-header">
       <span class="item-label">Dynamic Task</span>
       <button type="button" class="btn-remove" onclick="removeItem(this)">Remove</button>
+    </div>
+    <div class="row">
+      <label>Name
+        <input class="dt-name" type="text" value="${esc(data.name ?? '')}" required>
+      </label>
     </div>
     <div class="row">
       <label>Priority (1–5)
@@ -541,6 +726,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('refresh-ids-btn').addEventListener('click', loadGeneratedIds);
 
   loadGeneratedIds();
+
+  fetchSchema();
+  document.getElementById('copy-schema-btn').addEventListener('click', copySchemaToClipboard);
+  document.getElementById('copy-prompt-btn').addEventListener('click', copyPromptToClipboard);
 
   // JSON textarea → form (debounced to avoid cursor jumping while typing)
   let jsonDebounce = null;

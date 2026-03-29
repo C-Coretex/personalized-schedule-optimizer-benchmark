@@ -51,6 +51,24 @@ public class Validator
                 error = $"{prefix} must fall within the planning horizon ({horizon.StartDate} – {horizon.EndDate}).";
                 return false;
             }
+
+            if(task.StartTime.Date != task.EndTime.Date)
+            {
+                error = $"{prefix} must start and end on the same day.";
+                return false;
+            }
+        }
+
+
+        //check that fixed tasks cannot overlap with each other
+        var fixedTasks = request.FixedTasks.OrderBy(ft => ft.StartTime).ToArray();
+        for(var i = 0; i < fixedTasks.Length - 1; i++)
+        {
+            if(fixedTasks[i].EndTime > fixedTasks[i + 1].StartTime)
+            {
+                error = $"FixedTasks[{i}] overlaps with FixedTasks[{i + 1}].";
+                return false;
+            }
         }
 
         return true;

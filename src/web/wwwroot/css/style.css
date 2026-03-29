@@ -329,3 +329,37 @@ button {
 }
 
 #history-banner.hidden { display: none; }
+
+/* ── API Schema card ───────────────────────────────────────────── */
+
+#api-schema-details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+#api-schema-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.schema-header {
+  margin-bottom: 0;
+}
+
+.schema-btn-group {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.schema-pre {
+  margin-top: 0.75rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  font-family: monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  padding: 0.75rem;
+  border-radius: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre;
+}

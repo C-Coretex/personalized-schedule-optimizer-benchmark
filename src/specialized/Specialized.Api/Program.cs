@@ -1,12 +1,8 @@
-using Specialized.Api.Features.Endpoints.Jobs.CurrentSolution;
-using Specialized.Api.Features.Endpoints.Jobs.Run;
-using Specialized.Api.Features.Endpoints.Jobs.Status;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<Specialized.Api.Features.Endpoints.Jobs.Run.Handler>();
 builder.Services.AddScoped<Specialized.Api.Features.Endpoints.Jobs.Status.Handler>();
-builder.Services.AddScoped<Handler>();
+builder.Services.AddScoped<Specialized.Api.Features.Endpoints.Jobs.CurrentSolution.Handler>();
 
 builder.Services.AddOpenApi();
 

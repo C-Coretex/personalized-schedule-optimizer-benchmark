@@ -11,6 +11,8 @@ public class Handler()
         //save the job id and the actual job. Also save input data for the job (to return it too).
         //on job finished - send job id + response to the callback specified in appsettings
 
+        //on callback the web should calculate the score by himself
+
         return jobId;
     }
 }

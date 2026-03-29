@@ -15,4 +15,16 @@ var jsonOptions = new JsonSerializerOptions
 };
 var request = JsonSerializer.Deserialize<Request>(json, jsonOptions)!;
 
-var solution = Solver.Solve(request.ToScheduleOptimizationRequest());
+var solver = new Solver();
+var task = Task.Run(() => solver.Solve(request.ToScheduleOptimizationRequest()));
+
+var previousScore = solver.BestScore;
+while (!task.IsCompleted)
+{
+    await Task.Delay(500);
+    if(previousScore != solver.BestScore)
+    {
+        Console.WriteLine("New best score: " + solver.BestScore);
+        previousScore = solver.BestScore;
+    }
+}
