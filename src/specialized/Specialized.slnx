@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="Specialized.csproj" />
+  <Project Path="Specialized.Api/Specialized.Api.csproj" />
+  <Project Path="Specialized.Console/Specialized.Console.csproj" Id="22614084-e225-4cf8-aadd-62c56c84eb8d" />
+  <Project Path="Specialized.Optimizer/Specialized.Optimizer.csproj" Id="012a9787-51fc-49d8-b20d-6ebd4e6fdef7" />
 </Solution>

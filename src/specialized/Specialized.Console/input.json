@@ -1,0 +1,41 @@
+﻿{
+  "planningHorizon": {
+    "startDate": "2026-03-16",
+    "endDate": "2026-03-31"
+  },
+  "difficultTaskSchedulingStrategy": "Even",
+  "fixedTasks": [],
+  "dynamicTasks": [
+    {
+      "priority": 1,
+      "difficulty": 1,
+      "types": [
+        "Physical",
+        "Digital"
+      ],
+      "isRequired": false,
+      "duration": 30,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Work"
+      ],
+      "repeating": {
+        "minDayCount": 0,
+        "optDayCount": 0,
+        "minWeekCount": 1,
+        "optWeekCount": 2
+      }
+    }
+  ],
+  "categoryWindows": [
+    {
+      "category": "Work",
+      "startDateTime": "2026-03-22T09:56:00",
+      "endDateTime": "2026-04-11T09:56:00"
+    }
+  ],
+  "difficultyCapacities": [],
+  "taskTypePreferences": []
+}

@@ -12,6 +12,6 @@ services:
 
   pso.specialized:
     build:
-      context: ./specialized
+      context: ./specialized/Specialized.Api
       dockerfile: ./Dockerfile
     # No "ports:" mapping — not reachable from host, only from within the Docker network
