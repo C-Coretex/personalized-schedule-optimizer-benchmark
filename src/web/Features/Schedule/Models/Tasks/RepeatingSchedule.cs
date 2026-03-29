@@ -6,4 +6,12 @@ public record RepeatingSchedule
     public int OptDayCount { get; init; } = 0;
     public int MinWeekCount { get; init; } = 0;
     public int OptWeekCount { get; init; } = 0;
+
+    public Providers.Models.Tasks.RepeatingSchedule ToProviderModel() => new()
+    {
+        MinDayCount = MinDayCount,
+        OptDayCount = OptDayCount,
+        MinWeekCount = MinWeekCount,
+        OptWeekCount = OptWeekCount
+    };
 }

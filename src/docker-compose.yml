@@ -1,0 +1,17 @@
+services:
+  pso.web:
+    image: ${DOCKER_REGISTRY-}psoweb
+    container_name: pso.web
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    depends_on:
+      - pso.specialized
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw   # VS installs vsdbg here
+
+  pso.specialized:
+    build:
+      context: ./specialized
+      dockerfile: ./Dockerfile
+    # No "ports:" mapping — not reachable from host, only from within the Docker network

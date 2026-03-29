@@ -12,8 +12,11 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".ScheduleOptimizer.Session";
 });
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<Web.Features.Schedule.Endpoints.Generate.Handler>();
 builder.Services.AddScoped<Web.Features.Schedule.Endpoints.GetGenerated.Handler>();
+
+Web.Providers.ServiceCollectionExtensions.RegisterScheduleOptimizationClients(builder.Services, builder.Configuration);
 
 builder.Services.AddOpenApi();
 

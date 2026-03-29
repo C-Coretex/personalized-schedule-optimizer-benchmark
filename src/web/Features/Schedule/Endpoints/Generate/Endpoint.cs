@@ -7,6 +7,7 @@
             app.MapPost("/schedule/generate", async (
                 Request request,
                 Handler handler,
+                ILogger<Endpoint> logger,
                 CancellationToken ct) =>
             {
                 if (!Validator.IsValid(request, out var error))
@@ -19,6 +20,7 @@
                 }
                 catch (Exception ex)
                 {
+                    logger.LogError(ex, "Failed to generate schedule");
                     return Results.BadRequest(ex.Message);
                 }
             })

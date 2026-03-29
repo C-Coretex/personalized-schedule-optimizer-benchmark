@@ -7,12 +7,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-# This stage installs frontend dependencies and prepares wwwroot
-FROM node:22-alpine AS frontend
-WORKDIR /app
-COPY wwwroot/package.json wwwroot/package-lock.json* ./
-RUN npm install
-COPY wwwroot ./wwwroot
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
@@ -21,8 +15,6 @@ WORKDIR /src
 COPY ["Web.csproj", "."]
 RUN dotnet restore "./Web.csproj"
 COPY . .
-# Overlay wwwroot with output from the frontend stage (add a build step there when needed)
-COPY --from=frontend /app/wwwroot ./wwwroot
 WORKDIR "/src/."
 RUN dotnet build "./Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

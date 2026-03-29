@@ -393,27 +393,74 @@ function renderForm(s) {
   // Don't call syncJson — textarea already has the parsed value.
 }
 
+// ─── Default / Clear state ────────────────────────────────────────────────────
+
+const DEFAULT_STATE = {
+  planningHorizon: { startDate: null, endDate: null },
+  difficultTaskSchedulingStrategy: 'Cluster',
+  fixedTasks: [],
+  dynamicTasks: [],
+  categoryWindows: [],
+  difficultyCapacities: [],
+  taskTypePreferences: [],
+};
+
+function clearForm() {
+  renderForm(DEFAULT_STATE);
+  const ta = document.getElementById('json-preview');
+  ta.value = JSON.stringify(DEFAULT_STATE, null, 2);
+  ta.classList.remove('json-invalid');
+  hideHistoryBanner();
+  document.querySelectorAll('#generated-ids-list li.ids-active')
+    .forEach(li => li.classList.remove('ids-active'));
+}
+
+// ─── History banner ───────────────────────────────────────────────────────────
+
+function showHistoryBanner(id) {
+  const el = document.getElementById('history-banner');
+  el.textContent = `Viewing history entry — ${id}`;
+  el.classList.remove('hidden');
+}
+
+function hideHistoryBanner() {
+  document.getElementById('history-banner').classList.add('hidden');
+}
+
 // ─── Generated IDs Panel ─────────────────────────────────────────────────────
+
+function loadHistoryEntry(item, li) {
+  document.querySelectorAll('#generated-ids-list li.ids-active')
+    .forEach(el => el.classList.remove('ids-active'));
+  li.classList.add('ids-active');
+
+  const ta = document.getElementById('json-preview');
+  ta.value = JSON.stringify(item.request, null, 2);
+  ta.classList.remove('json-invalid');
+  renderForm(item.request);
+  showHistoryBanner(item.id);
+}
 
 async function loadGeneratedIds() {
   const list = document.getElementById('generated-ids-list');
   try {
     const res = await fetch('/schedule/generated');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const ids = await res.json();
+    const items = await res.json();
 
     list.innerHTML = '';
-    if (!ids || ids.length === 0) {
+    if (!items || items.length === 0) {
       list.innerHTML = '<li class="ids-empty">No schedules generated yet.</li>';
       return;
     }
 
     // Render newest first
-    for (let i = ids.length - 1; i >= 0; i--) {
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
       const li = document.createElement('li');
-      li.textContent = ids[i];
-      li.title = 'Click to copy';
-      li.addEventListener('click', () => navigator.clipboard?.writeText(ids[i]));
+      li.textContent = item.id;
+      li.title = 'Click to load into form';
+      li.addEventListener('click', () => loadHistoryEntry(item, li));
       list.appendChild(li);
     }
   } catch {
@@ -453,6 +500,9 @@ async function submit() {
     const text = await res.text();
     if (res.ok) {
       showResponse(`Schedule generated. ID: ${text.replace(/"/g, '')}`, true);
+      hideHistoryBanner();
+      document.querySelectorAll('#generated-ids-list li.ids-active')
+        .forEach(li => li.classList.remove('ids-active'));
       await loadGeneratedIds();
       const firstItem = document.querySelector('#generated-ids-list li:first-child');
       if (firstItem && !firstItem.classList.contains('ids-empty')) {
@@ -487,6 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-type-preference').addEventListener('click', () => addTypePreference());
 
   document.getElementById('submit-btn').addEventListener('click', submit);
+  document.getElementById('clear-btn').addEventListener('click', clearForm);
   document.getElementById('refresh-ids-btn').addEventListener('click', loadGeneratedIds);
 
   loadGeneratedIds();

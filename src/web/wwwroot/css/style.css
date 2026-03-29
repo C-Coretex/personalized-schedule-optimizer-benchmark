@@ -203,6 +203,15 @@ button {
 
 .btn-primary:hover { background: #1d4ed8; }
 
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.95rem;
+}
+
+.btn-secondary:hover { background: #e5e7eb; }
+
 .btn-add {
   background: #e0f2fe;
   color: #0369a1;
@@ -301,3 +310,22 @@ button {
   from { background: #d1fae5; }
   to   { background: transparent; }
 }
+
+.ids-list li.ids-active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#history-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  color: #1d4ed8;
+  margin-bottom: 0.75rem;
+}
+
+#history-banner.hidden { display: none; }

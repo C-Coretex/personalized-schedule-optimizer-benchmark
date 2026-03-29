@@ -19,4 +19,19 @@ public record DynamicTask : TaskBase
 
     /// <summary>Null means the task does not repeat.</summary>
     public RepeatingSchedule? Repeating { get; init; }
+
+    public Providers.Schedule.Models.Tasks.DynamicTask ToProviderModel() => new()
+    {
+        Id = Guid.NewGuid(),
+        Priority = Priority,
+        Difficulty = Difficulty,
+        Types = Types.Select(t => t.ToProviderModel()).ToList(),
+        IsRequired = IsRequired,
+        Duration = Duration,
+        WindowStart = WindowStart,
+        WindowEnd = WindowEnd,
+        Deadline = Deadline,
+        Categories = Categories.Select(c => c.ToProviderModel()).ToList(),
+        Repeating = Repeating?.ToProviderModel()
+    };
 }

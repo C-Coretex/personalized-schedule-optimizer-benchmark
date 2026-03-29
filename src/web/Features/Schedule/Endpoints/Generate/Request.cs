@@ -1,6 +1,7 @@
 ﻿using Web.Features.Schedule.Models.Enums;
 using Web.Features.Schedule.Models.Payload;
 using Web.Features.Schedule.Models.Tasks;
+using Web.Providers.Models;
 
 namespace Web.Features.Schedule.Endpoints.Generate;
 
@@ -13,4 +14,15 @@ public record Request
     public required DifficultTaskSchedulingStrategy DifficultTaskSchedulingStrategy { get; init; }
     public IReadOnlyList<DifficultyCapacityEntry> DifficultyCapacities { get; init; } = [];
     public IReadOnlyList<TaskTypePreferenceEntry> TaskTypePreferences { get; init; } = [];
+
+    public GenerateScheduleRequest ToScheduleOptimizationRequest() => new()
+    {
+        FixedTasks = FixedTasks.Select(t => t.ToProviderModel()).ToList(),
+        DynamicTasks = DynamicTasks.Select(t => t.ToProviderModel()).ToList(),
+        PlanningHorizon = PlanningHorizon.ToProviderModel(),
+        CategoryWindows = CategoryWindows.Select(w => w.ToProviderModel()).ToList(),
+        DifficultTaskSchedulingStrategy = DifficultTaskSchedulingStrategy.ToProviderModel(),
+        DifficultyCapacities = DifficultyCapacities.Select(d => d.ToProviderModel()).ToList(),
+        TaskTypePreferences = TaskTypePreferences.Select(p => p.ToProviderModel()).ToList()
+    };
 }

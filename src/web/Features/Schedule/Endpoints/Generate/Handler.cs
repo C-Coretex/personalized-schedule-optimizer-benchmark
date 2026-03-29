@@ -1,13 +1,19 @@
-using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Web.Features.Schedule.Models.Schedule;
+using Web.Providers;
+using static Web.Providers.ServiceCollectionExtensions;
 
 namespace Web.Features.Schedule.Endpoints.Generate;
 
-public class Handler(IHttpContextAccessor httpContextAccessor)
+public class Handler(
+    IHttpContextAccessor httpContextAccessor, 
+    [FromKeyedServices(OptimizationClients.Specialized)] IScheduleOptimizationClient scheduleOptimizationClient)
 {
     public async Task<Guid> Handle(Request request, CancellationToken ct)
     {
-        var id = Guid.CreateVersion7();
+        var scheduleOptimizationRequest = request.ToScheduleOptimizationRequest();
+        var jobId = await scheduleOptimizationClient.GenerateSchedule(scheduleOptimizationRequest, ct);
 
         var session = httpContextAccessor.HttpContext?.Session;
         if (session is not null)
@@ -16,15 +22,15 @@ public class Handler(IHttpContextAccessor httpContextAccessor)
 
             var existing = session.GetString("schedule_ids");
             var ids = existing is not null
-                ? JsonSerializer.Deserialize<List<Guid>>(existing)!
+                ? JsonSerializer.Deserialize<List<ScheduleJobMetadata>>(existing)!//save GenerateRequestModel, not just the id
                 : [];
 
-            ids.Add(id);
+            ids.Add(new(jobId, scheduleOptimizationRequest));
             session.SetString("schedule_ids", JsonSerializer.Serialize(ids));
 
             await session.CommitAsync(ct);
         }
 
-        return id;
+        return jobId;
     }
 }
