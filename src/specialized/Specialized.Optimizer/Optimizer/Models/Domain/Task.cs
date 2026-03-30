@@ -1,5 +1,6 @@
 ﻿using Specialized.Optimizer.Models.Enums;
 using Specialized.Optimizer.Models.Tasks;
+using System.Collections.Immutable;
 
 namespace Specialized.Optimizer.Optimizer.Models.Domain
 {
@@ -13,7 +14,7 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
         /// <summary>Difficulty from 1 (trivial) to 10 (hardest).</summary>
         public required int Difficulty { get; init; }
 
-        public required TaskType[] Types { get; init; }
+        public required ImmutableArray<TaskType> Types { get; init; }
 
         public required bool IsRequired { get; init; }
 
@@ -29,18 +30,9 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
         /// <summary>Null means the task does not repeat.</summary>
         public RepeatingSchedule? Repeating { get; init; }
 
-        public Category[] Categories { get; init; } = [];
+        public ImmutableArray<Category> Categories { get; init; } = [];
 
-        public CategoryTimeWindow[] FreeTimeWindows { get; init; } = [];
-
-        //benchmark ActualFreeTimeWindows it helps or harms
-        //public CategoryTimeWindow[] ActualFreeTimeWindows
-        //{
-        //    get
-        //    {
-        //        calculate based on FreeTimeWindows +Day.ActualFreeTimeWindows
-        //    }
-        //}
+        public ImmutableArray<CategoryTimeWindow> FreeTimeWindows { get; init; } = [];
 
         public static Task FromDynamicTask(DynamicTask dynamicTask, IEnumerable<Category> categories)
         {
@@ -79,22 +71,23 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
                     return entry;
                 })
                 .Where(ctw => ctw.Start >= (dynamicTask.WindowStart ?? TimeOnly.MinValue))
-                .Where(ctw => ctw.End <= (dynamicTask.WindowEnd ?? TimeOnly.MaxValue));
+                .Where(ctw => ctw.End <= (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
+                .Where(ctw => ctw.End - ctw.Start >= TimeSpan.FromMinutes(dynamicTask.Duration));
 
             return new Task
             {
                 Id = dynamicTask.Id,
                 Priority = dynamicTask.Priority,
                 Difficulty = dynamicTask.Difficulty,
-                Types = dynamicTask.Types.ToArray(),
+                Types = dynamicTask.Types.ToImmutableArray(),
                 IsRequired = dynamicTask.IsRequired,
                 Duration = dynamicTask.Duration,
                 WindowStart = dynamicTask.WindowStart,
                 WindowEnd = dynamicTask.WindowEnd,
                 Deadline = dynamicTask.Deadline,
                 Repeating = dynamicTask.Repeating,
-                Categories = taskCategories,
-                FreeTimeWindows = freeTaskTimeWindows.OrderBy(ftw => ftw.Day.Date).ThenBy(ftw => ftw.Start).ToArray()
+                Categories = taskCategories.ToImmutableArray(),
+                FreeTimeWindows = freeTaskTimeWindows.OrderBy(ftw => ftw.Day.Date).ThenBy(ftw => ftw.Start).ToImmutableArray()
             };
         }
     }

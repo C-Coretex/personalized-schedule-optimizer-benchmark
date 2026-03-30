@@ -1,10 +1,12 @@
-﻿namespace Specialized.Optimizer.Optimizer.Models.Domain;
+﻿using System.Collections.Immutable;
+
+namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
 internal record Category
 {
     public required Specialized.Optimizer.Models.Enums.Category CategoryType { get; init; }
     //time windows for day
-    public DayTimeWindow[] DayTimeWindows { get; init; } = [];
+    public ImmutableArray<DayTimeWindow> DayTimeWindows { get; init; } = [];
 }
 
 internal readonly record struct DayTimeWindow

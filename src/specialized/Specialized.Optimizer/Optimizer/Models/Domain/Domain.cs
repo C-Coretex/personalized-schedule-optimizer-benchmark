@@ -1,4 +1,6 @@
 ﻿using Specialized.Optimizer.Models;
+using System.Collections.Immutable;
+using System.Globalization;
 
 namespace Specialized.Optimizer.Optimizer.Models.Domain
 {
@@ -8,10 +10,6 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
         public Day[] Days { get; private set; } = [];
         public Category[] Categories { get; private set; } = [];
         public Task[] Tasks { get; private set; } = [];
-        
-        //actual planning entity
-        public PlanningDay[] PlanningDays { get; private set; }
-
 
         public Domain(GenerateScheduleRequest request)
         {
@@ -25,28 +23,24 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
             {
                 CategoryType = g.Key,
                 DayTimeWindows = DayTimeWindow.FromTimeWindows(g.Select(cw => (cw.StartDateTime, cw.EndDateTime)), Days)
-                    .OrderBy(tw => tw.Day.Date).ThenBy(tw => tw.Start).ToArray(),
+                    .OrderBy(tw => tw.Day.Date).ThenBy(tw => tw.Start).ToImmutableArray(),
             }).ToArray();
             foreach(var category in Categories)
             {
                 foreach (var timeWindow in category.DayTimeWindows)
                 {
-                    timeWindow.Day.Categories.Add(category);
+                    timeWindow.Day.AddCategory(category);
                 }
             }
 
+            var calendar = CultureInfo.CurrentCulture.Calendar;
             //list free time windows for each day based on fixed tasks and category time windows
-            Days = Days.Select(day => 
-                day with 
-                { 
-                    PossibleTimeWindows = FreeTimeWindow.FromRequest(day, request.FixedTasks, Categories).OrderBy(ftw => ftw.Start).ToArray() 
-                }).ToArray();
+            Days = Days.Select(day => day.EnrichWithData(request.FixedTasks, Categories, calendar.GetWeekOfYear(day.Date.ToDateTime(TimeOnly.MinValue), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)))
+                .ToArray();
 
+            //var t = request.DynamicTasks.Select(dt => Task.FromDynamicTask(dt, Categories));
             //list tasks
-            Tasks = request.DynamicTasks.Select(dt => Task.FromDynamicTask(dt, Categories)).ToArray();
-
-            //init actual planning entity
-            PlanningDays = Days.Select(day => new PlanningDay(day)).ToArray();
+            Tasks = request.DynamicTasks.Select(dt => Task.FromDynamicTask(dt, Categories)).Where(t => t.FreeTimeWindows.Length > 0).ToArray();
         }
     }
 }
