@@ -10,6 +10,7 @@ public record FixedTask : TaskBase
     public Providers.Models.Tasks.FixedTask ToProviderModel() => new()
     {
         Id = Guid.NewGuid(),
+        Name = Name,
         Priority = Priority,
         Difficulty = Difficulty,
         Types = Types.Select(t => t.ToProviderModel()).ToList(),

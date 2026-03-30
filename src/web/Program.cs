@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddSession(options =>
 {
@@ -15,6 +16,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<Web.Features.Schedule.Endpoints.Generate.Handler>();
 builder.Services.AddScoped<Web.Features.Schedule.Endpoints.GetGenerated.Handler>();
+builder.Services.AddScoped<Web.Features.Schedule.Endpoints.Submit.Handler>();
 
 Web.Providers.ServiceCollectionExtensions.RegisterScheduleOptimizationClients(builder.Services, builder.Configuration);
 
@@ -27,7 +29,9 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+//internal callback
+app.UseWhen(ctx => ctx.Request.Path != "/schedule/submit", branch => branch.UseHttpsRedirection());
+
 app.UseSession();
 
 app.UseDefaultFiles();
@@ -40,5 +44,6 @@ if (app.Environment.IsDevelopment())
 
 Web.Features.Schedule.Endpoints.Generate.Endpoint.Map(app);
 Web.Features.Schedule.Endpoints.GetGenerated.Endpoint.Map(app);
+Web.Features.Schedule.Endpoints.Submit.Endpoint.Map(app);
 
 app.Run();

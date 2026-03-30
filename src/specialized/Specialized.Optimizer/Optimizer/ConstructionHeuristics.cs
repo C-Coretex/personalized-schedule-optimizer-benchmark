@@ -1,23 +1,24 @@
-﻿using Specialized.Optimizer.Optimizer.Models.Domain;
+﻿using Specialized.Optimizer.Helpers;
+using Specialized.Optimizer.Optimizer.Models.Domain;
 
 namespace Specialized.Optimizer.Optimizer
 {
     internal static class ConstructionHeuristics
     {
-        public static PlanningDomain Construct(PlanningDomain domain)
+        public static PlanningDomain Construct(PlanningDomain domain, Random random)
         {
             domain = domain.GetSnapshot();
 
-            ConstructRepeatingTasks(domain);
+            ConstructRepeatingTasks(domain, random);
 
             //collect pool of tasks
-            ConstructNonRepeatingTasks(domain);
+            ConstructNonRepeatingTasks(domain, random);
 
 
             return domain;
         }
 
-        private static void ConstructRepeatingTasks(PlanningDomain domain)
+        private static void ConstructRepeatingTasks(PlanningDomain domain, Random random)
         {
             var repeatingTasks = domain.Domain.Tasks.Where(t => t.Repeating != null)
                 .OrderByDescending(t => t.Priority)
@@ -36,7 +37,7 @@ namespace Specialized.Optimizer.Optimizer
 
                     for (var i = 0; i < task.Repeating!.MinDayCount; i++)
                     {
-                        var randomTimeWindow = freeTimeWindows.RandomElement(_random);
+                        var randomTimeWindow = freeTimeWindows.RandomElement(random);
                         day.AddScheduledTaskInTimeWindow(task, randomTimeWindow.Start);
                     }
                 }
@@ -57,14 +58,14 @@ namespace Specialized.Optimizer.Optimizer
                         if (freeTimeWindows.Length == 0)
                             continue;
 
-                        var randomTimeWindow = freeTimeWindows.RandomElement(_random);
+                        var randomTimeWindow = freeTimeWindows.RandomElement(random);
                         days.First(d => d.Day == randomTimeWindow.Day).AddScheduledTaskInTimeWindow(task, randomTimeWindow.Start);
                     }
                 }
             }
         }
 
-        private static void ConstructNonRepeatingTasks(PlanningDomain domain)
+        private static void ConstructNonRepeatingTasks(PlanningDomain domain, Random random)
         {
             var repeatingTasks = domain.Domain.Tasks.Where(t => t.Repeating == null)
                 .OrderBy(t => t.IsRequired ? 0 : 1)
@@ -76,7 +77,7 @@ namespace Specialized.Optimizer.Optimizer
             //TODO: could be hot path
             foreach (var task in repeatingTasks)
             {
-                var days = task.FreeTimeWindows.Select(ftw => ftw.Day).Distinct().ToArray().ShuffleElements(_random);
+                var days = task.FreeTimeWindows.Select(ftw => ftw.Day).Distinct().ToArray().ShuffleElements(random);
                 foreach (var day in days)
                 {
                     var added = domain.PlanningDays.First(d => d.Day == day)

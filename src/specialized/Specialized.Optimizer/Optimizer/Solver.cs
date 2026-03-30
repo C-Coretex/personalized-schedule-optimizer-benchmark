@@ -1,7 +1,6 @@
-﻿using Specialized.Optimizer.Helpers;
-using Specialized.Optimizer.Models;
+﻿using Specialized.Optimizer.Models;
+using Specialized.Optimizer.Models.Tasks;
 using Specialized.Optimizer.Optimizer.Models.Domain;
-using System.Globalization;
 
 namespace Specialized.Optimizer.Optimizer;
 
@@ -18,12 +17,19 @@ public class Solver(int? seed = null)
         var planningDomain = new PlanningDomain(staticDomain);
 
         //construction
-        planningDomain = ConstructionHeuristics.Construct(planningDomain);
+        planningDomain = ConstructionHeuristics.Construct(planningDomain, _random);
 
         //optimization stage 1.
 
         //optimization stage 2.
 
-        return new GenerateScheduleResponse() { TasksTimeline = [] };
+        var tasksTimeline = planningDomain.PlanningDays
+            .SelectMany(d => d.ScheduledTasks.OrderBy(st => st.Start).Select(st => new TaskResponse()
+            {
+                Id = st.Task.Id,
+                StartTime = d.Day.Date.ToDateTime(st.Start),
+                EndTime = d.Day.Date.ToDateTime(st.End)
+            }));
+        return new GenerateScheduleResponse() { TasksTimeline = tasksTimeline.ToList() };
     }
 }

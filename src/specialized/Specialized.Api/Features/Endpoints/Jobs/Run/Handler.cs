@@ -1,17 +1,43 @@
-﻿using Specialized.Optimizer.Models;
+using System.Net.Http.Json;
+using Specialized.Optimizer.Models;
+using Specialized.Optimizer.Optimizer;
 
 namespace Specialized.Api.Features.Endpoints.Jobs.Run;
 
-public class Handler()
+public class Handler(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<Handler> logger)
 {
     public async Task<Guid> Handle(GenerateScheduleRequest request, CancellationToken ct)
     {
         var jobId = Guid.CreateVersion7();
 
-        //save the job id and the actual job. Also save input data for the job (to return it too).
-        //on job finished - send job id + response to the callback specified in appsettings
+        _ = Task.Run(async () =>
+        {
+            var solver = new Solver();
+            Task.Delay(1000).Wait(); //TODO: remove when actual solver will be implemented
+            var response = solver.Solve(request);
 
-        //on callback the web should calculate the score by himself
+            var callbackUrl = configuration["Callbacks:ScheduleSubmitUrl"];
+            if (string.IsNullOrEmpty(callbackUrl))
+            {
+                logger.LogInformation("No callback URL configured. Job {JobId} result will not be sent.", jobId);
+                return;
+            }
+
+            try
+            {
+                var client = httpClientFactory.CreateClient();
+                var payload = new { JobId = jobId, response.TasksTimeline };
+
+                var httpResponse = await client.PostAsJsonAsync(callbackUrl, payload);
+                httpResponse.EnsureSuccessStatusCode();
+
+                logger.LogInformation("Job {JobId} result sent to callback successfully.", jobId);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to send job {JobId} result to callback URL {Url}.", jobId, callbackUrl);
+            }
+        }, ct);
 
         return jobId;
     }

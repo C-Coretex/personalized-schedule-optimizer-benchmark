@@ -20,13 +20,13 @@ public class Handler(
         {
             await session.LoadAsync(ct);
 
-            var existing = session.GetString("schedule_ids");
-            var ids = existing is not null
+            var existing = session.GetString("schedule_data");
+            var data = existing is not null
                 ? JsonSerializer.Deserialize<List<ScheduleJobMetadata>>(existing)!//save GenerateRequestModel, not just the id
                 : [];
 
-            ids.Add(new(jobId, scheduleOptimizationRequest));
-            session.SetString("schedule_ids", JsonSerializer.Serialize(ids));
+            data.Add(new(jobId, scheduleOptimizationRequest, null));
+            session.SetString("schedule_data", JsonSerializer.Serialize(data));
 
             await session.CommitAsync(ct);
         }

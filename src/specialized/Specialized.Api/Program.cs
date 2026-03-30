@@ -1,5 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<Specialized.Api.Features.Endpoints.Jobs.Run.Handler>();
 builder.Services.AddScoped<Specialized.Api.Features.Endpoints.Jobs.Status.Handler>();
 builder.Services.AddScoped<Specialized.Api.Features.Endpoints.Jobs.CurrentSolution.Handler>();

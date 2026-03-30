@@ -2,5 +2,5 @@
 
 namespace Web.Features.Schedule.Models.Schedule
 {
-    public record ScheduleJobMetadata(Guid Id, GenerateScheduleRequest Request);
+    public record ScheduleJobMetadata(Guid Id, GenerateScheduleRequest Request, GeneratedSchedule? Response);
 }
