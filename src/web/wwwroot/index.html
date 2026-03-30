@@ -9,6 +9,19 @@
 <body>
   <main>
     <h1>Schedule Optimizer</h1>
+    <div id="calendar-section" class="hidden">
+      <div class="cal-panel card">
+        <div class="section-header">
+          <h2>Schedule Preview</h2>
+        </div>
+        <div id="cal-legend" class="cal-legend"></div>
+        <div class="cal-scroll-wrapper">
+          <div class="cal-header-row" id="cal-header-row"></div>
+          <div class="cal-body" id="cal-body"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="layout">
 
       <div class="form-panel">
@@ -122,6 +135,9 @@
       </div>
 
     </div>
+
+    <div id="cal-tooltip" class="cal-tooltip"></div>
+
   </main>
   <script src="js/schedule.js"></script>
 </body>

@@ -67,9 +67,8 @@ namespace Specialized.Optimizer.Optimizer
 
         private static void ConstructNonRepeatingTasks(PlanningDomain domain, Random random)
         {
-            var repeatingTasks = domain.Domain.Tasks.Where(t => t.Repeating == null)
-                .OrderBy(t => t.IsRequired ? 0 : 1)
-                .ThenByDescending(t => t.Priority)
+            var repeatingTasks = domain.Domain.Tasks.Where(t => t.Repeating == null && t.IsRequired)
+                .OrderByDescending(t => t.Priority)
                 .ThenBy(t => t.FreeTimeWindows.Sum(ftw => (ftw.End - ftw.Start).Minutes))
                 .ToArray();
 
