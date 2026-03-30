@@ -3,7 +3,8 @@
 internal record Category
 {
     public required Specialized.Optimizer.Models.Enums.Category CategoryType { get; init; }
-    public DayTimeWindow[] TimeWindows { get; init; } = [];
+    //time windows for day
+    public DayTimeWindow[] DayTimeWindows { get; init; } = [];
 }
 
 internal readonly record struct DayTimeWindow

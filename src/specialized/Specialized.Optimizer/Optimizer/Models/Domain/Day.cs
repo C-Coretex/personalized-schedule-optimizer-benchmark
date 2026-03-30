@@ -4,13 +4,9 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
 internal record Day
 {
-    public DateOnly Date { get; set; }
-    public HashSet<Category> Categories { get; set; } = [];
-    public FreeTimeWindow[] PossibleTimeWindows { get; set; } = [];
-
-    //scheduled dynamic tasks (ordered by start time)
-
-    //actual free time windows (possible-scheduled tasks)
+    public DateOnly Date { get; init; }
+    public HashSet<Category> Categories { get; init; } = [];
+    public FreeTimeWindow[] PossibleTimeWindows { get; init; } = [];
 }
 
 internal readonly record struct FreeTimeWindow
@@ -18,12 +14,49 @@ internal readonly record struct FreeTimeWindow
     public TimeOnly Start { get; init; }
     public TimeOnly End { get; init; }
     public CategoryTimeWindow[] CategoryTimeWindows { get; init; }
+    public Day Day { get; init; }
 
-    public static IEnumerable<FreeTimeWindow> FromRequest(DateOnly date, IEnumerable<FixedTask> tasks, ICollection<Category> categories)
+    public (FreeTimeWindow First, FreeTimeWindow Second) CutOut(TimeOnly from, TimeOnly to)
     {
-        var startDate = date.ToDateTime(TimeOnly.MinValue);
+        return (
+            this with 
+            {
+                End = from,
+                CategoryTimeWindows = CategoryTimeWindows.Where(ctw => ctw.Start < from)
+                    .Select(ctw => ctw with { End = from < ctw.End ? from : ctw.End }).ToArray()
+            },
+            this with
+            {
+                Start = to,
+                CategoryTimeWindows = CategoryTimeWindows.Where(ctw => ctw.Start >= to)
+                    .Select(ctw => ctw with { Start = to > ctw.Start ? to : ctw.Start }).ToArray()
+            }
+        );
+    }
+
+    public (FreeTimeWindow First, FreeTimeWindow Second) Split(TimeOnly splitTime)
+    {
+        return (
+            this with
+            {
+                End = splitTime,
+                CategoryTimeWindows = CategoryTimeWindows.Where(ctw => ctw.Start < splitTime)
+                    .Select(ctw => ctw with { End = splitTime < ctw.End ? splitTime : ctw.End }).ToArray()
+            },
+            this with
+            {
+                Start = splitTime,
+                CategoryTimeWindows = CategoryTimeWindows.Where(ctw => ctw.Start >= splitTime)
+                    .Select(ctw => ctw with { Start = splitTime > ctw.Start ? splitTime : ctw.Start }).ToArray()
+            }
+        );
+    }
+
+    public static IEnumerable<FreeTimeWindow> FromRequest(Day day, IEnumerable<FixedTask> tasks, ICollection<Category> categories)
+    {
+        var startDate = day.Date.ToDateTime(TimeOnly.MinValue);
         tasks = tasks.Where(ft => ft.StartTime.Date == startDate).OrderBy(ft => ft.StartTime);
-        categories = categories.Select(c => c with { TimeWindows = c.TimeWindows.Where(tw => tw.Day.Date == date).ToArray() }).Where(c => c.TimeWindows.Length > 0).ToArray();
+        categories = categories.Select(c => c with { DayTimeWindows = c.DayTimeWindows.Where(tw => tw.Day.Date == day.Date).ToArray() }).Where(c => c.DayTimeWindows.Length > 0).ToArray();
 
         var startTime = TimeOnly.MinValue;
         foreach(var task in tasks)
@@ -31,13 +64,14 @@ internal readonly record struct FreeTimeWindow
             var endTime = TimeOnly.FromDateTime(task.StartTime);
             if (endTime > startTime)
             {
-                var categoryTimeWindows = CategoryTimeWindow.FromRequest(startTime, endTime, categories).ToArray();
+                var categoryTimeWindows = CategoryTimeWindow.FromRequest(day, startTime, endTime, categories).OrderBy(ctw => ctw.Start).ToArray();
                 if(categoryTimeWindows.Length > 0)
                     yield return new FreeTimeWindow
                     {
                         Start = categoryTimeWindows.Min(ctw => ctw.Start),
                         End = categoryTimeWindows.Max(ctw => ctw.End),
-                        CategoryTimeWindows = categoryTimeWindows
+                        CategoryTimeWindows = categoryTimeWindows,
+                        Day = day
                     };
             }
             startTime = TimeOnly.FromDateTime(task.EndTime);
@@ -45,7 +79,7 @@ internal readonly record struct FreeTimeWindow
 
         if(startTime < TimeOnly.MaxValue)
         {
-            var categoryTimeWindows = CategoryTimeWindow.FromRequest(startTime, TimeOnly.MaxValue, categories).ToArray();
+            var categoryTimeWindows = CategoryTimeWindow.FromRequest(day, startTime, TimeOnly.MaxValue, categories).OrderBy(ctw => ctw.Start).ToArray();
             if (categoryTimeWindows.Length > 0)
                 yield return new FreeTimeWindow
                 {
@@ -62,15 +96,17 @@ internal readonly record struct CategoryTimeWindow
     public Category Category { get; init; }
     public TimeOnly Start { get; init; }
     public TimeOnly End { get; init; }
+    public Day Day { get; init; }
 
-    public static IEnumerable<CategoryTimeWindow> FromRequest(TimeOnly start, TimeOnly end, IEnumerable<Category> categories)
+    public static IEnumerable<CategoryTimeWindow> FromRequest(Day day, TimeOnly start, TimeOnly end, IEnumerable<Category> categories)
     {
         foreach(var category in categories)
         {
-            var categoryTimeWindows = category.TimeWindows.Where(tw => tw.Start < end && tw.End > start);
-            foreach(var categoryTimeWindow in categoryTimeWindows)
-                yield return new CategoryTimeWindow
+            var categoryTimeWindows = category.DayTimeWindows.Where(tw => tw.Start < end && tw.End > start);
+            foreach (var categoryTimeWindow in categoryTimeWindows)
+                yield return new()
                 {
+                    Day = day,
                     Category = category,
                     Start = start > categoryTimeWindow.Start ? start : categoryTimeWindow.Start,
                     End = end < categoryTimeWindow.End ? end : categoryTimeWindow.End,

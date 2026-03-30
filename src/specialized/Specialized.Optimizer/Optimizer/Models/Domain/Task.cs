@@ -31,8 +31,56 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
 
         public Category[] Categories { get; init; } = [];
 
+        public CategoryTimeWindow[] FreeTimeWindows { get; init; } = [];
+
+        //benchmark ActualFreeTimeWindows it helps or harms
+        //public CategoryTimeWindow[] ActualFreeTimeWindows
+        //{
+        //    get
+        //    {
+        //        calculate based on FreeTimeWindows +Day.ActualFreeTimeWindows
+        //    }
+        //}
+
         public static Task FromDynamicTask(DynamicTask dynamicTask, IEnumerable<Category> categories)
         {
+            var taskCategories = categories.Where(c => dynamicTask.Categories.Contains(c.CategoryType)).ToArray();
+
+            var categoryTimeWindows = taskCategories.SelectMany(c => 
+                c.DayTimeWindows.Select(dtw => dtw.Day).Distinct().SelectMany(d => 
+                    d.PossibleTimeWindows.SelectMany(ptw => ptw.CategoryTimeWindows)
+                    .Where(ctw => ctw.Category.CategoryType == c.CategoryType))
+            );
+            // Get the free time windows for the task by intersecting the category free time windows with the task's time window and deadline.
+            var freeTaskTimeWindows = categoryTimeWindows
+                .Where(ctw => ctw.Start < (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
+                .Where(ctw => ctw.End > (dynamicTask.WindowStart ?? TimeOnly.MinValue))
+                .Where(ctw => dynamicTask.Deadline == null
+                    || (ctw.Day.Date <= DateOnly.FromDateTime(dynamicTask.Deadline.Value.Date) && ctw.Start.ToTimeSpan() < dynamicTask.Deadline.Value.TimeOfDay))
+                .Select(ctw =>
+                {
+                    var minTime = (dynamicTask.WindowStart ?? TimeOnly.MinValue);
+                    minTime = minTime > ctw.Start ? minTime : ctw.Start;
+
+                    var maxTime = (dynamicTask.WindowEnd ?? TimeOnly.MaxValue);
+                    maxTime = maxTime < ctw.End ? maxTime : ctw.End;
+                    if (dynamicTask.Deadline != null && ctw.Day.Date == DateOnly.FromDateTime(dynamicTask.Deadline.Value.Date))
+                    {
+                        var dynamicTaskDeadlineTime = TimeOnly.FromTimeSpan(dynamicTask.Deadline.Value.TimeOfDay);
+                        maxTime = dynamicTaskDeadlineTime < maxTime ? dynamicTaskDeadlineTime : maxTime;
+                    }
+
+                    var entry = ctw with
+                    {
+                        Start = minTime,
+                        End = maxTime,
+                    };
+
+                    return entry;
+                })
+                .Where(ctw => ctw.Start >= (dynamicTask.WindowStart ?? TimeOnly.MinValue))
+                .Where(ctw => ctw.End <= (dynamicTask.WindowEnd ?? TimeOnly.MaxValue));
+
             return new Task
             {
                 Id = dynamicTask.Id,
@@ -45,7 +93,8 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
                 WindowEnd = dynamicTask.WindowEnd,
                 Deadline = dynamicTask.Deadline,
                 Repeating = dynamicTask.Repeating,
-                Categories = categories.Where(c => dynamicTask.Categories.Contains(c.CategoryType)).ToArray()
+                Categories = taskCategories,
+                FreeTimeWindows = freeTaskTimeWindows.OrderBy(ftw => ftw.Day.Date).ThenBy(ftw => ftw.Start).ToArray()
             };
         }
     }
