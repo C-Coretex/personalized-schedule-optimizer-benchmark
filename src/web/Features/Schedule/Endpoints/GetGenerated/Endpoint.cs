@@ -19,6 +19,6 @@ public class Endpoint
             }
         })
         .WithName("GetGeneratedSchedules")
-        .Produces<IReadOnlyList<ScheduleJobMetadata>>(StatusCodes.Status200OK);
+        .Produces<Response?>(StatusCodes.Status200OK);
     }
 }

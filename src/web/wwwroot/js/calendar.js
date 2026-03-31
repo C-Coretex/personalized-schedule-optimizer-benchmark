@@ -58,7 +58,7 @@ function buildTooltipHtml(t) {
   if (t.priority != null) {
     html += `<div class="ctt-row">
       <span class="ctt-lbl">Priority</span>
-      <span class="ctt-val">${dots(t.priority, 5)}</span>
+      <span class="ctt-val">${dots(6 - t.priority, 5)}</span>
     </div>`;
   }
   if (t.difficulty != null) {
@@ -165,7 +165,7 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-function buildCalGrid(dates, tasks, categoryWindows = []) {
+function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities = []) {
   calEventTasks = [];
   const totalPx = (CAL_END_HOUR - CAL_START_HOUR) * CAL_HOUR_PX;
 
@@ -181,11 +181,32 @@ function buildCalGrid(dates, tasks, categoryWindows = []) {
   for (const cw of categoryWindows) { const key = calDateKey(new Date(cw.startDateTime));  if (cwByDay[key]) cwByDay[key].push(cw); }
 
   // ── Header ──
+  const diffCapMap = new Map(difficultyCapacities.map(e => [e.date, e.capacity]));
+
   let headerHtml = '<div class="cal-gutter-header"></div>';
   for (const d of dates) {
+    const key      = calDateKey(d);
+    const dayTasks = byDay[key] || [];
+
+    // Priority: inverted scale (1 = most important, 5 = least) → weight = 6 - p
+    const totPrio  = dayTasks.reduce((s, t) => t.priority  != null ? s + (6 - t.priority)  : s, 0);
+    const hasPrio  = dayTasks.some(t => t.priority  != null);
+
+    const totDiff  = dayTasks.reduce((s, t) => t.difficulty != null ? s + t.difficulty : s, 0);
+    const hasDiff  = dayTasks.some(t => t.difficulty != null);
+    const capacity = diffCapMap.get(key);
+    const diffLabel = hasDiff ? (capacity != null ? `${totDiff}/${capacity}` : `${totDiff}`) : null;
+
+    const statsHtml = (hasPrio || hasDiff)
+      ? `<div class="cal-day-stats">
+           ${hasPrio  ? `<span class="cal-day-stat prio" title="Total priority (inverted scale)">P ${totPrio}</span>` : ''}
+           ${diffLabel ? `<span class="cal-day-stat diff" title="Total difficulty${capacity != null ? ' / daily cap' : ''}">D ${diffLabel}</span>` : ''}
+         </div>`
+      : '';
     headerHtml += `<div class="cal-day-header">
       <div class="cal-day-name">${DAY_NAMES[d.getDay()]}</div>
       <div>${d.getDate()} ${MONTH_ABBR[d.getMonth()]}</div>
+      ${statsHtml}
     </div>`;
   }
   document.getElementById('cal-header-row').innerHTML = headerHtml;
@@ -325,6 +346,6 @@ export function renderCalendar(item) {
   }
 
   buildCalLegend(enriched);
-  buildCalGrid(dates, enriched, request.categoryWindows || []);
+  buildCalGrid(dates, enriched, request.categoryWindows || [], request.difficultyCapacities || []);
   section.classList.remove('hidden');
 }

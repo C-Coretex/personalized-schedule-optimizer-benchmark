@@ -5,7 +5,7 @@ import {
 } from './items.js';
 import {
   submit, loadGeneratedIds, fetchSchema,
-  copySchemaToClipboard, copyPromptToClipboard,
+  copySchemaToClipboard, copyPromptToClipboard, loadSampleJson,
 } from './api.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Schema / clipboard
   fetchSchema();
+  document.getElementById('load-sample-btn').addEventListener('click', loadSampleJson);
   document.getElementById('copy-schema-btn').addEventListener('click', copySchemaToClipboard);
   document.getElementById('copy-prompt-btn').addEventListener('click', copyPromptToClipboard);
 

@@ -177,6 +177,16 @@ export async function copyPromptToClipboard(e) {
   }
 }
 
+const SAMPLE_JSON = {"planningHorizon":{"startDate":"2026-03-30","endDate":"2026-04-05"},"difficultTaskSchedulingStrategy":"Even","fixedTasks":[{"name":"Team Standup","priority":5,"difficulty":2,"types":["Routine","Collaborative"],"startTime":"2026-03-30T09:00:00","endTime":"2026-03-30T09:30:00"},{"name":"Team Standup","priority":5,"difficulty":2,"types":["Routine","Collaborative"],"startTime":"2026-03-31T09:00:00","endTime":"2026-03-31T09:30:00"},{"name":"Team Standup","priority":5,"difficulty":2,"types":["Routine","Collaborative"],"startTime":"2026-04-01T09:00:00","endTime":"2026-04-01T09:30:00"},{"name":"Team Standup","priority":5,"difficulty":2,"types":["Routine","Collaborative"],"startTime":"2026-04-02T09:00:00","endTime":"2026-04-02T09:30:00"},{"name":"Team Standup","priority":5,"difficulty":2,"types":["Routine","Collaborative"],"startTime":"2026-04-03T09:00:00","endTime":"2026-04-03T09:30:00"},{"name":"Client Presentation","priority":5,"difficulty":8,"types":["Social","Collaborative","HighEnergy"],"startTime":"2026-03-31T14:00:00","endTime":"2026-03-31T15:30:00"},{"name":"Doctor Appointment","priority":5,"difficulty":3,"types":["Routine","Indoor"],"startTime":"2026-04-01T11:00:00","endTime":"2026-04-01T12:00:00"},{"name":"Sprint Retrospective","priority":4,"difficulty":4,"types":["Intellectual","Collaborative"],"startTime":"2026-04-03T15:00:00","endTime":"2026-04-03T16:30:00"},{"name":"Family Dinner","priority":4,"difficulty":1,"types":["Social","Fun"],"startTime":"2026-04-04T19:00:00","endTime":"2026-04-04T21:00:00"}],"dynamicTasks":[{"name":"Feature Implementation","priority":5,"difficulty":8,"types":["Intellectual","DeepWork","Solo"],"isRequired":true,"duration":90,"windowStart":"09:30:00","windowEnd":"13:00:00","deadline":null,"categories":["Work"],"repeating":null},{"name":"Code Review","priority":4,"difficulty":5,"types":["Intellectual","Digital"],"isRequired":true,"duration":60,"windowStart":null,"windowEnd":null,"deadline":"2026-04-03T17:00:00","categories":["Work"],"repeating":null},{"name":"Write Unit Tests","priority":3,"difficulty":5,"types":["Intellectual","Boring","Solo"],"isRequired":false,"duration":75,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Work"],"repeating":null},{"name":"Update Project Documentation","priority":2,"difficulty":3,"types":["Digital","Boring","Solo"],"isRequired":false,"duration":45,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Work"],"repeating":null},{"name":"Refactor Legacy Module","priority":3,"difficulty":7,"types":["Intellectual","DeepWork","Solo"],"isRequired":false,"duration":60,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Work"],"repeating":null},{"name":"Research New Library","priority":2,"difficulty":4,"types":["Intellectual","Digital","Solo"],"isRequired":false,"duration":45,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Work"],"repeating":null},{"name":"Prepare Sprint Tasks","priority":4,"difficulty":3,"types":["Routine","Digital","Solo"],"isRequired":true,"duration":30,"windowStart":null,"windowEnd":null,"deadline":"2026-04-03T09:00:00","categories":["Work"],"repeating":null},{"name":"Morning Run","priority":4,"difficulty":6,"types":["Physical","Outdoor","HighEnergy"],"isRequired":false,"duration":40,"windowStart":"06:30:00","windowEnd":"08:00:00","deadline":null,"categories":["Health"],"repeating":{"minDayCount":0,"optDayCount":1,"minWeekCount":3,"optWeekCount":5}},{"name":"Stretching","priority":3,"difficulty":2,"types":["Physical","LowEnergy"],"isRequired":false,"duration":15,"windowStart":"06:00:00","windowEnd":"08:30:00","deadline":null,"categories":["Health","Morning"],"repeating":{"minDayCount":1,"optDayCount":1,"minWeekCount":0,"optWeekCount":7}},{"name":"Meditation","priority":3,"difficulty":1,"types":["Solo","LowEnergy","Meditative"],"isRequired":false,"duration":15,"windowStart":"06:00:00","windowEnd":"08:00:00","deadline":null,"categories":["Morning"],"repeating":{"minDayCount":0,"optDayCount":3,"minWeekCount":3,"optWeekCount":6}},{"name":"Gym Session","priority":3,"difficulty":7,"types":["Physical","Solo","HighEnergy"],"isRequired":false,"duration":60,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Health"],"repeating":null},{"name":"Read Technical Book","priority":3,"difficulty":4,"types":["Intellectual","Indoor","Solo"],"isRequired":false,"duration":40,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Study"],"repeating":{"minDayCount":0,"optDayCount":0,"minWeekCount":2,"optWeekCount":4}},{"name":"Spanish Language Practice","priority":2,"difficulty":3,"types":["Intellectual","Solo"],"isRequired":false,"duration":20,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Study"],"repeating":{"minDayCount":0,"optDayCount":1,"minWeekCount":0,"optWeekCount":4}},{"name":"Watch Conference Talk","priority":2,"difficulty":3,"types":["Intellectual","Indoor","Digital"],"isRequired":false,"duration":50,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Study"],"repeating":null},{"name":"Plan Next Week","priority":3,"difficulty":2,"types":["Routine","Digital","Solo"],"isRequired":false,"duration":30,"windowStart":null,"windowEnd":null,"deadline":"2026-04-05T18:00:00","categories":["Study"],"repeating":null},{"name":"Grocery Shopping","priority":4,"difficulty":2,"types":["Physical","Routine","Indoor"],"isRequired":true,"duration":50,"windowStart":null,"windowEnd":null,"deadline":"2026-04-04T17:00:00","categories":["Home"],"repeating":null},{"name":"Apartment Cleaning","priority":2,"difficulty":3,"types":["Physical","Routine","Boring"],"isRequired":false,"duration":60,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Home"],"repeating":null},{"name":"Meal Prep","priority":3,"difficulty":2,"types":["Physical","Routine","Indoor"],"isRequired":false,"duration":75,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Home"],"repeating":null},{"name":"Fix Bike","priority":2,"difficulty":4,"types":["Physical","Indoor","Solo"],"isRequired":false,"duration":40,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Home"],"repeating":null},{"name":"Evening Walk","priority":3,"difficulty":2,"types":["Outdoor","Solo","LowEnergy"],"isRequired":false,"duration":30,"windowStart":"19:00:00","windowEnd":"21:30:00","deadline":null,"categories":["Evening"],"repeating":{"minDayCount":0,"optDayCount":1,"minWeekCount":0,"optWeekCount":4}},{"name":"Journal Entry","priority":2,"difficulty":1,"types":["Creative","Solo","LowEnergy"],"isRequired":false,"duration":20,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Evening"],"repeating":null},{"name":"Call a Friend","priority":3,"difficulty":1,"types":["Social","Fun"],"isRequired":false,"duration":30,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["Evening"],"repeating":null},{"name":"Write Blog Post","priority":2,"difficulty":6,"types":["Creative","DeepWork","Digital","Solo"],"isRequired":false,"duration":90,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["FreeTime"],"repeating":null},{"name":"Board Game with Partner","priority":3,"difficulty":1,"types":["Social","Indoor","Fun"],"isRequired":false,"duration":90,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["FreeTime"],"repeating":null},{"name":"Sketch Side Project UI","priority":2,"difficulty":5,"types":["Creative","Digital","Solo"],"isRequired":false,"duration":60,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["FreeTime"],"repeating":null},{"name":"Watch Movie","priority":2,"difficulty":1,"types":["Indoor","Fun","LowEnergy"],"isRequired":false,"duration":120,"windowStart":null,"windowEnd":null,"deadline":null,"categories":["FreeTime"],"repeating":null},{"name":"Walk with dog","priority":1,"difficulty":2,"types":["Physical","Routine","Outdoor"],"isRequired":false,"duration":30,"windowStart":"18:00:00","windowEnd":null,"deadline":null,"categories":["Home","Evening"],"repeating":{"minDayCount":1,"optDayCount":1,"minWeekCount":0,"optWeekCount":7}}],"categoryWindows":[{"category":"Work","startDateTime":"2026-03-30T09:30:00","endDateTime":"2026-03-30T12:30:00"},{"category":"Work","startDateTime":"2026-03-30T13:00:00","endDateTime":"2026-03-30T18:00:00"},{"category":"Work","startDateTime":"2026-03-31T09:30:00","endDateTime":"2026-03-31T12:30:00"},{"category":"Work","startDateTime":"2026-03-31T13:00:00","endDateTime":"2026-03-31T14:00:00"},{"category":"Work","startDateTime":"2026-03-31T15:30:00","endDateTime":"2026-03-31T18:00:00"},{"category":"Work","startDateTime":"2026-04-01T09:30:00","endDateTime":"2026-04-01T11:00:00"},{"category":"Work","startDateTime":"2026-04-01T13:00:00","endDateTime":"2026-04-01T18:00:00"},{"category":"Work","startDateTime":"2026-04-02T09:30:00","endDateTime":"2026-04-02T12:30:00"},{"category":"Work","startDateTime":"2026-04-02T13:00:00","endDateTime":"2026-04-02T18:00:00"},{"category":"Work","startDateTime":"2026-04-03T09:30:00","endDateTime":"2026-04-03T12:30:00"},{"category":"Work","startDateTime":"2026-04-03T13:00:00","endDateTime":"2026-04-03T15:00:00"},{"category":"Health","startDateTime":"2026-03-30T06:30:00","endDateTime":"2026-03-30T08:30:00"},{"category":"Health","startDateTime":"2026-03-31T06:30:00","endDateTime":"2026-03-31T08:30:00"},{"category":"Health","startDateTime":"2026-04-01T06:30:00","endDateTime":"2026-04-01T08:30:00"},{"category":"Health","startDateTime":"2026-04-02T06:30:00","endDateTime":"2026-04-02T08:30:00"},{"category":"Health","startDateTime":"2026-04-03T06:30:00","endDateTime":"2026-04-03T08:30:00"},{"category":"Health","startDateTime":"2026-04-04T07:00:00","endDateTime":"2026-04-04T09:00:00"},{"category":"Health","startDateTime":"2026-04-05T07:00:00","endDateTime":"2026-04-05T09:00:00"},{"category":"Morning","startDateTime":"2026-03-30T06:00:00","endDateTime":"2026-03-30T08:00:00"},{"category":"Morning","startDateTime":"2026-03-31T06:00:00","endDateTime":"2026-03-31T08:00:00"},{"category":"Morning","startDateTime":"2026-04-01T06:00:00","endDateTime":"2026-04-01T08:00:00"},{"category":"Morning","startDateTime":"2026-04-02T06:00:00","endDateTime":"2026-04-02T08:00:00"},{"category":"Morning","startDateTime":"2026-04-03T06:00:00","endDateTime":"2026-04-03T08:00:00"},{"category":"Morning","startDateTime":"2026-04-04T07:00:00","endDateTime":"2026-04-04T09:00:00"},{"category":"Morning","startDateTime":"2026-04-05T07:00:00","endDateTime":"2026-04-05T09:00:00"},{"category":"Study","startDateTime":"2026-03-30T18:00:00","endDateTime":"2026-03-30T20:30:00"},{"category":"Study","startDateTime":"2026-03-31T18:00:00","endDateTime":"2026-03-31T20:30:00"},{"category":"Study","startDateTime":"2026-04-01T18:00:00","endDateTime":"2026-04-01T20:30:00"},{"category":"Study","startDateTime":"2026-04-02T18:00:00","endDateTime":"2026-04-02T20:30:00"},{"category":"Study","startDateTime":"2026-04-03T18:00:00","endDateTime":"2026-04-03T20:30:00"},{"category":"Study","startDateTime":"2026-04-04T10:00:00","endDateTime":"2026-04-04T12:00:00"},{"category":"Study","startDateTime":"2026-04-05T10:00:00","endDateTime":"2026-04-05T12:00:00"},{"category":"Home","startDateTime":"2026-04-02T18:00:00","endDateTime":"2026-04-02T20:00:00"},{"category":"Home","startDateTime":"2026-04-04T10:00:00","endDateTime":"2026-04-04T14:00:00"},{"category":"Home","startDateTime":"2026-04-05T10:00:00","endDateTime":"2026-04-05T13:00:00"},{"category":"Evening","startDateTime":"2026-03-30T19:00:00","endDateTime":"2026-03-30T22:00:00"},{"category":"Evening","startDateTime":"2026-03-31T19:00:00","endDateTime":"2026-03-31T22:00:00"},{"category":"Evening","startDateTime":"2026-04-01T19:00:00","endDateTime":"2026-04-01T22:00:00"},{"category":"Evening","startDateTime":"2026-04-02T19:00:00","endDateTime":"2026-04-02T22:00:00"},{"category":"Evening","startDateTime":"2026-04-03T19:00:00","endDateTime":"2026-04-03T22:00:00"},{"category":"Evening","startDateTime":"2026-04-04T21:00:00","endDateTime":"2026-04-04T23:00:00"},{"category":"Evening","startDateTime":"2026-04-05T19:00:00","endDateTime":"2026-04-05T22:00:00"},{"category":"FreeTime","startDateTime":"2026-04-03T20:00:00","endDateTime":"2026-04-03T22:30:00"},{"category":"FreeTime","startDateTime":"2026-04-04T14:00:00","endDateTime":"2026-04-04T19:00:00"},{"category":"FreeTime","startDateTime":"2026-04-05T13:00:00","endDateTime":"2026-04-05T18:00:00"}],"difficultyCapacities":[{"date":"2026-03-30","capacity":15},{"date":"2026-03-31","capacity":20},{"date":"2026-04-01","capacity":12},{"date":"2026-04-02","capacity":18},{"date":"2026-04-03","capacity":16},{"date":"2026-04-04","capacity":10},{"date":"2026-04-05","capacity":10}],"taskTypePreferences":[{"date":"2026-03-30","preferences":[{"type":"DeepWork","weight":3},{"type":"Intellectual","weight":2}]},{"date":"2026-04-01","preferences":[{"type":"LowEnergy","weight":2},{"type":"Routine","weight":2}]},{"date":"2026-04-04","preferences":[{"type":"Fun","weight":3},{"type":"Physical","weight":2},{"type":"Creative","weight":2}]},{"date":"2026-04-05","preferences":[{"type":"LowEnergy","weight":3},{"type":"Meditative","weight":2},{"type":"Solo","weight":1}]}]};
+
+export function loadSampleJson() {
+  const ta = document.getElementById('json-preview');
+  ta.value = JSON.stringify(SAMPLE_JSON, null, 2);
+  ta.classList.remove('json-invalid');
+  renderForm(SAMPLE_JSON);
+  hideHistoryBanner();
+}
+
 // ─── Submit ───────────────────────────────────────────────────────────────────
 
 function showResponse(message, ok) {
@@ -239,12 +249,80 @@ function loadHistoryEntry(item, li) {
     .forEach(el => el.classList.remove('ids-active'));
   li.classList.add('ids-active');
 
+  const meta = item.scheduleJobMetadata;
   const ta = document.getElementById('json-preview');
-  ta.value = JSON.stringify(item.request, null, 2);
+  ta.value = JSON.stringify(meta.request, null, 2);
   ta.classList.remove('json-invalid');
-  renderForm(item.request);
-  showHistoryBanner(item.id);
-  renderCalendar(item);
+  renderForm(meta.request);
+  showHistoryBanner(meta.id);
+  renderCalendar(meta);
+
+  const calScore = document.getElementById('cal-score');
+  if (item.score) {
+    const { hardScore, softScore } = item.score.score;
+    calScore.innerHTML =
+      `<span class="cal-score-item hard"><span class="cal-score-label">HARD</span><span class="cal-score-value">${hardScore}</span></span>` +
+      `<span class="cal-score-item soft"><span class="cal-score-label">SOFT</span><span class="cal-score-value">${softScore}</span></span>`;
+    calScore.classList.remove('hidden');
+    attachScoreTooltips(calScore, item.score);
+  } else {
+    calScore.classList.add('hidden');
+  }
+}
+
+function buildScoreTooltipHtml(score) {
+  const hardRows = score.hardConstraintScores.map(c =>
+    `<div class="ctt-row"><span class="ctt-lbl">${c.constraintName}</span><span class="ctt-val">${c.score}</span></div>`
+  ).join('');
+  const softRows = score.softConstraintScores.map(c =>
+    `<div class="ctt-row"><span class="ctt-lbl">${c.constraintName}</span><span class="ctt-val">${c.score}</span></div>`
+  ).join('');
+  return {
+    hard: `
+      <div class="ctt-title"><span class="ctt-dot" style="background:#dc2626"></span>Hard Constraints</div>
+      <div class="ctt-row"><span class="ctt-lbl">Total</span><span class="ctt-val score-total hard">${score.score.hardScore}</span></div>
+      ${hardRows}`,
+    soft: `
+      <div class="ctt-title"><span class="ctt-dot" style="background:#0284c7"></span>Soft Constraints</div>
+      <div class="ctt-row"><span class="ctt-lbl">Total</span><span class="ctt-val score-total soft">${score.score.softScore}</span></div>
+      ${softRows}`,
+  };
+}
+
+function attachScoreTooltips(container, score) {
+  const tip = document.getElementById('cal-tooltip');
+  const html = buildScoreTooltipHtml(score);
+  const badges = container.querySelectorAll('.cal-score-item');
+  const [hardBadge, softBadge] = badges;
+
+  function show(e, content) {
+    tip.innerHTML = content;
+    tip.style.display = 'block';
+    move(e);
+  }
+  function move(e) {
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = e.clientX + 14, y = e.clientY + 14;
+    if (x + tw > window.innerWidth  - 8) x = e.clientX - tw - 14;
+    if (y + th > window.innerHeight - 8) y = e.clientY - th - 14;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+  function hide() { tip.style.display = 'none'; }
+
+  hardBadge.addEventListener('mouseenter', e => show(e, html.hard));
+  hardBadge.addEventListener('mousemove',  move);
+  hardBadge.addEventListener('mouseleave', hide);
+  softBadge.addEventListener('mouseenter', e => show(e, html.soft));
+  softBadge.addEventListener('mousemove',  move);
+  softBadge.addEventListener('mouseleave', hide);
+}
+
+function buildScoreTitle(score) {
+  if (!score) return 'Click to load into form';
+  const hard = score.hardConstraintScores.map(c => `${c.constraintName}: ${c.score}`).join(', ');
+  const soft = score.softConstraintScores.map(c => `${c.constraintName}: ${c.score}`).join(', ');
+  return `Hard constraints: ${hard}\nSoft constraints: ${soft}`;
 }
 
 export async function loadGeneratedIds() {
@@ -252,7 +330,7 @@ export async function loadGeneratedIds() {
   try {
     const res = await fetch('/schedule/generated');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const items = await res.json();
+    const { data: items } = await res.json();
 
     list.innerHTML = '';
     if (!items || items.length === 0) {
@@ -264,14 +342,26 @@ export async function loadGeneratedIds() {
     for (let i = items.length - 1; i >= 0; i--) {
       const item = items[i];
       const li   = document.createElement('li');
-      li.textContent = item.id;
-      li.title = 'Click to load into form';
+
+      const idSpan = document.createElement('span');
+      idSpan.className = 'ids-id';
+      idSpan.textContent = item.scheduleJobMetadata.id;
+      li.appendChild(idSpan);
+
+      if (item.score) {
+        const badge = document.createElement('span');
+        badge.className = 'ids-score';
+        badge.textContent = `H: ${item.score.score.hardScore} | S: ${item.score.score.softScore}`;
+        li.appendChild(badge);
+      }
+
+      li.title = buildScoreTitle(item.score);
       li.addEventListener('click', async () => {
         try {
           const fresh = await fetch('/schedule/generated');
           if (!fresh.ok) throw new Error();
-          const freshItems = await fresh.json();
-          const freshItem  = freshItems.find(x => x.id === item.id) || item;
+          const { data: freshItems } = await fresh.json();
+          const freshItem = freshItems.find(x => x.scheduleJobMetadata.id === item.scheduleJobMetadata.id) || item;
           loadHistoryEntry(freshItem, li);
         } catch {
           loadHistoryEntry(item, li);

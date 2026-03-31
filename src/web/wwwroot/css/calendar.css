@@ -8,6 +8,64 @@
   padding: 1rem;
 }
 
+/* ── Score badge ───────────────────────────────────────────── */
+
+.cal-score {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.cal-score-item {
+  display: flex;
+  align-items: stretch;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  cursor: default;
+  font-family: system-ui, sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+}
+
+.cal-score-label {
+  padding: 4px 7px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+}
+
+.cal-score-value {
+  padding: 4px 9px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+}
+
+.cal-score-item.hard .cal-score-label {
+  background: #dc2626;
+  color: #fff;
+}
+
+.cal-score-item.hard .cal-score-value {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.cal-score-item.soft .cal-score-label {
+  background: #0284c7;
+  color: #fff;
+}
+
+.cal-score-item.soft .cal-score-value {
+  background: #e0f2fe;
+  color: #075985;
+}
+
 /* ── Legend ────────────────────────────────────────────────── */
 
 .cal-legend {
@@ -71,6 +129,34 @@
 
 .cal-day-header:last-child {
   border-right: none;
+}
+
+.cal-day-stats {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.cal-day-stat {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  cursor: default;
+}
+
+.cal-day-stat.prio {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.cal-day-stat.diff {
+  background: #ede9fe;
+  color: #5b21b6;
+  border: 1px solid #c4b5fd;
 }
 
 .cal-day-header .cal-day-name {
@@ -263,6 +349,14 @@
   color: #cbd5e1;
   word-break: break-word;
 }
+
+.ctt-val.score-total {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.ctt-val.score-total.hard { color: #f87171; }
+.ctt-val.score-total.soft { color: #38bdf8; }
 
 .ctt-dots {
   letter-spacing: 1px;
