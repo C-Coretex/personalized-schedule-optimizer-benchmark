@@ -21,6 +21,15 @@ public class Endpoint
                 return Results.BadRequest(ex.Message);
             }
         })
+        .AddEndpointFilter(async (ctx, next) =>
+        {
+            var config = ctx.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var expected = config["InternalApi:SharedSecret"];
+            ctx.HttpContext.Request.Headers.TryGetValue("X-Internal-Token", out var actual);
+            if (string.IsNullOrEmpty(expected) || !string.Equals(actual, expected, StringComparison.Ordinal))
+                return Results.Problem(statusCode: StatusCodes.Status403Forbidden);
+            return await next(ctx);
+        })
         .WithName("SubmitSchedule")
         .Produces(StatusCodes.Status200OK)
         .Produces<string>(StatusCodes.Status400BadRequest);

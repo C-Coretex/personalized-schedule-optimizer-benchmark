@@ -45,7 +45,7 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
             );
             // Get the free time windows for the task by intersecting the category free time windows with the task's time window and deadline.
             var freeTaskTimeWindows = categoryTimeWindows
-                .Where(ctw => ctw.Start < (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
+                .Where(ctw => ctw.Start <= (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
                 .Where(ctw => ctw.End > (dynamicTask.WindowStart ?? TimeOnly.MinValue))
                 .Where(ctw => dynamicTask.Deadline == null
                     || (ctw.Day.Date <= DateOnly.FromDateTime(dynamicTask.Deadline.Value.Date) && ctw.Start.ToTimeSpan() < dynamicTask.Deadline.Value.TimeOfDay))
@@ -71,7 +71,7 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
                     return entry;
                 })
                 .Where(ctw => ctw.Start >= (dynamicTask.WindowStart ?? TimeOnly.MinValue))
-                .Where(ctw => ctw.End <= (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
+                .Where(ctw => ctw.End < (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
                 .Where(ctw => ctw.End - ctw.Start >= TimeSpan.FromMinutes(dynamicTask.Duration));
 
             return new Task

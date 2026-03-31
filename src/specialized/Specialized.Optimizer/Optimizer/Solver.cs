@@ -28,12 +28,19 @@ public class Solver(int? seed = null)
         //optimization stage 2.
 
         var tasksTimeline = planningDomain.PlanningDays
-            .SelectMany(d => d.ScheduledTasks.OrderBy(st => st.Start).Select(st => new TaskResponse()
+            .SelectMany(d => d.ScheduledTasks.Select(st => new TaskResponse()
             {
                 Id = st.Task.Id,
                 StartTime = d.Day.Date.ToDateTime(st.Start),
                 EndTime = d.Day.Date.ToDateTime(st.End)
             }));
-        return new GenerateScheduleResponse() { TasksTimeline = tasksTimeline.ToList() };
+        tasksTimeline = tasksTimeline.Concat(request.FixedTasks.Select(ft => new TaskResponse()
+        {
+            Id = ft.Id,
+            StartTime = ft.StartTime,
+            EndTime = ft.EndTime
+        }));
+
+        return new GenerateScheduleResponse() { TasksTimeline = tasksTimeline.OrderBy(st => st.StartTime).ToList() };
     }
 }

@@ -5,6 +5,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - SpecializedApi__BaseUrl=http://pso.specialized:8080
+      - InternalApi__SharedSecret=eff9+c0hpiv3-rmln&_r+r9kcfv0&wpga8y-1$2yzazzb1z(q2
     ports:
       - "8080:8080"
       - "8081:8081"
@@ -17,3 +18,4 @@ services:
   pso.specialized:    
     environment:
       - Callbacks__ScheduleSubmitUrl=http://pso.web:8080/schedule/submit
+      - InternalApi__SharedSecret=eff9+c0hpiv3-rmln&_r+r9kcfv0&wpga8y-1$2yzazzb1z(q2

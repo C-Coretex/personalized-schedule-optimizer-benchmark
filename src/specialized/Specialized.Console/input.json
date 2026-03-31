@@ -306,7 +306,7 @@
       ],
       "repeating": {
         "minDayCount": 0,
-        "optDayCount": 2,
+        "optDayCount": 3,
         "minWeekCount": 3,
         "optWeekCount": 6
       }
@@ -628,6 +628,31 @@
         "FreeTime"
       ],
       "repeating": null
+    },
+    {
+      "name": "Walk with dog",
+      "priority": 1,
+      "difficulty": 2,
+      "types": [
+        "Physical",
+        "Routine",
+        "Outdoor"
+      ],
+      "isRequired": false,
+      "duration": 30,
+      "windowStart": "18:00:00",
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Home",
+        "Evening"
+      ],
+      "repeating": {
+        "minDayCount": 1,
+        "optDayCount": 1,
+        "minWeekCount": 0,
+        "optWeekCount": 7
+      }
     }
   ],
   "categoryWindows": [

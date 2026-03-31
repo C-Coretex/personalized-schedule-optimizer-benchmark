@@ -26,6 +26,9 @@ public class Handler(IHttpClientFactory httpClientFactory, IConfiguration config
             try
             {
                 var client = httpClientFactory.CreateClient();
+                var secret = configuration["InternalApi:SharedSecret"];
+                if (!string.IsNullOrEmpty(secret))
+                    client.DefaultRequestHeaders.Add("X-Internal-Token", secret);
                 var payload = new { JobId = jobId, response.TasksTimeline };
 
                 var httpResponse = await client.PostAsJsonAsync(callbackUrl, payload);
