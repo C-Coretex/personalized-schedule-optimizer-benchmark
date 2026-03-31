@@ -1,0 +1,175 @@
+/* ── Cards ─────────────────────────────────────────────────── */
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.825rem;
+  padding: 0.3rem 0.65rem;
+  line-height: 1.4;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  padding: 0.55rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+.btn-primary:hover { background: #1d4ed8; }
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.95rem;
+}
+
+.btn-secondary:hover { background: #e5e7eb; }
+
+.btn-add {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.btn-add:hover { background: #bae6fd; }
+
+.btn-remove {
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.45rem;
+}
+
+.btn-remove:hover { background: #fecaca; }
+
+/* ── JSON preview ──────────────────────────────────────────── */
+
+#json-preview {
+  width: 100%;
+  height: calc(100vh - 8rem);
+  min-height: 400px;
+  font-family: monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.75rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+}
+
+#json-preview.json-invalid {
+  border-color: #f87171;
+}
+
+/* ── Generated IDs list ────────────────────────────────────── */
+
+.ids-list {
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+}
+
+.ids-list li {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.78rem;
+  font-family: monospace;
+  border-bottom: 1px solid #f0f0f0;
+  color: #374151;
+  word-break: break-all;
+  cursor: default;
+}
+
+.ids-list li:last-child {
+  border-bottom: none;
+}
+
+.ids-list li:hover {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.ids-empty {
+  font-family: system-ui, sans-serif !important;
+  color: #9ca3af !important;
+  font-style: italic;
+  cursor: default !important;
+}
+
+.ids-list li.ids-new {
+  animation: ids-flash 0.8s ease-out;
+}
+
+@keyframes ids-flash {
+  from { background: #d1fae5; }
+  to   { background: transparent; }
+}
+
+.ids-list li.ids-active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── History banner ────────────────────────────────────────── */
+
+#history-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  color: #1d4ed8;
+  margin-bottom: 0.75rem;
+}
+
+/* ── API Schema card ───────────────────────────────────────── */
+
+#api-schema-details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+#api-schema-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.schema-header {
+  margin-bottom: 0;
+}
+
+.schema-btn-group {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.schema-pre {
+  margin-top: 0.75rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  font-family: monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  padding: 0.75rem;
+  border-radius: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre;
+}

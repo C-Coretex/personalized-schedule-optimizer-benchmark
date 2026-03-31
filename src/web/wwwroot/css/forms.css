@@ -1,0 +1,77 @@
+/* ── Form rows ─────────────────────────────────────────────── */
+
+.row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.row label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.row input[type="text"],
+.row input[type="number"],
+.row input[type="date"],
+.row input[type="time"],
+.row input[type="datetime-local"],
+.row select {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  background: #fff;
+  color: #222;
+}
+
+.inline-check {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.2rem 0;
+}
+
+.checkbox-group label {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  color: #333;
+  font-size: 0.85rem;
+}
+
+/* ── Response output ───────────────────────────────────────── */
+
+#response-output {
+  padding: 0.65rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  display: none;
+}
+
+#response-output.response-ok {
+  display: block;
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+#response-output.response-error {
+  display: block;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}

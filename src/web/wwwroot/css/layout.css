@@ -1,0 +1,45 @@
+/* ── Three-column layout ───────────────────────────────────── */
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 400px 260px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.form-panel {
+  min-width: 0;
+}
+
+/* ── Sticky side panels ────────────────────────────────────── */
+
+.json-panel {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.json-panel h2 {
+  margin-bottom: 0.5rem;
+}
+
+.ids-panel {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.ids-panel h2 {
+  margin-bottom: 0.5rem;
+}
+
+/* ── Section structure ─────────────────────────────────────── */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.submit-row {
+  margin: 1rem 0 0.75rem;
+}

@@ -1,0 +1,132 @@
+/* ── List items ────────────────────────────────────────────── */
+
+.task-item,
+.item {
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.4rem;
+  background: #fafafa;
+}
+
+/* ── Item header (collapse toggle) ────────────────────────── */
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  user-select: none;
+  min-height: 28px;
+}
+
+.item-header:hover .item-toggle { color: #374151; }
+
+.item-toggle {
+  font-size: 0.6rem;
+  color: #b0b8c8;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+  display: inline-block;
+  line-height: 1;
+}
+
+.task-item:not(.collapsed) .item-toggle,
+.item:not(.collapsed) .item-toggle,
+.pref-item:not(.collapsed) .item-toggle {
+  transform: rotate(90deg);
+}
+
+/* ── Item summary & body ───────────────────────────────────── */
+
+.item-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.item-body {
+  margin-top: 0.65rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.task-item.collapsed .item-body,
+.item.collapsed .item-body,
+.pref-item.collapsed .item-body {
+  display: none;
+}
+
+/* ── Summary badges & chips ────────────────────────────────── */
+
+.item-badge {
+  font-size: 0.6rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  line-height: 1.6;
+}
+
+.item-badge-fixed   { background: #dbeafe; color: #1d4ed8; }
+.item-badge-dynamic { background: #d1fae5; color: #065f46; }
+
+.sum-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  flex-shrink: 1;
+}
+
+.sum-chip {
+  display: inline-block;
+  font-size: 0.68rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: #e5e7eb;
+  color: #374151;
+  white-space: nowrap;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+
+.sum-chip-cat      { color: #fff; }
+.sum-chip-required { background: #fef3c7; color: #92400e; }
+.sum-chip-time     { background: #f1f5f9; color: #475569; font-family: monospace; font-size: 0.7rem; }
+
+.sum-date {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Repeating fields & type-weight rows ───────────────────── */
+
+.repeating-fields {
+  border-top: 1px dashed #e5e7eb;
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.tw-list {
+  margin-top: 0.4rem;
+}
+
+.tw-row {
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 0.4rem 0.5rem;
+  margin-bottom: 0.3rem;
+}
