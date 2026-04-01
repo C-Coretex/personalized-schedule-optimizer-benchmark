@@ -264,6 +264,7 @@
   line-height: 1.3;
   box-sizing: border-box;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  outline: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .cal-event-name {
@@ -357,6 +358,17 @@
 
 .ctt-val.score-total.hard { color: #f87171; }
 .ctt-val.score-total.soft { color: #38bdf8; }
+
+.ctt-sep {
+  border-top: 1px solid #334155;
+  margin: 7px 0;
+}
+
+.ctt-ann {
+  margin-left: 5px;
+  color: #94a3b8;
+  font-size: 0.68rem;
+}
 
 .ctt-dots {
   letter-spacing: 1px;

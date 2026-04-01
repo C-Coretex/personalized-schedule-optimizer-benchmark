@@ -118,12 +118,12 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
     {
         var categoryTimeWindowsDict = request.CategoryWindows.GroupBy(cw => cw.Category)
             .ToDictionary(g => g.Key, g => g.ToArray());
-        return tasksTimeline.Where(t => t.Task.Categories
+        return tasksTimeline.Count(t => t.Task.Categories
             .All(c =>
             {
                 var categoryTimeWindows = categoryTimeWindowsDict[c];
                 return !categoryTimeWindows.Any(ctw => t.Start >= ctw.StartDateTime && t.End <= ctw.EndDateTime);
-            })).Count();
+            }));
     }
 
     //week repeating task must be scheduled at least minWeekCount times in the week and at most optWeekCount times

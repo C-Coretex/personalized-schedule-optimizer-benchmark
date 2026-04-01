@@ -48,7 +48,8 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
                 .Where(ctw => ctw.Start <= (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
                 .Where(ctw => ctw.End > (dynamicTask.WindowStart ?? TimeOnly.MinValue))
                 .Where(ctw => dynamicTask.Deadline == null
-                    || (ctw.Day.Date <= DateOnly.FromDateTime(dynamicTask.Deadline.Value.Date) && ctw.Start.ToTimeSpan() < dynamicTask.Deadline.Value.TimeOfDay))
+                    || (ctw.Day.Date < DateOnly.FromDateTime(dynamicTask.Deadline.Value.Date) 
+                        || ctw.Day.Date == DateOnly.FromDateTime(dynamicTask.Deadline.Value.Date) && ctw.Start.ToTimeSpan() < dynamicTask.Deadline.Value.TimeOfDay))
                 .Select(ctw =>
                 {
                     var minTime = (dynamicTask.WindowStart ?? TimeOnly.MinValue);
@@ -70,8 +71,6 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
 
                     return entry;
                 })
-                .Where(ctw => ctw.Start >= (dynamicTask.WindowStart ?? TimeOnly.MinValue))
-                .Where(ctw => ctw.End < (dynamicTask.WindowEnd ?? TimeOnly.MaxValue))
                 .Where(ctw => ctw.End - ctw.Start >= TimeSpan.FromMinutes(dynamicTask.Duration));
 
             return new Task

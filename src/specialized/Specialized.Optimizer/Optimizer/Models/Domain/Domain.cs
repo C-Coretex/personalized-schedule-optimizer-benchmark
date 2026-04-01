@@ -38,7 +38,6 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain
             Days = Days.Select(day => day.EnrichWithData(request.FixedTasks, Categories, calendar.GetWeekOfYear(day.Date.ToDateTime(TimeOnly.MinValue), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)))
                 .ToArray();
 
-            //var t = request.DynamicTasks.Select(dt => Task.FromDynamicTask(dt, Categories));
             //list tasks
             Tasks = request.DynamicTasks.Select(dt => Task.FromDynamicTask(dt, Categories)).Where(t => t.FreeTimeWindows.Length > 0).ToArray();
         }

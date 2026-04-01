@@ -270,13 +270,27 @@ function loadHistoryEntry(item, li) {
   }
 }
 
+const CONSTRAINT_INFO = {
+  HC3: { fmt: s => `÷60 → ${Math.ceil(s / 60)}` },
+  HC4: { fmt: s => `÷60 → ${Math.ceil(s / 60)}` },
+  HC8: { fmt: s => `÷60 → ${Math.ceil(s / 60)}` },
+  SC1: { fmt: s => `×1000 → ${1000 * s}` },
+  SC2: { fmt: s => `×1250 → ${1250 * s}` },
+  SC5: { fmt: s => `×50 → ${50 * s}` },
+  SC6: { fmt: s => `×50 → ${50 * s}` },
+};
+
 function buildScoreTooltipHtml(score) {
-  const hardRows = score.hardConstraintScores.map(c =>
-    `<div class="ctt-row"><span class="ctt-lbl">${c.constraintName}</span><span class="ctt-val">${c.score}</span></div>`
-  ).join('');
-  const softRows = score.softConstraintScores.map(c =>
-    `<div class="ctt-row"><span class="ctt-lbl">${c.constraintName}</span><span class="ctt-val">${c.score}</span></div>`
-  ).join('');
+  const hardRows = score.hardConstraintScores.map(c => {
+    const info = CONSTRAINT_INFO[c.constraintName];
+    const ann  = info ? `<span class="ctt-ann">(${info.fmt(c.score)})</span>` : '';
+    return `<div class="ctt-row"><span class="ctt-lbl">${c.constraintName}</span><span class="ctt-val">${c.score}${ann}</span></div>`;
+  }).join('');
+  const softRows = score.softConstraintScores.map(c => {
+    const info = CONSTRAINT_INFO[c.constraintName];
+    const ann  = info ? `<span class="ctt-ann">(${info.fmt(c.score)})</span>` : '';
+    return `<div class="ctt-row"><span class="ctt-lbl">${c.constraintName}</span><span class="ctt-val">${c.score}${ann}</span></div>`;
+  }).join('');
   return {
     hard: `
       <div class="ctt-title"><span class="ctt-dot" style="background:#dc2626"></span>Hard Constraints</div>
@@ -289,6 +303,15 @@ function buildScoreTooltipHtml(score) {
   };
 }
 
+function tooltipMove(tip, e) {
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + tw > window.innerWidth  - 8) x = e.clientX - tw - 14;
+  if (y + th > window.innerHeight - 8) y = e.clientY - th - 14;
+  tip.style.left = x + 'px';
+  tip.style.top  = y + 'px';
+}
+
 function attachScoreTooltips(container, score) {
   const tip = document.getElementById('cal-tooltip');
   const html = buildScoreTooltipHtml(score);
@@ -298,31 +321,30 @@ function attachScoreTooltips(container, score) {
   function show(e, content) {
     tip.innerHTML = content;
     tip.style.display = 'block';
-    move(e);
-  }
-  function move(e) {
-    const tw = tip.offsetWidth, th = tip.offsetHeight;
-    let x = e.clientX + 14, y = e.clientY + 14;
-    if (x + tw > window.innerWidth  - 8) x = e.clientX - tw - 14;
-    if (y + th > window.innerHeight - 8) y = e.clientY - th - 14;
-    tip.style.left = x + 'px';
-    tip.style.top  = y + 'px';
+    tooltipMove(tip, e);
   }
   function hide() { tip.style.display = 'none'; }
 
   hardBadge.addEventListener('mouseenter', e => show(e, html.hard));
-  hardBadge.addEventListener('mousemove',  move);
+  hardBadge.addEventListener('mousemove',  e => tooltipMove(tip, e));
   hardBadge.addEventListener('mouseleave', hide);
   softBadge.addEventListener('mouseenter', e => show(e, html.soft));
-  softBadge.addEventListener('mousemove',  move);
+  softBadge.addEventListener('mousemove',  e => tooltipMove(tip, e));
   softBadge.addEventListener('mouseleave', hide);
 }
 
-function buildScoreTitle(score) {
-  if (!score) return 'Click to load into form';
-  const hard = score.hardConstraintScores.map(c => `${c.constraintName}: ${c.score}`).join(', ');
-  const soft = score.softConstraintScores.map(c => `${c.constraintName}: ${c.score}`).join(', ');
-  return `Hard constraints: ${hard}\nSoft constraints: ${soft}`;
+function attachCombinedScoreTooltip(el, score) {
+  const tip = document.getElementById('cal-tooltip');
+  const { hard, soft } = buildScoreTooltipHtml(score);
+  const combined = hard + `<div class="ctt-sep"></div>` + soft;
+
+  el.addEventListener('mouseenter', e => {
+    tip.innerHTML = combined;
+    tip.style.display = 'block';
+    tooltipMove(tip, e);
+  });
+  el.addEventListener('mousemove',  e => tooltipMove(tip, e));
+  el.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
 }
 
 export async function loadGeneratedIds() {
@@ -353,9 +375,8 @@ export async function loadGeneratedIds() {
         badge.className = 'ids-score';
         badge.textContent = `H: ${item.score.score.hardScore} | S: ${item.score.score.softScore}`;
         li.appendChild(badge);
+        attachCombinedScoreTooltip(badge, item.score);
       }
-
-      li.title = buildScoreTitle(item.score);
       li.addEventListener('click', async () => {
         try {
           const fresh = await fetch('/schedule/generated');

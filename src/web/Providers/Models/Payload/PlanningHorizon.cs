@@ -10,8 +10,8 @@ public record PlanningHorizon(DateOnly StartDate, DateOnly EndDate)
         var currentDay = StartDate;
         while (currentDay <= EndDate)
         {
-            currentDay = currentDay.AddDays(1);
             yield return currentDay;
+            currentDay = currentDay.AddDays(1);
         }
     }
 
@@ -19,16 +19,19 @@ public record PlanningHorizon(DateOnly StartDate, DateOnly EndDate)
     {
         var calendar = CultureInfo.CurrentCulture.Calendar;
         var weekStartDay = StartDate;
-        var weekNumber = -1;
+        int? weekNumber = null;
         foreach(var day in GetDays())
         {
+            weekNumber ??= calendar.GetWeekOfYear(day.ToDateTime(TimeOnly.MinValue), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             var newWeekNumber = calendar.GetWeekOfYear(day.ToDateTime(TimeOnly.MinValue), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             if (newWeekNumber != weekNumber)
             {
-                yield return (weekStartDay, day.AddDays(-1), weekNumber);
+                yield return (weekStartDay, day.AddDays(-1), weekNumber.Value);
                 weekStartDay = day;
                 weekNumber = newWeekNumber;
             }
         }
+        if (weekNumber.HasValue)
+            yield return (weekStartDay, EndDate, weekNumber.Value);
     }
 }
