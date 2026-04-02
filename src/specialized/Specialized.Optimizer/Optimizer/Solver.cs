@@ -20,9 +20,7 @@ public class Solver(int? seed = null)
         planningDomain = ConstructionHeuristics.Construct(planningDomain, _random);
 
 
-        //for optimization Add step we should somehow collect task pool
-        //it should contain all tasks that still can be scheduled(repeating tasks optimal value or just not scheduled)
-        //on Add we can either add to a free location or swap if there is no free location
+        //on Add we can either add to a free location or swap if there is no free location from task pool
 
         //optimization stage 1.
 

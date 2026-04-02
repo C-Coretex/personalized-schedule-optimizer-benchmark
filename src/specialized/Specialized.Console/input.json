@@ -1,69 +1,66 @@
 ﻿{
+  "planningHorizon": {
+    "startDate": "2026-03-30",
+    "endDate": "2026-04-05"
+  },
+  "difficultTaskSchedulingStrategy": "Even",
   "fixedTasks": [
     {
+      "name": "Team Standup",
+      "priority": 5,
+      "difficulty": 2,
+      "types": [
+        "Routine",
+        "Collaborative"
+      ],
       "startTime": "2026-03-30T09:00:00",
-      "endTime": "2026-03-30T09:30:00",
-      "id": "f0800c3b-2b36-41fe-9642-389bef9d9963",
+      "endTime": "2026-03-30T09:30:00"
+    },
+    {
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
       "types": [
         "Routine",
         "Collaborative"
-      ]
-    },
-    {
+      ],
       "startTime": "2026-03-31T09:00:00",
-      "endTime": "2026-03-31T09:30:00",
-      "id": "681203f8-37e0-4596-8279-1b380b3dd89f",
+      "endTime": "2026-03-31T09:30:00"
+    },
+    {
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
       "types": [
         "Routine",
         "Collaborative"
-      ]
-    },
-    {
+      ],
       "startTime": "2026-04-01T09:00:00",
-      "endTime": "2026-04-01T09:30:00",
-      "id": "18ad5e2a-d3f3-47df-af29-b5fc71ad14a8",
+      "endTime": "2026-04-01T09:30:00"
+    },
+    {
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
       "types": [
         "Routine",
         "Collaborative"
-      ]
-    },
-    {
+      ],
       "startTime": "2026-04-02T09:00:00",
-      "endTime": "2026-04-02T09:30:00",
-      "id": "d73d645c-80b8-4933-b568-8afc8046e720",
+      "endTime": "2026-04-02T09:30:00"
+    },
+    {
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
       "types": [
         "Routine",
         "Collaborative"
-      ]
-    },
-    {
+      ],
       "startTime": "2026-04-03T09:00:00",
-      "endTime": "2026-04-03T09:30:00",
-      "id": "20f36648-3f59-44b5-a001-dc45ec11a351",
-      "name": "Team Standup",
-      "priority": 5,
-      "difficulty": 2,
-      "types": [
-        "Routine",
-        "Collaborative"
-      ]
+      "endTime": "2026-04-03T09:30:00"
     },
     {
-      "startTime": "2026-03-31T14:00:00",
-      "endTime": "2026-03-31T15:30:00",
-      "id": "46e83364-ed6c-4baf-ab4a-8d24b08d6c73",
       "name": "Client Presentation",
       "priority": 5,
       "difficulty": 8,
@@ -71,47 +68,54 @@
         "Social",
         "Collaborative",
         "HighEnergy"
-      ]
+      ],
+      "startTime": "2026-03-31T14:00:00",
+      "endTime": "2026-03-31T15:30:00"
     },
     {
-      "startTime": "2026-04-01T11:00:00",
-      "endTime": "2026-04-01T12:00:00",
-      "id": "d4b45fee-94d4-48f3-91fa-70bc51e3d9fc",
       "name": "Doctor Appointment",
       "priority": 5,
       "difficulty": 3,
       "types": [
         "Routine",
         "Indoor"
-      ]
+      ],
+      "startTime": "2026-04-01T11:00:00",
+      "endTime": "2026-04-01T12:00:00"
     },
     {
-      "startTime": "2026-04-03T15:00:00",
-      "endTime": "2026-04-03T16:30:00",
-      "id": "a692b196-736c-4d3f-9e3d-bda310e751c6",
       "name": "Sprint Retrospective",
       "priority": 4,
       "difficulty": 4,
       "types": [
         "Intellectual",
         "Collaborative"
-      ]
+      ],
+      "startTime": "2026-04-03T15:00:00",
+      "endTime": "2026-04-03T16:30:00"
     },
     {
-      "startTime": "2026-04-04T19:00:00",
-      "endTime": "2026-04-04T21:00:00",
-      "id": "9c8d1fe7-e32b-4589-aa47-a6465e9621f5",
       "name": "Family Dinner",
       "priority": 4,
       "difficulty": 1,
       "types": [
         "Social",
         "Fun"
-      ]
+      ],
+      "startTime": "2026-04-04T19:00:00",
+      "endTime": "2026-04-04T21:00:00"
     }
   ],
   "dynamicTasks": [
     {
+      "name": "Feature Implementation",
+      "priority": 5,
+      "difficulty": 8,
+      "types": [
+        "Intellectual",
+        "DeepWork",
+        "Solo"
+      ],
       "isRequired": true,
       "duration": 90,
       "windowStart": "09:30:00",
@@ -120,18 +124,16 @@
       "categories": [
         "Work"
       ],
-      "repeating": null,
-      "id": "d5b543ed-814b-4396-acd6-c2cadf910334",
-      "name": "Feature Implementation",
-      "priority": 5,
-      "difficulty": 8,
-      "types": [
-        "Intellectual",
-        "DeepWork",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Code Review",
+      "priority": 4,
+      "difficulty": 5,
+      "types": [
+        "Intellectual",
+        "Digital"
+      ],
       "isRequired": true,
       "duration": 60,
       "windowStart": null,
@@ -140,17 +142,17 @@
       "categories": [
         "Work"
       ],
-      "repeating": null,
-      "id": "598a157b-3e87-471e-847b-897bfa108d26",
-      "name": "Code Review",
-      "priority": 4,
+      "repeating": null
+    },
+    {
+      "name": "Write Unit Tests",
+      "priority": 3,
       "difficulty": 5,
       "types": [
         "Intellectual",
-        "Digital"
-      ]
-    },
-    {
+        "Boring",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 75,
       "windowStart": null,
@@ -159,18 +161,17 @@
       "categories": [
         "Work"
       ],
-      "repeating": null,
-      "id": "1d147a25-382b-439e-adbb-ec1e8c5156ad",
-      "name": "Write Unit Tests",
-      "priority": 3,
-      "difficulty": 5,
-      "types": [
-        "Intellectual",
-        "Boring",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Update Project Documentation",
+      "priority": 2,
+      "difficulty": 3,
+      "types": [
+        "Digital",
+        "Boring",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 45,
       "windowStart": null,
@@ -179,18 +180,17 @@
       "categories": [
         "Work"
       ],
-      "repeating": null,
-      "id": "b643643e-972d-4de5-9853-ecfaa9ff103b",
-      "name": "Update Project Documentation",
-      "priority": 2,
-      "difficulty": 3,
-      "types": [
-        "Digital",
-        "Boring",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Refactor Legacy Module",
+      "priority": 3,
+      "difficulty": 7,
+      "types": [
+        "Intellectual",
+        "DeepWork",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 60,
       "windowStart": null,
@@ -199,18 +199,17 @@
       "categories": [
         "Work"
       ],
-      "repeating": null,
-      "id": "2075a08a-1539-40df-b379-0efdde5fd86a",
-      "name": "Refactor Legacy Module",
-      "priority": 3,
-      "difficulty": 7,
-      "types": [
-        "Intellectual",
-        "DeepWork",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Research New Library",
+      "priority": 2,
+      "difficulty": 4,
+      "types": [
+        "Intellectual",
+        "Digital",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 45,
       "windowStart": null,
@@ -219,18 +218,17 @@
       "categories": [
         "Work"
       ],
-      "repeating": null,
-      "id": "eb72c162-9d0d-445b-a26c-98204722162e",
-      "name": "Research New Library",
-      "priority": 2,
-      "difficulty": 4,
-      "types": [
-        "Intellectual",
-        "Digital",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Prepare Sprint Tasks",
+      "priority": 4,
+      "difficulty": 3,
+      "types": [
+        "Routine",
+        "Digital",
+        "Solo"
+      ],
       "isRequired": true,
       "duration": 30,
       "windowStart": null,
@@ -239,18 +237,17 @@
       "categories": [
         "Work"
       ],
-      "repeating": null,
-      "id": "c4cbe792-a8ca-462c-aed9-5a0c3376e6ad",
-      "name": "Prepare Sprint Tasks",
-      "priority": 4,
-      "difficulty": 3,
-      "types": [
-        "Routine",
-        "Digital",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Morning Run",
+      "priority": 4,
+      "difficulty": 6,
+      "types": [
+        "Physical",
+        "Outdoor",
+        "HighEnergy"
+      ],
       "isRequired": false,
       "duration": 40,
       "windowStart": "06:30:00",
@@ -264,18 +261,16 @@
         "optDayCount": 1,
         "minWeekCount": 3,
         "optWeekCount": 5
-      },
-      "id": "7946ec9d-f79f-428f-8e18-932c6f5ac7c3",
-      "name": "Morning Run",
-      "priority": 4,
-      "difficulty": 6,
-      "types": [
-        "Physical",
-        "Outdoor",
-        "HighEnergy"
-      ]
+      }
     },
     {
+      "name": "Stretching",
+      "priority": 3,
+      "difficulty": 2,
+      "types": [
+        "Physical",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 15,
       "windowStart": "06:00:00",
@@ -290,17 +285,17 @@
         "optDayCount": 1,
         "minWeekCount": 0,
         "optWeekCount": 7
-      },
-      "id": "09e10136-8401-4db7-bf2e-2c61cf9de3a8",
-      "name": "Stretching",
-      "priority": 3,
-      "difficulty": 2,
-      "types": [
-        "Physical",
-        "LowEnergy"
-      ]
+      }
     },
     {
+      "name": "Meditation",
+      "priority": 3,
+      "difficulty": 1,
+      "types": [
+        "Solo",
+        "LowEnergy",
+        "Meditative"
+      ],
       "isRequired": false,
       "duration": 15,
       "windowStart": "06:00:00",
@@ -314,18 +309,17 @@
         "optDayCount": 3,
         "minWeekCount": 3,
         "optWeekCount": 6
-      },
-      "id": "9e02ae82-1954-45aa-bded-80012c5880df",
-      "name": "Meditation",
-      "priority": 3,
-      "difficulty": 1,
-      "types": [
-        "Solo",
-        "LowEnergy",
-        "Meditative"
-      ]
+      }
     },
     {
+      "name": "Gym Session",
+      "priority": 3,
+      "difficulty": 7,
+      "types": [
+        "Physical",
+        "Solo",
+        "HighEnergy"
+      ],
       "isRequired": false,
       "duration": 60,
       "windowStart": null,
@@ -334,18 +328,17 @@
       "categories": [
         "Health"
       ],
-      "repeating": null,
-      "id": "e1294668-9f24-413b-ad3a-78f7eee05b29",
-      "name": "Gym Session",
-      "priority": 3,
-      "difficulty": 7,
-      "types": [
-        "Physical",
-        "Solo",
-        "HighEnergy"
-      ]
+      "repeating": null
     },
     {
+      "name": "Read Technical Book",
+      "priority": 3,
+      "difficulty": 4,
+      "types": [
+        "Intellectual",
+        "Indoor",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 40,
       "windowStart": null,
@@ -359,18 +352,16 @@
         "optDayCount": 0,
         "minWeekCount": 2,
         "optWeekCount": 4
-      },
-      "id": "3829c142-5106-431d-b7cc-0b0192260707",
-      "name": "Read Technical Book",
-      "priority": 3,
-      "difficulty": 4,
-      "types": [
-        "Intellectual",
-        "Indoor",
-        "Solo"
-      ]
+      }
     },
     {
+      "name": "Spanish Language Practice",
+      "priority": 2,
+      "difficulty": 3,
+      "types": [
+        "Intellectual",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 20,
       "windowStart": null,
@@ -384,17 +375,17 @@
         "optDayCount": 1,
         "minWeekCount": 0,
         "optWeekCount": 4
-      },
-      "id": "39cc1bca-0448-4873-bb71-f61035027bdc",
-      "name": "Spanish Language Practice",
+      }
+    },
+    {
+      "name": "Watch Conference Talk",
       "priority": 2,
       "difficulty": 3,
       "types": [
         "Intellectual",
-        "Solo"
-      ]
-    },
-    {
+        "Indoor",
+        "Digital"
+      ],
       "isRequired": false,
       "duration": 50,
       "windowStart": null,
@@ -403,18 +394,17 @@
       "categories": [
         "Study"
       ],
-      "repeating": null,
-      "id": "50ba1885-cc18-4523-a21a-6d683b444ddc",
-      "name": "Watch Conference Talk",
-      "priority": 2,
-      "difficulty": 3,
-      "types": [
-        "Intellectual",
-        "Indoor",
-        "Digital"
-      ]
+      "repeating": null
     },
     {
+      "name": "Plan Next Week",
+      "priority": 3,
+      "difficulty": 2,
+      "types": [
+        "Routine",
+        "Digital",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 30,
       "windowStart": null,
@@ -423,18 +413,17 @@
       "categories": [
         "Study"
       ],
-      "repeating": null,
-      "id": "c52c5c6b-6e1f-4248-b9cc-8c744749fa84",
-      "name": "Plan Next Week",
-      "priority": 3,
-      "difficulty": 2,
-      "types": [
-        "Routine",
-        "Digital",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Grocery Shopping",
+      "priority": 4,
+      "difficulty": 2,
+      "types": [
+        "Physical",
+        "Routine",
+        "Indoor"
+      ],
       "isRequired": true,
       "duration": 50,
       "windowStart": null,
@@ -443,18 +432,17 @@
       "categories": [
         "Home"
       ],
-      "repeating": null,
-      "id": "9ad233f8-e3ab-4b81-a12d-a8716baf340e",
-      "name": "Grocery Shopping",
-      "priority": 4,
-      "difficulty": 2,
+      "repeating": null
+    },
+    {
+      "name": "Apartment Cleaning",
+      "priority": 2,
+      "difficulty": 3,
       "types": [
         "Physical",
         "Routine",
-        "Indoor"
-      ]
-    },
-    {
+        "Boring"
+      ],
       "isRequired": false,
       "duration": 60,
       "windowStart": null,
@@ -463,18 +451,17 @@
       "categories": [
         "Home"
       ],
-      "repeating": null,
-      "id": "9760e078-43ca-44cf-80d8-f26048738120",
-      "name": "Apartment Cleaning",
-      "priority": 2,
-      "difficulty": 3,
+      "repeating": null
+    },
+    {
+      "name": "Meal Prep",
+      "priority": 3,
+      "difficulty": 2,
       "types": [
         "Physical",
         "Routine",
-        "Boring"
-      ]
-    },
-    {
+        "Indoor"
+      ],
       "isRequired": false,
       "duration": 75,
       "windowStart": null,
@@ -483,18 +470,17 @@
       "categories": [
         "Home"
       ],
-      "repeating": null,
-      "id": "1618753a-5315-4918-a208-89b5323faf51",
-      "name": "Meal Prep",
-      "priority": 3,
-      "difficulty": 2,
-      "types": [
-        "Physical",
-        "Routine",
-        "Indoor"
-      ]
+      "repeating": null
     },
     {
+      "name": "Fix Bike",
+      "priority": 2,
+      "difficulty": 4,
+      "types": [
+        "Physical",
+        "Indoor",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 40,
       "windowStart": null,
@@ -503,18 +489,17 @@
       "categories": [
         "Home"
       ],
-      "repeating": null,
-      "id": "f37a9d57-cf0b-4585-a2ae-2c6751ef8dcc",
-      "name": "Fix Bike",
-      "priority": 2,
-      "difficulty": 4,
-      "types": [
-        "Physical",
-        "Indoor",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Evening Walk",
+      "priority": 3,
+      "difficulty": 2,
+      "types": [
+        "Outdoor",
+        "Solo",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 30,
       "windowStart": "19:00:00",
@@ -528,18 +513,17 @@
         "optDayCount": 1,
         "minWeekCount": 0,
         "optWeekCount": 4
-      },
-      "id": "1c07abc9-c70e-447c-8de7-4c59130d7b12",
-      "name": "Evening Walk",
-      "priority": 3,
-      "difficulty": 2,
-      "types": [
-        "Outdoor",
-        "Solo",
-        "LowEnergy"
-      ]
+      }
     },
     {
+      "name": "Journal Entry",
+      "priority": 2,
+      "difficulty": 1,
+      "types": [
+        "Creative",
+        "Solo",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 20,
       "windowStart": null,
@@ -548,18 +532,16 @@
       "categories": [
         "Evening"
       ],
-      "repeating": null,
-      "id": "8e41ed3c-dab8-434d-87f2-1fd2a8e97e0f",
-      "name": "Journal Entry",
-      "priority": 2,
-      "difficulty": 1,
-      "types": [
-        "Creative",
-        "Solo",
-        "LowEnergy"
-      ]
+      "repeating": null
     },
     {
+      "name": "Call a Friend",
+      "priority": 3,
+      "difficulty": 1,
+      "types": [
+        "Social",
+        "Fun"
+      ],
       "isRequired": false,
       "duration": 30,
       "windowStart": null,
@@ -568,27 +550,9 @@
       "categories": [
         "Evening"
       ],
-      "repeating": null,
-      "id": "d4a0a03b-4947-4c98-8c1b-8073b49ee3e3",
-      "name": "Call a Friend",
-      "priority": 3,
-      "difficulty": 1,
-      "types": [
-        "Social",
-        "Fun"
-      ]
+      "repeating": null
     },
     {
-      "isRequired": false,
-      "duration": 90,
-      "windowStart": null,
-      "windowEnd": null,
-      "deadline": null,
-      "categories": [
-        "FreeTime"
-      ],
-      "repeating": null,
-      "id": "be4e1e59-716f-4ac6-ab1b-285bce44570d",
       "name": "Write Blog Post",
       "priority": 2,
       "difficulty": 6,
@@ -597,9 +561,7 @@
         "DeepWork",
         "Digital",
         "Solo"
-      ]
-    },
-    {
+      ],
       "isRequired": false,
       "duration": 90,
       "windowStart": null,
@@ -608,8 +570,9 @@
       "categories": [
         "FreeTime"
       ],
-      "repeating": null,
-      "id": "d161d1c5-bc18-4444-871a-ae94521aeea6",
+      "repeating": null
+    },
+    {
       "name": "Board Game with Partner",
       "priority": 3,
       "difficulty": 1,
@@ -617,9 +580,26 @@
         "Social",
         "Indoor",
         "Fun"
-      ]
+      ],
+      "isRequired": false,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "FreeTime"
+      ],
+      "repeating": null
     },
     {
+      "name": "Sketch Side Project UI",
+      "priority": 2,
+      "difficulty": 5,
+      "types": [
+        "Creative",
+        "Digital",
+        "Solo"
+      ],
       "isRequired": false,
       "duration": 60,
       "windowStart": null,
@@ -628,18 +608,17 @@
       "categories": [
         "FreeTime"
       ],
-      "repeating": null,
-      "id": "6938cb03-fbaa-450b-be08-07258263efa3",
-      "name": "Sketch Side Project UI",
-      "priority": 2,
-      "difficulty": 5,
-      "types": [
-        "Creative",
-        "Digital",
-        "Solo"
-      ]
+      "repeating": null
     },
     {
+      "name": "Watch Movie",
+      "priority": 2,
+      "difficulty": 1,
+      "types": [
+        "Indoor",
+        "Fun",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 120,
       "windowStart": null,
@@ -648,18 +627,17 @@
       "categories": [
         "FreeTime"
       ],
-      "repeating": null,
-      "id": "74d900b0-1040-43b3-b578-b6be6d4b5c51",
-      "name": "Watch Movie",
-      "priority": 2,
-      "difficulty": 1,
-      "types": [
-        "Indoor",
-        "Fun",
-        "LowEnergy"
-      ]
+      "repeating": null
     },
     {
+      "name": "Walk with dog",
+      "priority": 1,
+      "difficulty": 2,
+      "types": [
+        "Physical",
+        "Routine",
+        "Outdoor"
+      ],
       "isRequired": false,
       "duration": 30,
       "windowStart": "18:00:00",
@@ -674,22 +652,9 @@
         "optDayCount": 1,
         "minWeekCount": 0,
         "optWeekCount": 7
-      },
-      "id": "f090c36a-1229-470d-bc8a-8beff64dfde9",
-      "name": "Walk with dog",
-      "priority": 1,
-      "difficulty": 2,
-      "types": [
-        "Physical",
-        "Routine",
-        "Outdoor"
-      ]
+      }
     }
   ],
-  "planningHorizon": {
-    "startDate": "2026-03-30",
-    "endDate": "2026-04-05"
-  },
   "categoryWindows": [
     {
       "category": "Work",
@@ -917,7 +882,6 @@
       "endDateTime": "2026-04-05T18:00:00"
     }
   ],
-  "difficultTaskSchedulingStrategy": "Even",
   "difficultyCapacities": [
     {
       "date": "2026-03-30",

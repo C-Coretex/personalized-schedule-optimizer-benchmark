@@ -56,6 +56,7 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
         var hc6 = new ResponseConstraintScore("HC6", HC6(metadata.Request, dynamicTasksTimeline));
         var hc7 = new ResponseConstraintScore("HC7", HC7(metadata.Request, dynamicTasksTimeline));
         var hc8 = new ResponseConstraintScore("HC8", HC8(metadata.Request, dynamicTasksTimeline));
+        var hc9 = new ResponseConstraintScore("HC9", HC9(dynamicTasksTimeline));
 
         var sc1 = new ResponseConstraintScore("SC1", SC1(dynamicTasksTimeline));
         var sc2 = new ResponseConstraintScore("SC2", SC2(metadata.Request, tasksTimeline));
@@ -65,7 +66,7 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
         var sc6 = new ResponseConstraintScore("SC6", SC6(metadata.Request, dynamicTasksTimeline));
         var sc7 = new ResponseConstraintScore("SC7", SC7(tasksTimeline));
 
-        return ResponseScore.FromConstraintValues(hc1, hc2, hc3, hc4, hc5, hc6, hc7, hc8, sc1, sc2, sc3, sc4, sc5, sc6, sc7);
+        return ResponseScore.FromConstraintValues(hc1, hc2, hc3, hc4, hc5, hc6, hc7, hc8, hc9, sc1, sc2, sc3, sc4, sc5, sc6, sc7);
     }
 
     private int TimeOnlyToMinutes(TimeOnly time)
@@ -91,8 +92,8 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
     //all required tasks must be scheduled
     private int HC2(GenerateScheduleRequest request, ScheduledTask<DynamicTask>[] tasksTimeline)
     {
-        var requiredUnscheduledTasks = request.DynamicTasks.Where(t => t.IsRequired).Select(t => t)
-            .Except(tasksTimeline.Select(dt => dt.Task));
+        var requiredUnscheduledTasks = request.DynamicTasks.Where(t => t.IsRequired).Select(t => t.Id)
+            .Except(tasksTimeline.Select(dt => dt.Task.Id));
 
         return requiredUnscheduledTasks.Count();
     }
@@ -168,6 +169,12 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
         var endDateTime = request.PlanningHorizon.EndDate.ToDateTime(TimeOnly.MaxValue);
         return (int)tasksTimeline.Sum(t => 
             Math.Max(0, (startDateTime - t.Start).TotalMinutes) + Math.Max(0, (t.End - endDateTime).TotalMinutes));
+    }
+
+    //non repeating tasks can be included max one time
+    private int HC9(ScheduledTask<DynamicTask>[] tasksTimeline)
+    {
+        return tasksTimeline.Where(t => t.Task.Repeating is null).GroupBy(t => t.Task.Id).Count(t => t.Count() > 1);
     }
 
     #endregion

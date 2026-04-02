@@ -3,21 +3,21 @@ using Web.Providers.Models;
 
 namespace Web.Features.Schedule.Endpoints.GetGenerated
 {
-    public record Response(List<ResponseEntry> data);
+    public record Response(List<ResponseEntry> Data);
 
-    public record ResponseEntry(ResponseScore? score, ScheduleJobMetadata scheduleJobMetadata);
+    public record ResponseEntry(ResponseScore? Score, ScheduleJobMetadata ScheduleJobMetadata);
 
-    public record ResponseScore(JobScore score, List<ResponseConstraintScore> hardConstraintScores, List<ResponseConstraintScore> softConstraintScores)
+    public record ResponseScore(JobScore Score, List<ResponseConstraintScore> HardConstraintScores, List<ResponseConstraintScore> SoftConstraintScores)
     {
         public static ResponseScore FromConstraintValues(ResponseConstraintScore hc1, ResponseConstraintScore hc2, 
             ResponseConstraintScore hc3, ResponseConstraintScore hc4, ResponseConstraintScore hc5, ResponseConstraintScore hc6, 
-            ResponseConstraintScore hc7, ResponseConstraintScore hc8, ResponseConstraintScore sc1, ResponseConstraintScore sc2, 
-            ResponseConstraintScore sc3, ResponseConstraintScore sc4, ResponseConstraintScore sc5, ResponseConstraintScore sc6, 
-            ResponseConstraintScore sc7)
+            ResponseConstraintScore hc7, ResponseConstraintScore hc8, ResponseConstraintScore hc9, ResponseConstraintScore sc1, 
+            ResponseConstraintScore sc2, ResponseConstraintScore sc3, ResponseConstraintScore sc4, ResponseConstraintScore sc5, 
+            ResponseConstraintScore sc6, ResponseConstraintScore sc7)
         {
-            var hcScore = hc1.score + hc2.score + (int)Math.Ceiling(hc3.score/60d) + (int)Math.Ceiling(hc4.score / 60d)
-                + hc5.score + hc6.score + hc7.score + (int)Math.Ceiling(hc8.score / 60d);
-            var scScore = 1000 * sc1.score + 1250 * sc2.score + sc3.score + sc4.score + 50 * sc5.score + 50 * sc6.score + sc7.score;
+            var hcScore = hc1.Score + hc2.Score + (int)Math.Ceiling(hc3.Score/60d) + (int)Math.Ceiling(hc4.Score / 60d)
+                + hc5.Score + hc6.Score + hc7.Score + (int)Math.Ceiling(hc8.Score / 60d) + hc9.Score;
+            var scScore = 1000 * sc1.Score + 1250 * sc2.Score + sc3.Score + sc4.Score + 50 * sc5.Score + 50 * sc6.Score + sc7.Score;
 
             return new ResponseScore(
                 new(hcScore, scScore),
@@ -27,5 +27,5 @@ namespace Web.Features.Schedule.Endpoints.GetGenerated
         }
     }
 
-    public record ResponseConstraintScore(string constraintName, int score);
+    public record ResponseConstraintScore(string ConstraintName, int Score);
 }

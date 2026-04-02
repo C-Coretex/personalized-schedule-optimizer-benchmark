@@ -1,4 +1,6 @@
-﻿using Specialized.Optimizer.Models.Tasks;
+﻿using Specialized.Optimizer.Models.Enums;
+using Specialized.Optimizer.Models.Tasks;
+using System.Collections.Frozen;
 using System.Collections.Immutable;
 
 namespace Specialized.Optimizer.Optimizer.Models.Domain;
@@ -6,9 +8,13 @@ namespace Specialized.Optimizer.Optimizer.Models.Domain;
 internal record Day
 {
     public DateOnly Date { get; init; }
+    public int DifficultyCapacity { get; init; }
+
     public int WeekNumber { get; private set; }
     public ImmutableHashSet<Category> Categories { get; private set; } = [];
     public ImmutableArray<FreeTimeWindow> PossibleTimeWindows { get; private set; } = [];
+
+    public FrozenDictionary<TaskType, int> TypeWeights { get; init; } = new Dictionary<TaskType, int>().ToFrozenDictionary();
 
     public Day AddCategory(Category category)
     {
