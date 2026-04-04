@@ -165,6 +165,52 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+function computeOverlapLayout(tasks) {
+  const n = tasks.length;
+  if (n === 0) return [];
+
+  const times = tasks.map(t => ({
+    start: new Date(t.startTime),
+    end:   new Date(t.endTime),
+  }));
+
+  // Union-Find
+  const parent = Array.from({ length: n }, (_, i) => i);
+  function find(i) {
+    while (parent[i] !== i) { parent[i] = parent[parent[i]]; i = parent[i]; }
+    return i;
+  }
+  function union(i, j) { parent[find(i)] = find(j); }
+
+  // Detect pairwise overlaps (strict: back-to-back events don't overlap)
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      if (times[i].start < times[j].end && times[j].start < times[i].end) {
+        union(i, j);
+      }
+    }
+  }
+
+  // Group by cluster root
+  const clusters = new Map();
+  for (let i = 0; i < n; i++) {
+    const root = find(i);
+    if (!clusters.has(root)) clusters.set(root, []);
+    clusters.get(root).push(i);
+  }
+
+  // Assign slots sorted by start time within each cluster
+  const layout = new Array(n);
+  for (const members of clusters.values()) {
+    const totalSlots = members.length;
+    members
+      .sort((a, b) => times[a].start - times[b].start)
+      .forEach((idx, slot) => { layout[idx] = { slot, totalSlots }; });
+  }
+
+  return layout;
+}
+
 function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities = []) {
   calEventTasks = [];
   const totalPx = (CAL_END_HOUR - CAL_START_HOUR) * CAL_HOUR_PX;
@@ -255,7 +301,9 @@ function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities =
     }
 
     // Events
-    for (const t of dayTasks) {
+    const overlapLayout = computeOverlapLayout(dayTasks);
+    for (let ti = 0; ti < dayTasks.length; ti++) {
+      const t         = dayTasks[ti];
       const start     = new Date(t.startTime);
       const end       = new Date(t.endTime);
       const topPx     = (start.getHours() + start.getMinutes() / 60 - CAL_START_HOUR) * CAL_HOUR_PX;
@@ -270,7 +318,17 @@ function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities =
       const idx = calEventTasks.length;
       calEventTasks.push(t);
 
-      colHtml += `<div class="cal-event" data-tidx="${idx}" style="top:${topPx}px;height:${heightPx}px;background:${color}">
+      const { slot, totalSlots } = overlapLayout[ti];
+      let posStyle = '';
+      if (totalSlots > 1) {
+        const leftPct  =  (slot / totalSlots) * 100;
+        const rightPct = ((totalSlots - slot - 1) / totalSlots) * 100;
+        const leftPx   = slot === 0              ? 2 : 1;
+        const rightPx  = slot === totalSlots - 1 ? 2 : 1;
+        posStyle = `left:calc(${leftPct}% + ${leftPx}px);right:calc(${rightPct}% + ${rightPx}px);`;
+      }
+
+      colHtml += `<div class="cal-event" data-tidx="${idx}" style="top:${topPx}px;height:${heightPx}px;background:${color};${posStyle}">
         <div class="cal-event-name">${t.name}</div>
         ${heightPx >= 38 ? `<div class="cal-event-badges">${badges}</div>` : ''}
       </div>`;

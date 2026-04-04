@@ -1,5 +1,6 @@
 ﻿using Specialized.Optimizer.Models;
 using Specialized.Optimizer.Models.Enums;
+using Specialized.Optimizer.Models.Tasks;
 using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -26,7 +27,11 @@ internal record Domain
                 Date = date,
                 DifficultyCapacity = request.DifficultyCapacities.FirstOrDefault(dc => dc.Date == date)?.Capacity ?? int.MaxValue,
                 TypeWeights = (request.TaskTypePreferences.FirstOrDefault(tp => tp.Date == date)?.Preferences ?? [])
-                    .ToDictionary(p => p.Type, p => p.Weight).ToFrozenDictionary()
+                    .ToDictionary(p => p.Type, p => p.Weight).ToFrozenDictionary(),
+                FixedTasks = request.FixedTasks.Where(t => DateOnly.FromDateTime(t.StartTime) == date).OrderBy(t => t.StartTime)
+                    .Select(t => (TimeOnly.FromDateTime(t.StartTime), TimeOnly.FromDateTime(t.EndTime), t))
+                    .ToImmutableArray()
+
             })
             .ToArray();
 

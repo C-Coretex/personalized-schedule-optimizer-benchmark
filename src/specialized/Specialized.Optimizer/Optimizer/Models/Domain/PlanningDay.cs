@@ -1,9 +1,6 @@
-﻿using Specialized.Optimizer.Models.Enums;
-using System.Collections.Frozen;
+﻿namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
-namespace Specialized.Optimizer.Optimizer.Models.Domain;
-
-internal record PlanningDay
+internal partial record PlanningDay
 {
     public PlanningDay(Day day, PlanningDomain domain)
     {
@@ -11,6 +8,8 @@ internal record PlanningDay
         Domain = domain;
 
         DayRepeatingTasksCount  = domain.Domain.Tasks.Where(t => t.IsDayRepeating).ToDictionary(wt => wt.Id, _ => 0);
+
+        InitConstraintValues(domain);
     }
 
     public Day Day { get; init; }
@@ -28,25 +27,6 @@ internal record PlanningDay
     private FreeTimeWindow[]? _actualTimeWindows;
     public IReadOnlyCollection<FreeTimeWindow> ActualTimeWindows => _actualTimeWindows ??= [.. GetActualTimeWindows()];
 
-    #region Constraint Values
-
-    public int HC1_NoTaskOverlaps { get; set; } = 0;
-
-    public int HC7_RespectDayMinOptCountConstraint { get; set; } = 0;
-
-    public Dictionary<Guid, int> DayRepeatingTasksCount { get; set; }
-
-    public int TotalDifficulty { get; set; } = 0;
-    public int SC2_TotalDayDifficultyConstraint { get; set; } = 0;
-
-    public int SC3_DifficultTaskSchedulingConstraint { get; set; } = 0;
-
-    public int SC4_TypeWeightsConstraint { get; set; } = 0;
-
-    public int SC6_MinimizeDifferenceFromDayOptConstraint { get; set; } = 0;
-
-    #endregion
-
     public PlanningDay GetSnapshot(PlanningDomain domain)
     {
         return this with
@@ -57,7 +37,7 @@ internal record PlanningDay
         };
     }
 
-    public void AddScheduledTask(Task task, TimeOnly start)
+    public bool AddScheduledTask(Task task, TimeOnly start, bool stopIfUnfeasible = false)
     {
         var scheduledTask = new ScheduledTask()
         {
@@ -65,12 +45,21 @@ internal record PlanningDay
             Start = start,
             End = start.AddMinutes(task.Duration)
         };
-        //if start time is the same - replace the old task
-        _scheduledTasks[start] = scheduledTask;
+
+        while (!_scheduledTasks.TryAdd(start, scheduledTask))
+        {
+            start = start.AddMinutes(1);
+            if (stopIfUnfeasible || (TimeOnly.MaxValue - start).TotalMinutes < task.Duration)
+                return false;
+
+            scheduledTask = scheduledTask with { Start = start, End = start.AddMinutes(task.Duration) };
+        }
         _actualTimeWindows = null;
 
         UpdateConstraintValues(task, add: true);
         Domain.OnTaskAdded(scheduledTask, this);
+
+        return true;
     }
 
     /// <returns>True if added</returns>
@@ -82,7 +71,8 @@ internal record PlanningDay
             return false;
 
         var start = actualTimeWindow != default ? actualTimeWindow.Start : from;
-        AddScheduledTask(task, start);
+        if (!AddScheduledTask(task, start, stopIfUnfeasible))
+            return false;
 
         return true;
     }
@@ -124,72 +114,5 @@ internal record PlanningDay
             }
             yield return currentPossibleTimeWindow;
         }
-    }
-
-    private void UpdateConstraintValues(Task task, bool add)
-    {
-        UpdateDayMinOpt(task, add);
-
-        var coefficient = add ? 1 : -1;
-
-        TotalDifficulty += coefficient * task.Difficulty;
-        SC2_TotalDayDifficultyConstraint = Day.DifficultyCapacity - task.Difficulty;
-
-        UpdateScheduledTaskBasedConstraints();
-
-        var weight = task.TypeWeights[Day.Date];
-        SC4_TypeWeightsConstraint += coefficient * weight;
-    }
-
-    private void UpdateDayMinOpt(Task task, bool add)
-    {
-        if (!task.IsDayRepeating)
-            return;
-
-        var prevCount = DayRepeatingTasksCount[task.Id];
-        var newCount = prevCount + (add ? 1 : -1);
-        DayRepeatingTasksCount[task.Id] = newCount;
-
-        var minDayCount = task.Repeating!.MinDayCount;
-        var optDayCount = task.Repeating!.OptDayCount;
-        if (prevCount < minDayCount && newCount >= minDayCount
-            || prevCount > optDayCount && newCount <= optDayCount)
-        {
-            HC7_RespectDayMinOptCountConstraint--;
-        }
-        else if (prevCount >= minDayCount && newCount < minDayCount
-            || prevCount <= optDayCount && newCount > optDayCount)
-        {
-            HC7_RespectDayMinOptCountConstraint++;
-        }
-
-        SC6_MinimizeDifferenceFromDayOptConstraint -= optDayCount - prevCount;
-        SC6_MinimizeDifferenceFromDayOptConstraint += optDayCount - newCount;
-    }
-
-    private void UpdateScheduledTaskBasedConstraints()
-    {
-        HC1_NoTaskOverlaps = 0;
-        SC3_DifficultTaskSchedulingConstraint = 0;
-        if (ScheduledTasks.Count == 0)
-            return;
-
-        var previousRequiredTask = ScheduledTasks[0].Task.IsRequired ? (ScheduledTask?)ScheduledTasks[0] : null;
-        for(var i = 1; i < ScheduledTasks.Count; i++)
-        {
-            if (ScheduledTasks[i - 1].End > ScheduledTasks[i].Start)
-                HC1_NoTaskOverlaps++;
-
-            if(ScheduledTasks[i].Task.IsRequired)
-            {
-                if (previousRequiredTask is not null)
-                    SC3_DifficultTaskSchedulingConstraint += (int)(ScheduledTasks[i].Start - previousRequiredTask.Value.End).TotalMinutes;
-
-                previousRequiredTask = ScheduledTasks[i];
-            }
-        }
-
-        if (Domain.Domain.DifficultTaskSchedulingStrategy == DifficultTaskSchedulingStrategy.Even)
-            SC3_DifficultTaskSchedulingConstraint = -SC3_DifficultTaskSchedulingConstraint;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Specialized.Optimizer.Models;
 using Specialized.Optimizer.Models.Tasks;
+using Specialized.Optimizer.Optimizer.Helpers;
 using Specialized.Optimizer.Optimizer.Models.Domain;
 
 namespace Specialized.Optimizer.Optimizer;
@@ -8,7 +9,7 @@ public class Solver(int? seed = null)
 {
     public Score? BestScore { get; private set; }
 
-    private readonly Random _random = seed != null ? new Random(seed.Value) : new Random();
+    private readonly Random _random = seed != null ? new Random(seed.Value) : new Random(121212);
 
     public GenerateScheduleResponse Solve(GenerateScheduleRequest request)
     {
@@ -19,6 +20,7 @@ public class Solver(int? seed = null)
         //construction
         planningDomain = ConstructionHeuristics.Construct(planningDomain, _random);
 
+        var constraintScore = planningDomain.CalculateConstraintScore();
 
         //on Add we can either add to a free location or swap if there is no free location from task pool
 

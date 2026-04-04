@@ -8,7 +8,10 @@ internal readonly record struct ScheduledTask
 
     public static IEnumerable<CategoryTimeWindow> GetActualTimeWindowsForDay(PlanningDay day, Task task, TimeOnly? from = null, TimeOnly? to = null)
     {
-        var taskFreeTimeWindows = task.FreeTimeWindows.Where(ftw => ftw.Day.Date == day.Day.Date).AsEnumerable();
+        if (!task.FreeTimeWindowsByDate.TryGetValue(day.Day.Date, out var taskFreeTimeWindowsArray))
+            taskFreeTimeWindowsArray = [];
+        var taskFreeTimeWindows = taskFreeTimeWindowsArray.AsEnumerable();
+
         if (from is not null)
             taskFreeTimeWindows = taskFreeTimeWindows.Where(ftw => ftw.End > from)
                 .Select(ftw => from > ftw.Start ? ftw with { Start = from.Value } : ftw);

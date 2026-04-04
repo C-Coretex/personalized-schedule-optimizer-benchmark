@@ -34,12 +34,14 @@ internal record Task
     public ImmutableArray<Category> Categories { get; init; } = [];
 
     public ImmutableArray<CategoryTimeWindow> FreeTimeWindows { get; init; } = [];
+    public FrozenDictionary<DateOnly, ImmutableArray<CategoryTimeWindow>> FreeTimeWindowsByDate { get; private set; } = new Dictionary<DateOnly, ImmutableArray<CategoryTimeWindow>>().ToFrozenDictionary();
 
     //type weights for days
     public FrozenDictionary<DateOnly, int> TypeWeights { get; init; } = new Dictionary<DateOnly, int>().ToFrozenDictionary();
 
-    public bool IsWeekRepeating => Repeating is { MinWeekCount: > 0 };
-    public bool IsDayRepeating => Repeating is { MinDayCount: > 0 };
+    public bool IsWeekRepeating => Repeating is { MinWeekCount: > 0 } or { OptWeekCount: > 1 };
+    public bool IsDayRepeating => Repeating is { MinDayCount: > 0 } or { OptDayCount: > 1 };
+    public bool IsDifficult => Difficulty >= 4;
 
     public static Task FromDynamicTask(DynamicTask dynamicTask, IEnumerable<Category> categories, IEnumerable<Day> days)
     {
@@ -97,6 +99,8 @@ internal record Task
             Repeating = dynamicTask.Repeating,
             Categories = taskCategories.ToImmutableArray(),
             FreeTimeWindows = freeTaskTimeWindows.OrderBy(ftw => ftw.Day.Date).ThenBy(ftw => ftw.Start).ToImmutableArray(),
+            FreeTimeWindowsByDate = freeTaskTimeWindows.GroupBy(ftw => ftw.Day.Date)
+                .ToDictionary(g => g.Key, g => g.OrderBy(t => t.Start).ToImmutableArray()).ToFrozenDictionary(),
             TypeWeights = typeWeights
         };
     }

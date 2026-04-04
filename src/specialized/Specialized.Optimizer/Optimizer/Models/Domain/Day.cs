@@ -16,6 +16,9 @@ internal record Day
 
     public FrozenDictionary<TaskType, int> TypeWeights { get; init; } = new Dictionary<TaskType, int>().ToFrozenDictionary();
 
+    public ImmutableArray<(TimeOnly Start, TimeOnly End, FixedTask Task)> FixedTasks { get; init; }
+    public ImmutableArray<(TimeOnly Start, TimeOnly End, FixedTask Task)> DifficultFixedTasks { get; private set; }
+
     public Day AddCategory(Category category)
     {
         Categories = Categories.Add(category);
@@ -26,6 +29,8 @@ internal record Day
     {
         PossibleTimeWindows = FreeTimeWindow.FromRequest(this, tasks, categories).OrderBy(ftw => ftw.Start).ToImmutableArray();
         WeekNumber = weekNumber;
+        DifficultFixedTasks = FixedTasks.Where(t => t.Task.Difficulty >= 4).ToImmutableArray();
+
         return this;
     }
 }
