@@ -178,6 +178,17 @@ button {
 .schema-btn-group {
   display: flex;
   gap: 0.4rem;
+  align-items: center;
+}
+
+.prompt-variant-select {
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 .schema-pre {

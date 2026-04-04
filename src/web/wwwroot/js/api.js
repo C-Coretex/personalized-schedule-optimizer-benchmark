@@ -56,7 +56,74 @@ export async function fetchSchema() {
   }
 }
 
-function buildLlmPrompt() {
+function buildScenarioInstructions(variant) {
+  const today = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const addDays = (d, n) => { const r = new Date(d); r.setDate(r.getDate()+n); return r; };
+  const start = fmt(today);
+
+  const scenarios = {
+    'week-light': `Generate a LIGHT one-week scenario (low complexity, easy for the optimizer).
+- planningHorizon: ${start} to ${fmt(addDays(today, 6))}
+- fixedTasks: 1–3 tasks, spread across different days
+- dynamicTasks: 5–8 tasks total; mostly one-time (no repeating), 1–2 with weekly repeating (minWeekCount: 1, optWeekCount: 2)
+- categories to use: Work, Morning, Evening (keep it simple — 2–3 categories)
+- categoryWindows: ~3–4 windows per day covering Work (09:00–12:00, 13:00–17:00), Morning (07:00–09:00), Evening (18:00–21:00)
+- difficultyCapacities: 10–15 per day (comfortable)
+- taskTypePreferences: 2–3 days with preferences (e.g., Physical on weekend days)
+- Goal: a schedule that the optimizer can solve near-perfectly (few constraint conflicts)`,
+
+    'week-heavy': `Generate a HEAVY one-week scenario (high complexity, challenging for the optimizer).
+- planningHorizon: ${start} to ${fmt(addDays(today, 6))}
+- fixedTasks: 5–8 tasks filling significant portions of each day
+- dynamicTasks: 18–25 tasks total; mix of:
+    • One-time tasks with various deadlines throughout the week
+    • Day-repeating tasks (e.g., meditation: minDayCount: 1, optDayCount: 1)
+    • Week-repeating tasks (e.g., exercise: minWeekCount: 2, optWeekCount: 4)
+    • Several isRequired: true tasks (but keep them achievable — ensure matching windows exist)
+- categories: use most categories — Work, Study, Home, Health, Social, Morning, Evening
+- categoryWindows: dense coverage — multiple windows per day for each category
+- difficultyCapacities: 20–28 per day (tight — some days may overflow, which is intentional)
+- taskTypePreferences: defined for most days of the week
+- Include competing high-priority tasks that may not all fit (priority 4–5 on many tasks)
+- Goal: a schedule with tradeoffs — the optimizer must balance multiple competing constraints`,
+
+    'month-light': `Generate a LIGHT one-month scenario (moderate complexity, stretched over 30 days).
+- planningHorizon: ${start} to ${fmt(addDays(today, 29))}
+- fixedTasks: 4–7 tasks, spread across the month (appointments, meetings, etc.)
+- dynamicTasks: 8–14 tasks total; mix of:
+    • One-time tasks (some with deadlines 2–3 weeks out)
+    • 2–3 weekly repeating tasks (e.g., gym: minWeekCount: 2, optWeekCount: 3)
+    • 1–2 daily habits (minDayCount: 1, optDayCount: 1, short duration like 15–30 min)
+- categories: Work, Home, Health, Morning, Evening
+- categoryWindows: windows for all 30 days — use a repeating weekly pattern (Work Mon–Fri, Morning/Evening every day)
+- difficultyCapacities: 12–18 per day for all 30 days
+- taskTypePreferences: a few selected days (e.g., weekends: Physical, Outdoor)
+- Goal: a realistic personal schedule that a typical person could follow for a month`,
+
+    'month-heavy': `Generate a HEAVY one-month scenario (maximum complexity, stress-test for the optimizer).
+- planningHorizon: ${start} to ${fmt(addDays(today, 29))}
+- fixedTasks: 12–18 tasks spread across all 4 weeks (recurring meetings, appointments)
+- dynamicTasks: 30–40 tasks total; mix of:
+    • One-time tasks with staggered deadlines throughout the month
+    • Daily habits: 3–5 tasks with minDayCount: 1, optDayCount: 1 (short, 10–20 min each)
+    • Weekly recurring tasks: 4–6 tasks with minWeekCount: 1–2, optWeekCount: 3–4
+    • Several isRequired: true one-time tasks with tight deadlines
+    • Optional tasks with priority 1–2 that may not get scheduled
+- categories: use all 10 categories (Work, Study, Home, Health, Social, FreeTime, Transport, Morning, Evening, Weekend)
+- categoryWindows: full month coverage — work days have Work/Study windows; weekends have Weekend/FreeTime/Health windows; mornings and evenings every day
+- difficultyCapacities: 20–35 per day for all 30 days (varied — harder on weekdays, lighter on weekends)
+- taskTypePreferences: most days have preferences (work days: Intellectual/DeepWork; weekends: Physical/Fun/Outdoor)
+- Mix of all difficulty levels (1–10) and all priority levels (1–5)
+- Goal: a maximum-complexity benchmark that exposes optimizer tradeoffs under real-world load`,
+  };
+
+  const desc = scenarios[variant] ?? scenarios['week-light'];
+  return `## Scenario Instructions\n\n${desc}`;
+}
+
+function buildLlmPrompt(variant = 'week-light') {
   const lines = [
     'You are a JSON generation assistant for a Schedule Optimizer API.',
     '',
@@ -134,9 +201,41 @@ function buildLlmPrompt() {
     '- Windows on different days (repeat the category entry for each day it applies)',
     'There is no restriction on the number of windows per category.',
     '',
+    '## Optimizer Constraints',
+    '',
+    'The optimizer scores solutions using hard constraints (HC, must be zero) and soft constraints (SC, minimized).',
+    'Understanding these helps you generate data that produces realistic, challenging schedules.',
+    '',
+    '### Hard Constraints — violations prevent a valid schedule',
+    '- HC1 (No Overlaps): Fixed tasks must not overlap each other. Dynamic tasks placed by the optimizer will not overlap.',
+    '- HC2 (Required Tasks): Dynamic tasks with isRequired: true MUST be schedulable. Ensure their categories have windows with enough time and their duration fits.',
+    '- HC3 (Time Windows): If windowStart/windowEnd are set on a dynamic task, the task duration must fit within that window (windowEnd - windowStart >= duration minutes).',
+    '- HC4 (Deadlines): If a deadline is set, there must be enough category window time before that deadline to fit the task.',
+    '- HC5 (Category Windows): Every category listed in a dynamic task\'s "categories" must have at least one categoryWindow entry. Missing windows = task cannot be scheduled.',
+    '- HC6 (Week Repeating): For week-repeating tasks, minWeekCount per week must be achievable with available windows per week. Do not set minWeekCount so high that there is not enough window time.',
+    '- HC7 (Day Repeating): For day-repeating tasks, minDayCount per day must fit in the category windows available that day. E.g., minDayCount: 2 for a 30-min task requires 60 min of matching windows per day.',
+    '- HC8 (Planning Horizon): Fixed tasks must have startTime/endTime within planningHorizon dates.',
+    '- HC9 (Non-Repeating Uniqueness): Dynamic tasks without a "repeating" field are scheduled at most once.',
+    '',
+    '### Soft Constraints — affect schedule quality and score',
+    '- SC1 (Priority): Higher-priority tasks (priority 5) are scheduled preferentially. Use priority 4–5 for important tasks.',
+    '- SC2 (Daily Difficulty Capacity): difficultyCapacities[date].capacity limits total task difficulty per day. Set capacity ≈ sum of difficulties you expect scheduled that day (10–20 is typical). Exceeding capacity is penalized ×1250.',
+    '- SC3 (Difficult Task Strategy): Tasks with difficulty ≥ 4 are affected by difficultTaskSchedulingStrategy. "Cluster" groups them together; "Even" spreads them apart.',
+    '- SC4 (Type Preferences): taskTypePreferences boost scheduling of matching task types on given days (e.g., Physical tasks on weekends).',
+    '- SC5/SC6 (Opt Counts): optWeekCount / optDayCount = the ideal target. The optimizer tries to reach it. Always set optWeekCount >= minWeekCount and optDayCount >= minDayCount.',
+    '- SC7 (Difficulty Balance): The optimizer tries to keep total daily difficulty balanced across days. Mix task difficulties rather than clustering all hard tasks on one day.',
+    '',
+    '### Common pitfalls to avoid',
+    '- Too many isRequired tasks with minDayCount/minWeekCount will saturate the schedule and leave no room for optional tasks.',
+    '- Setting minWeekCount larger than the number of available windows per week causes HC6 violations.',
+    '- A dynamic task with categories: ["Work"] but no categoryWindow for "Work" can never be scheduled (HC5 violation).',
+    '- A required task (isRequired: true) with a category that has no windows in the planning horizon will always be unscheduled.',
+    '',
     '## Instructions',
     'Generate realistic, diverse test data. Return ONLY the raw JSON object — no explanation, no markdown code fences.',
     'Note that minDays (minimum count of tasks in day) and minWeeks (minimum count of tasks in week) in repeating tasks mean that the task is required to be included minimum this amount of times. If there will be too much such tasks, the schedule will consist only of such tasks, so do not put too many repeats.',
+    '',
+    buildScenarioInstructions(variant),
     '',
     '## OpenAPI Schema',
     schemaJson !== null ? JSON.stringify(schemaJson, null, 2) : '(schema not loaded)',
@@ -169,8 +268,9 @@ export async function copySchemaToClipboard(e) {
 
 export async function copyPromptToClipboard(e) {
   e.stopPropagation();
+  const variant = document.getElementById('copy-prompt-variant')?.value ?? 'week-light';
   try {
-    await navigator.clipboard.writeText(buildLlmPrompt());
+    await navigator.clipboard.writeText(buildLlmPrompt(variant));
     showCopiedFeedback(document.getElementById('copy-prompt-btn'));
   } catch (err) {
     console.error('Copy prompt failed:', err);
