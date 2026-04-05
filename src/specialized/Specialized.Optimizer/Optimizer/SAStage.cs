@@ -20,9 +20,9 @@ internal class SAStage
         _random = random;
         _moveSelector = moveSelector;
 
-        _initialHard = 0;
+        _initialHard = 2;
         _initialSoft = 1_000;
-        _optimizationTimeInSeconds = 10;
+        _optimizationTimeInSeconds = 15;
         _optimizationTimeInMilliseconds = _optimizationTimeInSeconds * 1000;
     }
 
@@ -36,10 +36,10 @@ internal class SAStage
 
         var sw = new Stopwatch();
         sw.Start();
-        var temperature = (hard: 0, soft: 100);
+        //var temperature = (hard: 0, soft: 100);
 
-        //while(sw.ElapsedMilliseconds < _optimizationTimeInMilliseconds)
-        for(var i = 0; i < 1_000_000; ++i)
+        //for(var i = 0; i < 3_000_000; ++i)
+        while(sw.ElapsedMilliseconds < _optimizationTimeInMilliseconds)
         {
             domain = _moveSelector.MakeMove(currentDomain);
             var domainScore = domain.CalculateConstraintScore();
@@ -49,7 +49,7 @@ internal class SAStage
                 bestDomainScore = domainScore;
             }
 
-           // var temperature = GetTemperature(1 - ((double)sw.ElapsedMilliseconds / _optimizationTimeInMilliseconds));
+            var temperature = GetTemperature(1 - ((double)sw.ElapsedMilliseconds / _optimizationTimeInMilliseconds));
             var randomValue = _random.NextDouble();
             var expHard = temperature.hard > 0 ? Math.Exp((domainScore.Hard - currentDomainScore.Hard) / temperature.hard) : 0;
             var expSoft = temperature.soft > 0 ? Math.Exp((domainScore.Soft - currentDomainScore.Soft) / temperature.soft) : 0;
@@ -62,7 +62,7 @@ internal class SAStage
             }
 
             //Replace with logger.Debug
-            if (++iteration % 10_000 == 0)
+            if (++iteration % 50_000 == 0)
                 Console.WriteLine($"Iteration {iteration}, best score: {bestDomainScore}, time elapsed: {sw.Elapsed.TotalSeconds:F1}s");
         }
 
@@ -85,7 +85,7 @@ internal class SAStage
         }
         else
         {
-            double softProgress = Math.Pow(timePercentLeft / hardPhaseEnd, 2);
+            double softProgress = timePercentLeft / hardPhaseEnd;
             return (0, (int)(_initialSoft * softProgress));
         }
     }

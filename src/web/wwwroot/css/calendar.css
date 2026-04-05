@@ -295,6 +295,11 @@
   background: rgba(255, 255, 255, 0.35);
 }
 
+.cal-event-hard {
+  outline: 2px solid #ef4444;
+  outline-offset: -2px;
+}
+
 /* ── Task tooltip ──────────────────────────────────────────── */
 
 .cal-tooltip {
@@ -445,4 +450,9 @@
 .cal-badge-required {
   background: rgba(220, 38, 38, 0.15);
   color: #dc2626;
+}
+
+.cal-unscheduled-item--hard {
+  border-color: #fca5a5;
+  background: #fff5f5;
 }

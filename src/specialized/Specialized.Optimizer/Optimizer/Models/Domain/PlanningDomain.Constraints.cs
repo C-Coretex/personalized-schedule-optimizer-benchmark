@@ -44,10 +44,9 @@ internal partial record PlanningDomain
         AvailableTasksPool = nonRepeatingTasks.Concat(dayRepeating).Concat(weekRepeating)
             .GroupBy(t => t).ToDictionary(g => g.Key, g => g.Count());
 
-        var t = domain.Tasks.Where(t => t.IsRequired && t.Repeating is null);
         HC2_RequiredTasksMustBeScheduledConstraint = domain.Tasks.Count(t => t.IsRequired && t.Repeating is null);
 
-        foreach (var repeatingTask in domain.Tasks.Where(t => t.IsWeekRepeating))
+        foreach (var repeatingTask in domain.Tasks.Where(t => t.Repeating is not null))
         {
             HC6_RespectWeekMinOptCountConstraint += (repeatingTask.Repeating!.MinWeekCount ?? 0) * WeekRepeatingTasksCount.Count;
             SC5_MinimizeDifferenceFromWeekOptConstraint += repeatingTask.Repeating!.OptWeekCount * WeekRepeatingTasksCount.Count;
@@ -79,13 +78,7 @@ internal partial record PlanningDomain
 
         if (task.Task.IsRequired && task.Task.Repeating is null)
         {
-            var prev = HC2_RequiredTasksMustBeScheduledConstraint;
             HC2_RequiredTasksMustBeScheduledConstraint += -coefficient;
-
-            var test = Domain.Tasks.Where(t => t.IsRequired && t.Repeating is null);
-
-            var requiredUnscheduledTasks = test.Where(t => t.IsRequired && t.Repeating is null).Select(t => t)
-                .Except(PlanningDays.SelectMany(pd => pd.ScheduledTasks.Select(st => st.Task)));
         }
 
         SC1_TotalPriorityConstraint += coefficient * (6 - task.Task.Priority);
@@ -123,7 +116,7 @@ internal partial record PlanningDomain
 
     private void UpdateWeekMinOpt(Task task, Day day, bool add)
     {
-        if (!task.IsWeekRepeating)
+        if (task.Repeating is null)
             return;
 
         var coefficient = add ? 1 : -1;

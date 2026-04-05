@@ -20,7 +20,7 @@ internal static class ConstraintHelpers
 
         var scScore = 
             -1 * 100 * domain.SC1_TotalPriorityConstraint
-            + 150 * domain.SC2_TotalConstraint
+            + 500 * domain.SC2_TotalConstraint
             + domain.SC3_TotalConstraint * (domain.Domain.DifficultTaskSchedulingStrategy == DifficultTaskSchedulingStrategy.Even ? -1 : 1)
             + -1 * domain.SC4_TotalConstraint
             + 50 * domain.SC5_MinimizeDifferenceFromWeekOptConstraint

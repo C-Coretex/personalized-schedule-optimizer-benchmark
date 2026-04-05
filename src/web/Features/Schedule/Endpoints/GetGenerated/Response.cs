@@ -18,7 +18,7 @@ namespace Web.Features.Schedule.Endpoints.GetGenerated
         {
             var hcScore = hc1.Score + hc2.Score + (int)Math.Ceiling(hc3.Score/60d) + (int)Math.Ceiling(hc4.Score / 60d)
                 + hc5.Score + hc6.Score + hc7.Score + (int)Math.Ceiling(hc8.Score / 60d) + hc9.Score;
-            var scScore = 100 * sc1.Score + 150 * sc2.Score + 10 * sc3.Score + sc4.Score + 50 * sc5.Score + 50 * sc6.Score + sc7.Score;
+            var scScore = 100 * sc1.Score + 500 * sc2.Score + sc3.Score + sc4.Score + 50 * sc5.Score + 50 * sc6.Score + sc7.Score;
 
             return new ResponseScore(
                 new(hcScore, scScore),

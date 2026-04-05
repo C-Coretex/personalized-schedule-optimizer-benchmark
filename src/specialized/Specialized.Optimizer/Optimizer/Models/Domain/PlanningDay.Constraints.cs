@@ -13,6 +13,8 @@ internal partial record PlanningDay
     public int TotalDifficulty { get; private set; } = 0;
     public int SC2_TotalDayDifficultyConstraint { get; private set; } = 0;
 
+    //actually we want for both to either penalize or reward
+    //TODO: maybe this could be separate objective
     public int SC3_DifficultTaskSchedulingConstraint { get; private set; } = 0;
 
     public int SC4_TypeWeightsConstraint { get; private set; } = 0;
@@ -51,7 +53,7 @@ internal partial record PlanningDay
 
     private void UpdateDayMinOpt(Task task, bool add)
     {
-        if (!task.IsDayRepeating)
+        if (task.Repeating is null)
             return;
 
         var coefficient = add ? 1 : -1;

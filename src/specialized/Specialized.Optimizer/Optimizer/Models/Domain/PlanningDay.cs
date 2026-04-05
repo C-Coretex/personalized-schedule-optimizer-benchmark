@@ -7,7 +7,7 @@ internal partial record PlanningDay
         Day = day;
         Domain = domain;
 
-        DayRepeatingTasksCount  = domain.Domain.Tasks.Where(t => t.IsDayRepeating).ToDictionary(wt => wt.Id, _ => 0);
+        DayRepeatingTasksCount  = domain.Domain.Tasks.Where(t => t.Repeating is not null).ToDictionary(wt => wt.Id, _ => 0);
 
         InitConstraintValues(domain);
     }

@@ -140,10 +140,10 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
     {
         var weeks = request.PlanningHorizon.GetWeeks().ToArray();
 
-        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating?.MinWeekCount > 0)
+        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating is not null)
             .Except(tasksTimeline.Select(tt => tt.Task));
 
-        return tasksTimeline.Where(t => t.Task.Repeating?.MinWeekCount > 0).GroupBy(t => t.Task)
+        return tasksTimeline.Where(t => t.Task.Repeating is not null).GroupBy(t => t.Task)
             .Sum(g =>
             {
                 var sum = 0;
@@ -161,10 +161,10 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
     {
         var days = request.PlanningHorizon.GetDays();
 
-        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating?.MinDayCount > 0)
+        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating is not null)
             .Except(tasksTimeline.Select(tt => tt.Task));
 
-        return tasksTimeline.Where(t => t.Task.Repeating?.MinDayCount > 0).GroupBy(t => t.Task)
+        return tasksTimeline.Where(t => t.Task.Repeating is not null).GroupBy(t => t.Task)
             .Sum(g =>
             {
                 var sum = 0;
@@ -232,6 +232,7 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
         return coefficient * sum;
 
         //actually we want for both to either penalize or reward
+        //TODO: maybe this could be separate objective
     }
 
     //maximize user defined task type preferences

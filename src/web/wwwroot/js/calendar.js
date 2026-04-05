@@ -328,7 +328,8 @@ function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities =
         posStyle = `left:calc(${leftPct}% + ${leftPx}px);right:calc(${rightPct}% + ${rightPx}px);`;
       }
 
-      colHtml += `<div class="cal-event" data-tidx="${idx}" style="top:${topPx}px;height:${heightPx}px;background:${color};${posStyle}">
+      const hardClass = t.difficulty >= 7 ? ' cal-event-hard' : '';
+      colHtml += `<div class="cal-event${hardClass}" data-tidx="${idx}" style="top:${topPx}px;height:${heightPx}px;background:${color};${posStyle}">
         <div class="cal-event-name">${t.name}</div>
         ${heightPx >= 38 ? `<div class="cal-event-badges">${badges}</div>` : ''}
       </div>`;
@@ -378,7 +379,8 @@ function renderUnscheduled(tasks) {
       ? '<span class="cal-badge cal-badge-required">Required</span>'
       : '<span class="cal-badge">Optional</span>';
     const cats = t.categories?.length ? `<span class="cal-unscheduled-cats">${t.categories.join(', ')}</span>` : '';
-    html += `<div class="cal-unscheduled-item">
+    const hardClass = t.difficulty >= 7 ? ' cal-unscheduled-item--hard' : '';
+    html += `<div class="cal-unscheduled-item${hardClass}">
       <span class="cal-unscheduled-dot" style="background:${color}"></span>
       <span class="cal-unscheduled-name">${t.name}</span>
       ${cats}

@@ -1,4 +1,6 @@
-﻿namespace Specialized.Optimizer.Optimizer.Models.Domain;
+﻿using Specialized.Optimizer.Helpers;
+
+namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
 //separate from Domain to optimize snapshots
 internal partial record PlanningDomain
@@ -85,15 +87,20 @@ internal partial record PlanningDomain
 
     public (CategoryTimeWindow TimeWindow, PlanningDay Day)[] GetActualFreeTimeWindowsFor(Task task, bool useDefaultIfNoActuallyFree = true)
     {
-        var entries = PlanningDays.SelectMany(d => ScheduledTask.GetActualTimeWindowsForDay(d, task).Select(t => (t, d))).ToArray();
-        if (!useDefaultIfNoActuallyFree || entries.Length > 0)
-            return entries;
+        var shuffledDays = PlanningDays.ShuffleElements();
+        var entriesByDays = shuffledDays
+            .Select(d => ScheduledTask.GetActualTimeWindowsForDay(d, task).Select(t => (t, d)).ToArray())
+            .Where(t => t.Length > 0);
 
-        return PlanningDays.SelectMany(d =>
+        var entryCollection = entriesByDays.FirstOrDefault();
+        if (!useDefaultIfNoActuallyFree || entryCollection is not null)
+            return entryCollection ?? [];
+
+        return shuffledDays.Select(d =>
         {
             if (!task.FreeTimeWindowsByDate.TryGetValue(d.Day.Date, out var freeTimeWindows))
                 return [];
-            return freeTimeWindows.Select(tw => (tw, d));
-        }).ToArray();
+            return freeTimeWindows.Select(tw => (tw, d)).ToArray();
+        }).FirstOrDefault() ?? [];
     }
 }

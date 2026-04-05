@@ -241,8 +241,8 @@
     },
     {
       "name": "Morning Run",
-      "priority": 4,
-      "difficulty": 6,
+      "priority": 5,
+      "difficulty": 7,
       "types": [
         "Physical",
         "Outdoor",
@@ -333,7 +333,7 @@
     {
       "name": "Read Technical Book",
       "priority": 3,
-      "difficulty": 4,
+      "difficulty": 7,
       "types": [
         "Intellectual",
         "Indoor",
@@ -554,8 +554,8 @@
     },
     {
       "name": "Write Blog Post",
-      "priority": 2,
-      "difficulty": 6,
+      "priority": 3,
+      "difficulty": 7,
       "types": [
         "Creative",
         "DeepWork",
@@ -885,31 +885,31 @@
   "difficultyCapacities": [
     {
       "date": "2026-03-30",
-      "capacity": 15
+      "capacity": 35
     },
     {
       "date": "2026-03-31",
-      "capacity": 20
+      "capacity": 35
     },
     {
       "date": "2026-04-01",
-      "capacity": 12
+      "capacity": 35
     },
     {
       "date": "2026-04-02",
-      "capacity": 18
+      "capacity": 35
     },
     {
       "date": "2026-04-03",
-      "capacity": 16
+      "capacity": 25
     },
     {
       "date": "2026-04-04",
-      "capacity": 10
+      "capacity": 25
     },
     {
       "date": "2026-04-05",
-      "capacity": 10
+      "capacity": 25
     }
   ],
   "taskTypePreferences": [
