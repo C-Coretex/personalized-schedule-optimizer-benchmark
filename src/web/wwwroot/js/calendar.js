@@ -360,6 +360,37 @@ function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities =
   document.querySelector('.cal-scroll-wrapper').scrollTop = scrollTop;
 }
 
+// ─── Unscheduled tasks list ───────────────────────────────────────────────────
+
+function renderUnscheduled(tasks) {
+  const el = document.getElementById('cal-unscheduled');
+  if (!tasks || tasks.length === 0) {
+    el.classList.add('hidden');
+    return;
+  }
+  let html = '<h3 class="cal-unscheduled-title">Unscheduled Tasks</h3><div class="cal-unscheduled-list">';
+  for (const t of tasks) {
+    const color = CATEGORY_COLORS[t.categories?.[0]] || '#9ca3af';
+    const durStr = t.duration >= 60
+      ? `${Math.floor(t.duration / 60)}h${t.duration % 60 ? ' ' + (t.duration % 60) + 'm' : ''}`
+      : `${t.duration}m`;
+    const requiredBadge = t.isRequired
+      ? '<span class="cal-badge cal-badge-required">Required</span>'
+      : '<span class="cal-badge">Optional</span>';
+    const cats = t.categories?.length ? `<span class="cal-unscheduled-cats">${t.categories.join(', ')}</span>` : '';
+    html += `<div class="cal-unscheduled-item">
+      <span class="cal-unscheduled-dot" style="background:${color}"></span>
+      <span class="cal-unscheduled-name">${t.name}</span>
+      ${cats}
+      <span class="cal-unscheduled-meta">${durStr}</span>
+      ${requiredBadge}
+    </div>`;
+  }
+  html += '</div>';
+  el.innerHTML = html;
+  el.classList.remove('hidden');
+}
+
 // ─── Public entry point ───────────────────────────────────────────────────────
 
 export function renderCalendar(item) {
@@ -405,5 +436,6 @@ export function renderCalendar(item) {
 
   buildCalLegend(enriched);
   buildCalGrid(dates, enriched, request.categoryWindows || [], request.difficultyCapacities || []);
+  renderUnscheduled(item.unscheduledDynamicTasks);
   section.classList.remove('hidden');
 }

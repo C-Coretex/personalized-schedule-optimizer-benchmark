@@ -378,3 +378,71 @@
 .ctt-dots .filled {
   color: #f8fafc;
 }
+
+/* ── Unscheduled tasks list ────────────────────────────────── */
+
+.cal-unscheduled {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cal-unscheduled-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.6rem;
+}
+
+.cal-unscheduled-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cal-unscheduled-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.cal-unscheduled-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.cal-unscheduled-name {
+  font-weight: 600;
+  color: #111827;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-unscheduled-cats {
+  color: #6b7280;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.cal-unscheduled-meta {
+  color: #6b7280;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.cal-badge-required {
+  background: rgba(220, 38, 38, 0.15);
+  color: #dc2626;
+}

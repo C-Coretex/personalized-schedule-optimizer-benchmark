@@ -26,7 +26,15 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
             if (meta.Response is null && cache.TryGetValue($"job_result_{meta.Id}", out GeneratedSchedule? schedule))
                 meta = meta with { Response = schedule };
 
-            return new ResponseEntry(CalculateJobScore(meta), meta);
+            var scheduledDynamicIds = meta.Response?.TasksTimeline
+                .Where(tt => meta.Request.DynamicTasks.Any(dt => dt.Id == tt.Id))
+                .Select(tt => tt.Id)
+                .ToHashSet() ?? [];
+            var unscheduled = meta.Request.DynamicTasks
+                .Where(t => !scheduledDynamicIds.Contains(t.Id))
+                .ToList();
+
+            return new ResponseEntry(CalculateJobScore(meta), meta, unscheduled);
         }).ToList();
 
         return new Response(responseEntries);
@@ -92,8 +100,8 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
     //all required tasks must be scheduled
     private int HC2(GenerateScheduleRequest request, ScheduledTask<DynamicTask>[] tasksTimeline)
     {
-        var requiredUnscheduledTasks = request.DynamicTasks.Where(t => t.IsRequired).Select(t => t.Id)
-            .Except(tasksTimeline.Select(dt => dt.Task.Id));
+        var requiredUnscheduledTasks = request.DynamicTasks.Where(t => t.IsRequired && t.Repeating is null).Select(t => t)
+            .Except(tasksTimeline.Select(dt => dt.Task));
 
         return requiredUnscheduledTasks.Count();
     }
@@ -211,7 +219,7 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
     {
         var sum = 0;
 
-        var difficultTasksByDays = tasksTimeline.Where(t => t.Task.Difficulty >= 4).GroupBy(t => t.Start.Date).Select(t => t.ToArray());
+        var difficultTasksByDays = tasksTimeline.Where(t => t.Task.Difficulty >= 6).GroupBy(t => t.Start.Date).Select(t => t.ToArray());
         foreach(var tasks in difficultTasksByDays)
         {
             for(var i = 0; i < tasks.Length - 1; i++)
@@ -222,6 +230,8 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
 
         var coefficient = request.DifficultTaskSchedulingStrategy == DifficultTaskSchedulingStrategy.Cluster ? 1 : -1;
         return coefficient * sum;
+
+        //actually we want for both to either penalize or reward
     }
 
     //maximize user defined task type preferences

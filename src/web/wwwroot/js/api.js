@@ -355,7 +355,7 @@ function loadHistoryEntry(item, li) {
   ta.classList.remove('json-invalid');
   renderForm(meta.request);
   showHistoryBanner(meta.id);
-  renderCalendar(meta);
+  renderCalendar({ ...meta, unscheduledDynamicTasks: item.unscheduledDynamicTasks });
 
   const calScore = document.getElementById('cal-score');
   if (item.score) {

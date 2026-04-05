@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using Specialized.Optimizer.Models;
 using Specialized.Optimizer.Optimizer;
 
@@ -13,7 +12,6 @@ public class Handler(IHttpClientFactory httpClientFactory, IConfiguration config
         _ = Task.Run(async () =>
         {
             var solver = new Solver();
-            Task.Delay(1000).Wait(); //TODO: remove when actual solver will be implemented
             var response = solver.Solve(request);
 
             var callbackUrl = configuration["Callbacks:ScheduleSubmitUrl"];

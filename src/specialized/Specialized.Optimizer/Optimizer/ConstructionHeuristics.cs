@@ -5,15 +5,15 @@ namespace Specialized.Optimizer.Optimizer;
 
 internal static class ConstructionHeuristics
 {
-    public static PlanningDomain Construct(PlanningDomain domain, Random random)
+    public static PlanningDomain Construct(PlanningDomain domain, Random random, bool createSnapshot = true)
     {
-        domain = domain.GetSnapshot();
+        if(createSnapshot)
+            domain = domain.GetSnapshot();
 
         ConstructRepeatingTasks(domain, random);
 
         //collect pool of tasks
         ConstructNonRepeatingTasks(domain, random);
-
 
         return domain;
     }

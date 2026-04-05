@@ -9,7 +9,8 @@ internal readonly record struct ScheduledTask
     public static IEnumerable<CategoryTimeWindow> GetActualTimeWindowsForDay(PlanningDay day, Task task, TimeOnly? from = null, TimeOnly? to = null)
     {
         if (!task.FreeTimeWindowsByDate.TryGetValue(day.Day.Date, out var taskFreeTimeWindowsArray))
-            taskFreeTimeWindowsArray = [];
+            yield break;
+
         var taskFreeTimeWindows = taskFreeTimeWindowsArray.AsEnumerable();
 
         if (from is not null)
@@ -27,10 +28,10 @@ internal readonly record struct ScheduledTask
         {
             if (!isTaskFreeTimeWindowPresent)
                 break;
-            if (currentTaskFreeTimeWindow.Start >= actualTimeWindow.End)
+            if (currentTaskFreeTimeWindow!.Start >= actualTimeWindow.End)
                 continue;
 
-            while (isTaskFreeTimeWindowPresent && currentTaskFreeTimeWindow.End <= actualTimeWindow.End)
+            while (isTaskFreeTimeWindowPresent && currentTaskFreeTimeWindow!.End <= actualTimeWindow.End)
             {
                 var timeWindow = currentTaskFreeTimeWindow with
                 {

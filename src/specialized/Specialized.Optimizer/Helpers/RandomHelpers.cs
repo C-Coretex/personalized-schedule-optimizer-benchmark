@@ -2,15 +2,55 @@
 
 internal static class RandomHelpers
 {
+    public static T RandomElement<T>(this T[] source, Random? random = null)
+    {
+        if (source == null || source.Length == 0)
+            throw new ArgumentException("Source cannot be null or empty.", nameof(source));
+
+        random ??= Random.Shared;
+        return source.ElementAt(random.Next(0, source.Length));
+    }
+
     public static T RandomElement<T>(this ICollection<T> source, Random? random = null)
     {
         if (source == null || source.Count == 0)
             throw new ArgumentException("Source cannot be null or empty.", nameof(source));
 
         random ??= Random.Shared;
-        int index = random.Next(0, source.Count);
-        return source.ElementAt(index);
+        return source.ElementAt(random.Next(0, source.Count));
     }
+
+    /// <summary>
+    /// Does not insure if elements are different (for performance).
+    /// </summary>
+    public static (T First, T Second) TwoRandomElements<T>(this ICollection<T> source, Random? random = null)
+    {
+        if (source == null || source.Count == 0)
+            throw new ArgumentException("Source cannot be null or empty.", nameof(source));
+
+        random ??= Random.Shared;
+
+        return (source.ElementAt(random.Next(0, source.Count)), source.ElementAt(random.Next(0, source.Count)));
+    }
+
+    /// <summary>
+    /// Does not insure if elements are different (for performance).
+    /// </summary>
+    public static (T First, T Second) TwoRandomElements<T>(this T[] source, Random? random = null)
+    {
+        if (source == null || source.Length == 0)
+            throw new ArgumentException("Source cannot be null or empty.", nameof(source));
+
+        random ??= Random.Shared;
+
+        return (source.ElementAt(random.Next(0, source.Length)), source.ElementAt(random.Next(0, source.Length)));
+    }
+
+    public static bool RandomBool(this Random random)
+        => random.Next() > int.MaxValue / 2; //a fast and simple way to return bool
+
+    public static bool RandomByPercent(this Random random, int percent)
+        => random.Next(100) < percent;
 
     public static T[] ShuffleElements<T>(this T[] source, Random? random = null)
     {

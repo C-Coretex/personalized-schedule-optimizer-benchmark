@@ -117,9 +117,9 @@ internal readonly record struct FreeTimeWindow
     }
 }
 
-internal readonly record struct CategoryTimeWindow
+internal record CategoryTimeWindow
 {
-    public Category Category { get; init; }
+    public Category Category { get; init; } = null!;
     public TimeOnly Start { get; init; }
     public TimeOnly End { get; init; }
     public Day Day { get; init; }

@@ -20,7 +20,6 @@ internal partial record PlanningDay
     //can contain unfeasible values (overlapping tasks)
     public IList<ScheduledTask> ScheduledTasks => _scheduledTasks.Values;
 
-
     //actual free time windows (possible-scheduled tasks)
     //return values ordered by start time
     //if we need to optimize - we can modify the value on tasks/adding/removing, not recalculate it from scratch
@@ -46,6 +45,12 @@ internal partial record PlanningDay
             End = start.AddMinutes(task.Duration)
         };
 
+        //infeasible
+        if (!scheduledTask.Task.FreeTimeWindowsByDate.TryGetValue(Day.Date, out var freeTimeWindows))
+            return false;
+        if (!freeTimeWindows.Any(ftw => ftw.Start <= scheduledTask.Start && ftw.End >= scheduledTask.End))
+            return false;
+
         while (!_scheduledTasks.TryAdd(start, scheduledTask))
         {
             start = start.AddMinutes(1);
@@ -67,10 +72,10 @@ internal partial record PlanningDay
     {
         //TODO: cache if will be hot path
         var actualTimeWindow = ScheduledTask.GetActualTimeWindowsForDay(this, task, from, to).FirstOrDefault();
-        if(stopIfUnfeasible && actualTimeWindow == default)
+        if(stopIfUnfeasible && actualTimeWindow == null)
             return false;
 
-        var start = actualTimeWindow != default ? actualTimeWindow.Start : from;
+        var start = actualTimeWindow != null ? actualTimeWindow.Start : from;
         if (!AddScheduledTask(task, start, stopIfUnfeasible))
             return false;
 
@@ -79,7 +84,11 @@ internal partial record PlanningDay
 
     public void RemoveScheduledTask(ScheduledTask task)
     {
+        if (!_scheduledTasks.TryGetValue(task.Start, out var existing) || existing.Task.Id != task.Task.Id)
+            return;
+
         _scheduledTasks.Remove(task.Start);
+
         _actualTimeWindows = null;
 
         UpdateConstraintValues(task.Task, add: false);

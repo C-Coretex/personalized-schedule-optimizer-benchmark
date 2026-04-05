@@ -3,7 +3,7 @@
     {
       "startTime": "2026-03-30T09:00:00",
       "endTime": "2026-03-30T09:30:00",
-      "id": "cbd7227f-bb93-4d68-9d27-ea632a66c203",
+      "id": "5faac887-af20-4244-b074-73dac989c488",
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
@@ -15,7 +15,7 @@
     {
       "startTime": "2026-03-31T09:00:00",
       "endTime": "2026-03-31T09:30:00",
-      "id": "e5d449ca-84e1-4a8f-af42-462b42f42176",
+      "id": "6f3da085-f55d-4c21-9c3f-750a17f57a42",
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
@@ -27,7 +27,7 @@
     {
       "startTime": "2026-04-01T09:00:00",
       "endTime": "2026-04-01T09:30:00",
-      "id": "f5922b74-b3e5-4c78-a9da-fc8599679129",
+      "id": "68ea439e-1040-4de4-b142-20d329e25ca4",
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
@@ -39,7 +39,7 @@
     {
       "startTime": "2026-04-02T09:00:00",
       "endTime": "2026-04-02T09:30:00",
-      "id": "87b18290-e6ab-48b3-b198-8c0a99951630",
+      "id": "b91982dd-9c20-46b1-8b9c-0338ff212b11",
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
@@ -51,7 +51,7 @@
     {
       "startTime": "2026-04-03T09:00:00",
       "endTime": "2026-04-03T09:30:00",
-      "id": "6562e1ed-133f-4ebb-b08b-84748ee7b6aa",
+      "id": "f3068bf8-00a8-44c8-89fc-b87206d69a7d",
       "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
@@ -63,7 +63,7 @@
     {
       "startTime": "2026-03-31T14:00:00",
       "endTime": "2026-03-31T15:30:00",
-      "id": "e4ec2a64-7773-41f8-beef-b88c45ea7dff",
+      "id": "56522773-13c7-4ba5-9f70-8f94ebd63cb4",
       "name": "Client Presentation",
       "priority": 5,
       "difficulty": 8,
@@ -76,7 +76,7 @@
     {
       "startTime": "2026-04-01T11:00:00",
       "endTime": "2026-04-01T12:00:00",
-      "id": "5ba92811-59cb-44c0-9176-c4677147f1c3",
+      "id": "3b9caafe-f88d-45ea-8e6a-0917404bbee3",
       "name": "Doctor Appointment",
       "priority": 5,
       "difficulty": 3,
@@ -88,7 +88,7 @@
     {
       "startTime": "2026-04-03T15:00:00",
       "endTime": "2026-04-03T16:30:00",
-      "id": "fc872256-e574-4ec7-ae17-183c28707448",
+      "id": "ecde253e-a6aa-4696-98e2-2143d9d1e1fa",
       "name": "Sprint Retrospective",
       "priority": 4,
       "difficulty": 4,
@@ -100,7 +100,7 @@
     {
       "startTime": "2026-04-04T19:00:00",
       "endTime": "2026-04-04T21:00:00",
-      "id": "dc2f123a-0802-4df4-8e26-3532c374d26b",
+      "id": "1d8d783f-718c-4fa8-adbd-2284918d1e46",
       "name": "Family Dinner",
       "priority": 4,
       "difficulty": 1,
@@ -121,7 +121,7 @@
         "Work"
       ],
       "repeating": null,
-      "id": "b65c27f7-a7ed-44ae-a367-e13498562790",
+      "id": "93b16302-dcd5-43da-8cd5-a5c6e78027ab",
       "name": "Feature Implementation",
       "priority": 5,
       "difficulty": 8,
@@ -141,7 +141,7 @@
         "Work"
       ],
       "repeating": null,
-      "id": "d355a412-b5ef-4132-82c7-8ac7c8bd2e89",
+      "id": "a8691329-86ac-4053-9ccf-4a4c6c1a56d4",
       "name": "Code Review",
       "priority": 4,
       "difficulty": 5,
@@ -160,7 +160,7 @@
         "Work"
       ],
       "repeating": null,
-      "id": "419a6893-f5a1-4576-bca5-b950cdcca1a2",
+      "id": "ca2e013c-fc90-46f8-b1b9-5483f5baa5ea",
       "name": "Write Unit Tests",
       "priority": 3,
       "difficulty": 5,
@@ -180,7 +180,7 @@
         "Work"
       ],
       "repeating": null,
-      "id": "19180890-daee-435c-95fb-99c1fa73c31b",
+      "id": "a8e17087-cc8c-420d-8558-cd221db99728",
       "name": "Update Project Documentation",
       "priority": 2,
       "difficulty": 3,
@@ -200,7 +200,7 @@
         "Work"
       ],
       "repeating": null,
-      "id": "8d19fc3a-6e08-43f2-b7fe-dfb7d3731660",
+      "id": "dc179e51-953a-4748-b310-751695cb52fa",
       "name": "Refactor Legacy Module",
       "priority": 3,
       "difficulty": 7,
@@ -220,7 +220,7 @@
         "Work"
       ],
       "repeating": null,
-      "id": "0d5434a4-a5c8-4dd8-b4b9-ff12cfddb656",
+      "id": "c9429c70-eb80-49f7-a964-f3b5bc4aa164",
       "name": "Research New Library",
       "priority": 2,
       "difficulty": 4,
@@ -240,7 +240,7 @@
         "Work"
       ],
       "repeating": null,
-      "id": "335f8b28-6558-4220-bf1b-17045652e904",
+      "id": "54e555fd-c393-4dd2-97ae-b316c3789112",
       "name": "Prepare Sprint Tasks",
       "priority": 4,
       "difficulty": 3,
@@ -265,7 +265,7 @@
         "minWeekCount": 3,
         "optWeekCount": 5
       },
-      "id": "f6ba598e-ca98-46fe-ac93-a68eab122044",
+      "id": "400c6aba-655a-4b9e-b086-47bc4a4d9706",
       "name": "Morning Run",
       "priority": 4,
       "difficulty": 6,
@@ -291,7 +291,7 @@
         "minWeekCount": 0,
         "optWeekCount": 7
       },
-      "id": "5b768ece-6bb8-4d4d-aca4-89771814aa25",
+      "id": "d714d655-9dfb-4b45-a7eb-6515c1cf09c7",
       "name": "Stretching",
       "priority": 3,
       "difficulty": 2,
@@ -315,7 +315,7 @@
         "minWeekCount": 3,
         "optWeekCount": 6
       },
-      "id": "d97b553d-57cc-4e2b-a5c1-72201a0d3e5a",
+      "id": "fcbc21de-ddf5-4350-a2fd-9a8bde07dcaf",
       "name": "Meditation",
       "priority": 3,
       "difficulty": 1,
@@ -335,7 +335,7 @@
         "Health"
       ],
       "repeating": null,
-      "id": "015f65d0-f22a-461b-b18b-4117ba405215",
+      "id": "511c2539-efd9-4522-b499-d1d8dd364d25",
       "name": "Gym Session",
       "priority": 3,
       "difficulty": 7,
@@ -360,7 +360,7 @@
         "minWeekCount": 2,
         "optWeekCount": 4
       },
-      "id": "65772ef7-5410-4867-88ff-7e41e2763ace",
+      "id": "1fb8eb7c-8cfe-4988-94f2-ecd0c72021f5",
       "name": "Read Technical Book",
       "priority": 3,
       "difficulty": 4,
@@ -385,7 +385,7 @@
         "minWeekCount": 0,
         "optWeekCount": 4
       },
-      "id": "8e182916-6f7b-40e7-9e14-ab7f3a031702",
+      "id": "957030ba-ca33-4aff-a74e-6552e5033095",
       "name": "Spanish Language Practice",
       "priority": 2,
       "difficulty": 3,
@@ -404,7 +404,7 @@
         "Study"
       ],
       "repeating": null,
-      "id": "1f85ffa8-5395-4baf-a87d-b9d29e680dee",
+      "id": "94a4c5fe-61aa-453c-9612-018da3ba6490",
       "name": "Watch Conference Talk",
       "priority": 2,
       "difficulty": 3,
@@ -424,7 +424,7 @@
         "Study"
       ],
       "repeating": null,
-      "id": "19f9877d-4b93-43f6-92df-9aa7ae218968",
+      "id": "a0b33502-c114-47ba-9f42-5e511a0976b2",
       "name": "Plan Next Week",
       "priority": 3,
       "difficulty": 2,
@@ -444,7 +444,7 @@
         "Home"
       ],
       "repeating": null,
-      "id": "2a8f8f1c-a3f2-4807-ad48-e79637a339c2",
+      "id": "10fc9f31-54e8-4c9f-acc8-d4271e5f5777",
       "name": "Grocery Shopping",
       "priority": 4,
       "difficulty": 2,
@@ -464,7 +464,7 @@
         "Home"
       ],
       "repeating": null,
-      "id": "d0629292-4bd1-456d-adcc-db5faaa3876e",
+      "id": "32276538-5840-4847-a3a0-3a5f42ce389c",
       "name": "Apartment Cleaning",
       "priority": 2,
       "difficulty": 3,
@@ -484,7 +484,7 @@
         "Home"
       ],
       "repeating": null,
-      "id": "abd9ec90-5b46-4e78-8d16-fd1231c91158",
+      "id": "51e20fb7-eb22-499d-b603-71bc402b0cee",
       "name": "Meal Prep",
       "priority": 3,
       "difficulty": 2,
@@ -504,7 +504,7 @@
         "Home"
       ],
       "repeating": null,
-      "id": "b48fc80b-46f9-4027-87bc-f33f9a4d19bb",
+      "id": "77f657ba-44fd-4881-85f7-1a8419a3424c",
       "name": "Fix Bike",
       "priority": 2,
       "difficulty": 4,
@@ -529,7 +529,7 @@
         "minWeekCount": 0,
         "optWeekCount": 4
       },
-      "id": "9aa26776-ee2d-4978-8ab9-6735bc7eeec6",
+      "id": "106a4ba6-dfae-413e-98b7-71692f334517",
       "name": "Evening Walk",
       "priority": 3,
       "difficulty": 2,
@@ -549,7 +549,7 @@
         "Evening"
       ],
       "repeating": null,
-      "id": "d329fc1a-a0c6-4868-bff4-8eabead8f3cd",
+      "id": "87a2bbce-1bf1-4f2d-98a7-da784a242123",
       "name": "Journal Entry",
       "priority": 2,
       "difficulty": 1,
@@ -569,7 +569,7 @@
         "Evening"
       ],
       "repeating": null,
-      "id": "b9218119-f5d5-4cd8-bf8e-1f41fb6f83d5",
+      "id": "5e8fc6e8-6992-43d9-8d6a-71c863558d36",
       "name": "Call a Friend",
       "priority": 3,
       "difficulty": 1,
@@ -588,7 +588,7 @@
         "FreeTime"
       ],
       "repeating": null,
-      "id": "f359220d-627c-4f61-96e4-7ecf79f02ba7",
+      "id": "33974714-dc8f-4b6b-964d-920daa7c941b",
       "name": "Write Blog Post",
       "priority": 2,
       "difficulty": 6,
@@ -609,7 +609,7 @@
         "FreeTime"
       ],
       "repeating": null,
-      "id": "f3b511ed-904f-42f0-98d5-0eed43aa03fe",
+      "id": "dff422f6-695f-4371-92c7-fd40fe8a0a4d",
       "name": "Board Game with Partner",
       "priority": 3,
       "difficulty": 1,
@@ -629,7 +629,7 @@
         "FreeTime"
       ],
       "repeating": null,
-      "id": "e91364b2-0040-4051-b499-47064f47db7e",
+      "id": "2c2b3bc8-1ca5-4cfa-b7c8-00b6c8701455",
       "name": "Sketch Side Project UI",
       "priority": 2,
       "difficulty": 5,
@@ -649,7 +649,7 @@
         "FreeTime"
       ],
       "repeating": null,
-      "id": "df82ce95-5e91-4c00-9de1-d3f64cc55d03",
+      "id": "c9fcdf6d-6369-43c4-89d6-22bfacdf68c2",
       "name": "Watch Movie",
       "priority": 2,
       "difficulty": 1,
@@ -675,7 +675,7 @@
         "minWeekCount": 0,
         "optWeekCount": 7
       },
-      "id": "8b744d7d-c933-4d2d-ba74-a631ba14bef2",
+      "id": "644ec2f4-8471-4e05-95fd-34db1e5a1c3b",
       "name": "Walk with dog",
       "priority": 1,
       "difficulty": 2,
@@ -688,7 +688,7 @@
   ],
   "planningHorizon": {
     "startDate": "2026-03-30",
-    "endDate": "2026-04-08"
+    "endDate": "2026-04-05"
   },
   "categoryWindows": [
     {

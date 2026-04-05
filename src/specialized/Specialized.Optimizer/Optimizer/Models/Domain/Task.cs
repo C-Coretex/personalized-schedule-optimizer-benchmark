@@ -31,7 +31,7 @@ internal record Task
     /// <summary>Null means the task does not repeat.</summary>
     public RepeatingSchedule? Repeating { get; init; }
 
-    public ImmutableArray<Category> Categories { get; init; } = [];
+    public ImmutableHashSet<Category> Categories { get; init; } = [];
 
     public ImmutableArray<CategoryTimeWindow> FreeTimeWindows { get; init; } = [];
     public FrozenDictionary<DateOnly, ImmutableArray<CategoryTimeWindow>> FreeTimeWindowsByDate { get; private set; } = new Dictionary<DateOnly, ImmutableArray<CategoryTimeWindow>>().ToFrozenDictionary();
@@ -41,7 +41,7 @@ internal record Task
 
     public bool IsWeekRepeating => Repeating is { MinWeekCount: > 0 } or { OptWeekCount: > 1 };
     public bool IsDayRepeating => Repeating is { MinDayCount: > 0 } or { OptDayCount: > 1 };
-    public bool IsDifficult => Difficulty >= 4;
+    public bool IsDifficult => Difficulty >= 6;
 
     public static Task FromDynamicTask(DynamicTask dynamicTask, IEnumerable<Category> categories, IEnumerable<Day> days)
     {
@@ -97,7 +97,7 @@ internal record Task
             WindowEnd = dynamicTask.WindowEnd,
             Deadline = dynamicTask.Deadline,
             Repeating = dynamicTask.Repeating,
-            Categories = taskCategories.ToImmutableArray(),
+            Categories = taskCategories.ToImmutableHashSet(),
             FreeTimeWindows = freeTaskTimeWindows.OrderBy(ftw => ftw.Day.Date).ThenBy(ftw => ftw.Start).ToImmutableArray(),
             FreeTimeWindowsByDate = freeTaskTimeWindows.GroupBy(ftw => ftw.Day.Date)
                 .ToDictionary(g => g.Key, g => g.OrderBy(t => t.Start).ToImmutableArray()).ToFrozenDictionary(),

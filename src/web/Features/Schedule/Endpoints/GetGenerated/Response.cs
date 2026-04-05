@@ -1,11 +1,12 @@
 ﻿using Web.Features.Schedule.Models.Schedule;
 using Web.Providers.Models;
+using Web.Providers.Schedule.Models.Tasks;
 
 namespace Web.Features.Schedule.Endpoints.GetGenerated
 {
     public record Response(List<ResponseEntry> Data);
 
-    public record ResponseEntry(ResponseScore? Score, ScheduleJobMetadata ScheduleJobMetadata);
+    public record ResponseEntry(ResponseScore? Score, ScheduleJobMetadata ScheduleJobMetadata, List<DynamicTask> UnscheduledDynamicTasks);
 
     public record ResponseScore(JobScore Score, List<ResponseConstraintScore> HardConstraintScores, List<ResponseConstraintScore> SoftConstraintScores)
     {
@@ -17,7 +18,7 @@ namespace Web.Features.Schedule.Endpoints.GetGenerated
         {
             var hcScore = hc1.Score + hc2.Score + (int)Math.Ceiling(hc3.Score/60d) + (int)Math.Ceiling(hc4.Score / 60d)
                 + hc5.Score + hc6.Score + hc7.Score + (int)Math.Ceiling(hc8.Score / 60d) + hc9.Score;
-            var scScore = 1000 * sc1.Score + 1250 * sc2.Score + sc3.Score + sc4.Score + 50 * sc5.Score + 50 * sc6.Score + sc7.Score;
+            var scScore = 100 * sc1.Score + 150 * sc2.Score + 10 * sc3.Score + sc4.Score + 50 * sc5.Score + 50 * sc6.Score + sc7.Score;
 
             return new ResponseScore(
                 new(hcScore, scScore),
