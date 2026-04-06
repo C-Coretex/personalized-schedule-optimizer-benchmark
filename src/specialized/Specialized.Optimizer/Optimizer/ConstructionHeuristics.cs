@@ -20,46 +20,43 @@ internal static class ConstructionHeuristics
 
     private static void ConstructRepeatingTasks(PlanningDomain domain, Random random)
     {
-        var repeatingTasks = domain.Domain.Tasks.Where(t => t.Repeating != null)
+        var repeatingTasks = domain.AvailableTasksPool.Select(t => t.Key).Where(t => t.Repeating is not null)
             .OrderByDescending(t => t.Priority)
-            .ThenBy(t => t.FreeTimeWindows.Sum(ftw => (ftw.End - ftw.Start).Minutes))
-            .ToArray();
+            .ThenBy(t => t.FreeTimeWindows.Sum(ftw => (ftw.End - ftw.Start).Minutes));
 
         //get repeating for each day
-        var dailyRepeatingTasks = repeatingTasks.Where(t => t.Repeating!.MinDayCount != null).ToArray();
-        foreach (var day in domain.PlanningDays)
+        var dailyRepeatingTasks = repeatingTasks.Where(t => t.Repeating!.MinDayCount > 0).ToArray();
+        foreach (var day in domain.PlanningDays.ShuffleElements(random))
         {
-            foreach (var task in dailyRepeatingTasks)
+            foreach (var task in dailyRepeatingTasks.Where(domain.AvailableTasksPool.ContainsKey))
             {
-                var freeTimeWindows = task.FreeTimeWindows.Where(tw => tw.Day == day.Day).ToArray();
-                if (freeTimeWindows.Length == 0)
-                    continue;
-
-                for (var i = 0; i < task.Repeating!.MinDayCount; i++)
+                var taskCount = day.DayRepeatingTasksCount[task.Id];
+                for (var i = taskCount; i < task.Repeating!.MinDayCount; i++)
                 {
-                    var randomTimeWindow = freeTimeWindows.RandomElement(random);
-                    day.AddScheduledTaskInTimeWindow(task, randomTimeWindow.Start);
+                    day.AddScheduledTaskInTimeWindow(task, TimeOnly.MinValue);
                 }
             }
         }
 
         //get repeating for each week + respect max count
-        var weeklyRepeatingTasks = repeatingTasks.Where(t => t.Repeating!.MinWeekCount != null).ToArray();
+        var weeklyRepeatingTasks = repeatingTasks.Where(t => t.Repeating!.MinWeekCount > 0).ToArray();
         var weekDays = domain.PlanningDays.GroupBy(pd => pd.Day.WeekNumber);
 
-        foreach (var days in weekDays.Select(g => g.ToArray()))
+        foreach (var week in weekDays)
         {
-            foreach (var task in weeklyRepeatingTasks)
+            foreach (var task in weeklyRepeatingTasks.Where(domain.AvailableTasksPool.ContainsKey))
             {
-                for (var i = 0; i < task.Repeating!.MinWeekCount; i++)
+                var taskCount = domain.WeekRepeatingTasksCount[week.Key][task.Id];
+                for (var i = taskCount; i < task.Repeating!.MinWeekCount; i++)
                 {
-                    var possibleDays = days.Where(d => d.ScheduledTasks.Count(st => st.Task == task) < task.Repeating!.OptDayCount).ToArray();
-                    var freeTimeWindows = task.FreeTimeWindows.Where(tw => possibleDays.Any(d => d.Day == tw.Day)).ToArray();
-                    if (freeTimeWindows.Length == 0)
+                    var possibleDays = week.Where(d => d.DayRepeatingTasksCount[task.Id] < task.Repeating!.OptDayCount).ToArray();
+                    var actualFreeTimeWindows = domain.GetActualFreeTimeWindowsFor(task, random, possibleDays: possibleDays);
+                    
+                    if (actualFreeTimeWindows.Length == 0)
                         continue;
 
-                    var randomTimeWindow = freeTimeWindows.RandomElement(random);
-                    days.First(d => d.Day == randomTimeWindow.Day).AddScheduledTaskInTimeWindow(task, randomTimeWindow.Start);
+                    var randomTimeWindow = actualFreeTimeWindows.RandomElement(random);
+                    randomTimeWindow.Day.AddScheduledTask(task, randomTimeWindow.TimeWindow.Start);
                 }
             }
         }
@@ -67,7 +64,7 @@ internal static class ConstructionHeuristics
 
     private static void ConstructNonRepeatingTasks(PlanningDomain domain, Random random)
     {
-        var repeatingTasks = domain.Domain.Tasks.Where(t => t.Repeating == null && t.IsRequired)
+        var repeatingTasks = domain.AvailableTasksPool.Select(t => t.Key).Where(t => t.Repeating == null && t.IsRequired)
             .OrderByDescending(t => t.Priority)
             .ThenBy(t => t.FreeTimeWindows.Sum(ftw => (ftw.End - ftw.Start).Minutes))
             .ToArray();

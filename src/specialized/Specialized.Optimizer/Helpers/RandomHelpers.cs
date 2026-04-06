@@ -59,16 +59,18 @@ internal static class RandomHelpers
 
         random ??= Random.Shared;
 
-        int n = source.Length;
+        T[] copy = new T[source.Length];
+        Array.Copy(source, copy, source.Length);
+        int n = copy.Length;
         while (n > 1)
         {
             n--;
             int k = random.Next(n + 1);
-            T value = source[k];
-            source[k] = source[n];
-            source[n] = value;
+            T value = copy[k];
+            copy[k] = copy[n];
+            copy[n] = value;
         }
 
-        return source;
+        return copy;
     }
 }

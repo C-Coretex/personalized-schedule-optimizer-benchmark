@@ -22,7 +22,7 @@ internal class MoveEngine
 
         var task = domain.AvailableTasksPool.RandomElement(_random);
         //could be hot path
-        var freeTimeWindows = domain.GetActualFreeTimeWindowsFor(task.Key);
+        var freeTimeWindows = domain.GetActualFreeTimeWindowsFor(task.Key, _random);
         if (freeTimeWindows.Length == 0)
             return domain;
 
@@ -165,7 +165,7 @@ internal class MoveEngine
         }
     }
 
-    public PlanningDomain RuinRecreate(PlanningDomain domain, MoveScope ruinScope, RecreateStrategy recreateStrategy, bool createSnapshot = true)
+    public PlanningDomain RuinRecreate(PlanningDomain domain, MoveScope ruinScope, bool createSnapshot = true)
     {
         if (createSnapshot)
             domain = domain.GetSnapshot();
@@ -182,15 +182,7 @@ internal class MoveEngine
                 RuinStrategic(); break;
         }
 
-        switch(recreateStrategy)
-        {
-            case RecreateStrategy.None: 
-                break;
-            case RecreateStrategy.ConstructionHeuristics:
-                RunConstructionHeuristic(); break;
-            case RecreateStrategy.ConsecutiveAdd:
-                RunConsecutiveAdd(); break;
-        }
+        ConstructionHeuristics.Construct(domain, _random, createSnapshot: false);
 
         return domain;
 
@@ -201,7 +193,7 @@ internal class MoveEngine
                 return;
 
             var category = day.Day.Categories.RandomElement(_random);
-            var tasksToRemove = day.ScheduledTasks.Where(c => c.Task.Categories.Contains(category));
+            var tasksToRemove = day.ScheduledTasks.Where(c => c.Task.Categories.Contains(category)).ToArray();
             foreach(var task in tasksToRemove)
                 day.RemoveScheduledTask(task);
         }
@@ -209,7 +201,7 @@ internal class MoveEngine
         void RuinTactical()
         {
             var day = domain.PlanningDays.RandomElement(_random);
-            foreach (var task in day.ScheduledTasks)
+            foreach (var task in day.ScheduledTasks.ToArray())
                 day.RemoveScheduledTask(task);
         }
 
@@ -221,7 +213,7 @@ internal class MoveEngine
             var category = domain.Domain.Categories.RandomElement(_random);
             foreach(var day in domain.PlanningDays.Where(_ => _random.RandomBool()))
             {
-                var tasksToRemove = day.ScheduledTasks.Where(c => c.Task.Categories.Contains(category));
+                var tasksToRemove = day.ScheduledTasks.Where(c => c.Task.Categories.Contains(category)).ToArray();
                 foreach (var task in tasksToRemove)
                     day.RemoveScheduledTask(task);
             }
@@ -240,21 +232,6 @@ internal class MoveEngine
                     day.RemoveScheduledTask(task);
             }
         }
-
-        void RunConstructionHeuristic()
-        {
-            ConstructionHeuristics.Construct(domain, _random, createSnapshot: false);
-        }
-
-        void RunConsecutiveAdd()
-        {
-            var totalActualFreeMinutes = (int)domain.PlanningDays.SelectMany(pd => pd.ActualTimeWindows)
-                .Sum(atw => (atw.End - atw.Start).TotalMinutes);
-            totalActualFreeMinutes /= 30;
-
-            for (var i = 0; i < totalActualFreeMinutes; i++)
-                AddTask(domain, replace: false, createSnapshot: false);
-        }
     }
 
     public enum MoveScope
@@ -264,10 +241,13 @@ internal class MoveEngine
         SemiStrategic,  //one category multiple days
         Strategic       //multiple categories multiple days
     }
-    public enum RecreateStrategy
+
+    public enum MoveType
     {
-        None,
-        ConstructionHeuristics,
-        ConsecutiveAdd
+        Add,
+        Remove,
+        Swap,
+        CascadeMove,
+        RuinRecreate
     }
 }

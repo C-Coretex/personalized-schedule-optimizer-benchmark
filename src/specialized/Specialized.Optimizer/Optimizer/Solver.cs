@@ -26,17 +26,14 @@ public class Solver
         //construction
         planningDomain = ConstructionHeuristics.Construct(planningDomain, _random);
 
-        var constraintScore = planningDomain.CalculateConstraintScore();
-
         //on Add we can either add to a free location or swap if there is no free location from task pool
 
         var moveSelector = new MoveSelector(_random);
 
         //optimization stage 1.
-        var saStage = new SAStage(moveSelector, _random);
+        var saStage = new SAEngine(moveSelector, _random);
         planningDomain = saStage.Run(planningDomain);
 
-        var constraintScore2 = planningDomain.CalculateConstraintScore();
         //optimization stage 2.
         //probably run in parallel if several differentiating versions present
         //probably we don't need to combine LAHC and SA

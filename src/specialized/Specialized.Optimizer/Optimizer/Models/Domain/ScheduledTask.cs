@@ -13,10 +13,10 @@ internal readonly record struct ScheduledTask
 
         var taskFreeTimeWindows = taskFreeTimeWindowsArray.AsEnumerable();
 
-        if (from is not null)
+        if (from is not null || from == TimeOnly.MinValue)
             taskFreeTimeWindows = taskFreeTimeWindows.Where(ftw => ftw.End > from)
                 .Select(ftw => from > ftw.Start ? ftw with { Start = from.Value } : ftw);
-        if (to is not null)
+        if (to is not null || to == TimeOnly.MaxValue)
             taskFreeTimeWindows = taskFreeTimeWindows.Where(ftw => ftw.Start < to)
                 .Select(ftw => to < ftw.End ? ftw with { End = to.Value } : ftw);
 

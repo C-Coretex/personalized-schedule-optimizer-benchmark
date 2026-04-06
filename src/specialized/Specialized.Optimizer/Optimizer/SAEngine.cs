@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Specialized.Optimizer.Optimizer;
 
 //SA (Simulated Annealing) stage for the optimizer
-internal class SAStage
+internal class SAEngine
 {
     private readonly MoveSelector _moveSelector;
     private readonly Random _random;
@@ -15,7 +15,7 @@ internal class SAStage
     private readonly int _optimizationTimeInSeconds;
     private readonly int _optimizationTimeInMilliseconds;
 
-    public SAStage(MoveSelector moveSelector, Random random)
+    public SAEngine(MoveSelector moveSelector, Random random)
     {
         _random = random;
         _moveSelector = moveSelector;
@@ -41,12 +41,13 @@ internal class SAStage
         //for(var i = 0; i < 3_000_000; ++i)
         while(sw.ElapsedMilliseconds < _optimizationTimeInMilliseconds)
         {
-            domain = _moveSelector.MakeMove(currentDomain);
+            domain = _moveSelector.MakeMove(currentDomain, out var selectedMove);
             var domainScore = domain.CalculateConstraintScore();
             if (domainScore < bestDomainScore)
             {
                 bestDomain = domain;
                 bestDomainScore = domainScore;
+                //Console.WriteLine($"Move selected: {selectedMove}");
             }
 
             var temperature = GetTemperature(1 - ((double)sw.ElapsedMilliseconds / _optimizationTimeInMilliseconds));

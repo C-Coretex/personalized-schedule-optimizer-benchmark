@@ -1,4 +1,5 @@
-﻿using Specialized.Optimizer.Optimizer.Models.Domain;
+﻿using Specialized.Optimizer.Optimizer.Helpers;
+using Specialized.Optimizer.Optimizer.Models.Domain;
 using static Specialized.Optimizer.Optimizer.Moves.MoveEngine;
 
 namespace Specialized.Optimizer.Optimizer.Moves;
@@ -9,56 +10,59 @@ internal class MoveSelector
     {
         _random = random ?? new Random();
         _moveEngine = moveEngine ?? new MoveEngine(_random);
+        _lahcEngine = new(this, optimizationIterations: 1_000, ruinEnabled: false);
     }
 
     private readonly Random _random;
     private readonly MoveEngine _moveEngine;
+    private readonly LAHCEngine _lahcEngine;
 
-    public PlanningDomain MakeMove(PlanningDomain domain, bool createSnapshot = true)
+    public PlanningDomain MakeMove(PlanningDomain domain, bool includeRuinRecreate = true, bool createSnapshot = true)
+        => MakeMove(domain, out _, includeRuinRecreate, createSnapshot);
+
+    public PlanningDomain MakeMove(PlanningDomain domain, out MoveType moveTypeSelected, bool includeRuinRecreate = true, bool createSnapshot = true)
     {
         var randomDouble = _random.NextDouble();
 
-        if (randomDouble <= 0.01)
+        var ruinRecreateChance = includeRuinRecreate ? 0.01 : 0;
+        if (randomDouble <= ruinRecreateChance)
         {
+            moveTypeSelected = MoveType.RuinRecreate;
             var scope = _random.NextDouble() switch
             {
-                0.4 => MoveScope.Operational,
-                0.3 + (0.4) => MoveScope.Tactical,
-                0.2 + (0.3 + 0.4) => MoveScope.SemiStrategic,
+                < 0.4 => MoveScope.Operational,
+                < 0.3 + (0.4) => MoveScope.Tactical,
+                < 0.2 + (0.3 + 0.4) => MoveScope.SemiStrategic,
                 _ => MoveScope.Strategic //0.1
             };
-            var recreateStrategy = _random.NextDouble() switch
-            {
-                0.2 => RecreateStrategy.None,
-                0.5 + (0.2) => RecreateStrategy.ConstructionHeuristics,
-                _ => RecreateStrategy.ConsecutiveAdd //0.3
-            };
 
-            domain = _moveEngine.RuinRecreate(domain, scope, recreateStrategy, createSnapshot: createSnapshot);
+            var previousAvailableItems = domain.AvailableTasksPool.Values.Sum();
+            domain = _moveEngine.RuinRecreate(domain, scope, createSnapshot: createSnapshot);
+            var newAvailableItems = domain.AvailableTasksPool.Values.Sum();
 
-            //make random moves
-            if(recreateStrategy == RecreateStrategy.None)
-            {
-                var totalActualFreeMinutes = (int)domain.PlanningDays.SelectMany(pd => pd.ActualTimeWindows)
-                .Sum(atw => (atw.End - atw.Start).TotalMinutes);
-                totalActualFreeMinutes /= 30;
+            var difference = Math.Abs(newAvailableItems - previousAvailableItems);
+            if (difference == 0)
+                return domain;
 
-                for(var i = 0; i < totalActualFreeMinutes; i++)
-                    domain = MakeMove(domain, createSnapshot: false);
-            }
+            //now run short LAHC to construct something SA can accept
+            //TODO: can be done in parallel to not stop actual SA run, since this could take a while because of large amount of LAHC iterations
+            domain = _lahcEngine.Run(domain, optimizationIterations: Math.Min(10_000, difference * 100));
 
             return domain;
         }
-        else if (randomDouble < 0.1 + (0.01))
+        else if (randomDouble < 0.1 + ruinRecreateChance)
         {
+            moveTypeSelected = MoveType.Add;
             return _moveEngine.AddTask(domain, createSnapshot: createSnapshot);
         }
-        else if (randomDouble < 0.1 + (0.1 + 0.01))
+        else if (randomDouble < 0.1 + (0.1 + ruinRecreateChance))
         {
+            moveTypeSelected = MoveType.Remove;
             return _moveEngine.RemoveTask(domain, createSnapshot: createSnapshot);
         }
-        else if (randomDouble < 0.35 + (0.1 + 0.1 + 0.01))
+        else if (randomDouble < 0.35 + (0.1 + 0.1 + ruinRecreateChance))
         {
+            moveTypeSelected = MoveType.Swap;
             var scope = _random.NextDouble() switch
             {
                 0.75 => MoveScope.Tactical,
@@ -68,6 +72,7 @@ internal class MoveSelector
         }
         else //0.44
         {
+            moveTypeSelected = MoveType.CascadeMove;
             var maxCascadeSequence = _random.NextDouble() switch
             {
                 0.35 => 1,

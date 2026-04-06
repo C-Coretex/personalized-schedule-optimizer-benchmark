@@ -85,9 +85,10 @@ internal partial record PlanningDomain
         return snapshot;
     }
 
-    public (CategoryTimeWindow TimeWindow, PlanningDay Day)[] GetActualFreeTimeWindowsFor(Task task, bool useDefaultIfNoActuallyFree = true)
+    public (CategoryTimeWindow TimeWindow, PlanningDay Day)[] GetActualFreeTimeWindowsFor(Task task, Random random, PlanningDay[]? possibleDays = null, bool useDefaultIfNoActuallyFree = true)
     {
-        var shuffledDays = PlanningDays.ShuffleElements();
+        possibleDays ??= PlanningDays;
+        var shuffledDays = possibleDays.ShuffleElements(random);
         var entriesByDays = shuffledDays
             .Select(d => ScheduledTask.GetActualTimeWindowsForDay(d, task).Select(t => (t, d)).ToArray())
             .Where(t => t.Length > 0);

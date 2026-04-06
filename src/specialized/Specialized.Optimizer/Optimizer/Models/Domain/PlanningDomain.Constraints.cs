@@ -36,12 +36,11 @@ internal partial record PlanningDomain
     {
         var nonRepeatingTasks = domain.Tasks.Where(t => t.Repeating is null);
 
-        var dayRepeating = domain.Tasks.Where(t => t.IsDayRepeating && !t.IsWeekRepeating)
-            .SelectMany(t => Enumerable.Repeat(t, t.Repeating!.OptDayCount * domain.Days.Length));
-        var weekRepeating = domain.Tasks.Where(t => t.IsWeekRepeating) //don't filter by day as WeekOptCount will be higher anyway
-            .SelectMany(t => Enumerable.Repeat(t, t.Repeating!.OptWeekCount * WeekRepeatingTasksCount.Count));
+        var repeating = domain.Tasks.Where(t => t.Repeating is not null)
+            .SelectMany(t => Enumerable.Repeat(t, 
+                Math.Min(t.Repeating!.OptWeekCount * WeekRepeatingTasksCount.Count, t.Repeating!.OptDayCount * domain.Days.Length)));
 
-        AvailableTasksPool = nonRepeatingTasks.Concat(dayRepeating).Concat(weekRepeating)
+        AvailableTasksPool = nonRepeatingTasks.Concat(repeating)
             .GroupBy(t => t).ToDictionary(g => g.Key, g => g.Count());
 
         HC2_RequiredTasksMustBeScheduledConstraint = domain.Tasks.Count(t => t.IsRequired && t.Repeating is null);
