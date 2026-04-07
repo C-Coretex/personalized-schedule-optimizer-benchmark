@@ -104,6 +104,18 @@ button {
   white-space: nowrap;
 }
 
+.ids-optimizer {
+  font-size: 0.65rem;
+  background: #f5f3ff;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .ids-score {
   font-size: 0.68rem;
   background: #f0f9ff;

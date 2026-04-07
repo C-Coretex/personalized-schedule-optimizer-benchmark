@@ -1,5 +1,6 @@
 import { renderForm, syncJson, showHistoryBanner, hideHistoryBanner } from './state.js';
 import { renderCalendar } from './calendar.js';
+import { OPTIMIZER_LABELS } from './constants.js';
 
 // ─── API Schema ───────────────────────────────────────────────────────────────
 
@@ -316,6 +317,8 @@ export async function submit() {
     return;
   }
 
+  payload.optimizer = document.getElementById('optimizer-select')?.value ?? 'Specialized';
+
   try {
     const res = await fetch('/schedule/generate', {
       method:  'POST',
@@ -359,6 +362,13 @@ function loadHistoryEntry(item, li) {
   ta.classList.remove('json-invalid');
   showHistoryBanner(meta.id);
   renderCalendar({ ...meta, unscheduledDynamicTasks: item.unscheduledDynamicTasks });
+
+  const optimizerKey = meta.optimizer;
+  const calOptimizerLabel = document.getElementById('cal-optimizer-label');
+  if (calOptimizerLabel) {
+    calOptimizerLabel.textContent = OPTIMIZER_LABELS[optimizerKey] ?? optimizerKey;
+    calOptimizerLabel.classList.remove('hidden');
+  }
 
   const calScore = document.getElementById('cal-score');
   if (item.score) {
@@ -472,6 +482,12 @@ export async function loadGeneratedIds() {
       idSpan.className = 'ids-id';
       idSpan.textContent = item.scheduleJobMetadata.id;
       li.appendChild(idSpan);
+
+      const optimizerKey = item.scheduleJobMetadata.optimizer;
+      const optimizerBadge = document.createElement('span');
+      optimizerBadge.className = 'ids-optimizer';
+      optimizerBadge.textContent = OPTIMIZER_LABELS[optimizerKey] ?? optimizerKey;
+      li.appendChild(optimizerBadge);
 
       if (item.score) {
         const badge = document.createElement('span');

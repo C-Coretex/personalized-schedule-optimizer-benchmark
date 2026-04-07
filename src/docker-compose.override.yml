@@ -5,6 +5,8 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - SpecializedApi__BaseUrl=http://pso.specialized:8080
+      - OrToolsApi__BaseUrl=http://pso.ortools:8080
+      - TimefoldApi__BaseUrl=http://pso.timefold:8080
       - InternalApi__SharedSecret=eff9+c0hpiv3-rmln&_r+r9kcfv0&wpga8y-1$2yzazzb1z(q2
     ports:
       - "8080:8080"
@@ -15,7 +17,17 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  pso.specialized:    
+  pso.specialized:
     environment:
       - Callbacks__ScheduleSubmitUrl=http://pso.web:8080/schedule/submit
       - InternalApi__SharedSecret=eff9+c0hpiv3-rmln&_r+r9kcfv0&wpga8y-1$2yzazzb1z(q2
+
+  pso.ortools:
+    environment:
+      - Callbacks__ScheduleSubmitUrl=http://pso.web:8080/schedule/submit
+      - InternalApi__SharedSecret=eff9+c0hpiv3-rmln&_r+r9kcfv0&wpga8y-1$2yzazzb1z(q2
+
+  pso.timefold:
+    environment:
+      - CALLBACKS_SCHEDULE_SUBMIT_URL=http://pso.web:8080/schedule/submit
+      - INTERNAL_API_SHARED_SECRET=eff9+c0hpiv3-rmln&_r+r9kcfv0&wpga8y-1$2yzazzb1z(q2

@@ -32,6 +32,14 @@ export const CATEGORIES = [
   { value: 'Weekend',   label: 'Weekend' },
 ];
 
+// ─── Optimizer labels ─────────────────────────────────────────────────────────
+
+export const OPTIMIZER_LABELS = {
+  Specialized: 'Specialized',
+  OrTools:     'OR-Tools',
+  Timefold:    'Timefold',
+};
+
 // ─── Calendar colors & display constants ──────────────────────────────────────
 
 export const CATEGORY_COLORS = {

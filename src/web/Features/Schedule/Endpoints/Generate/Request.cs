@@ -1,7 +1,9 @@
 ﻿using Web.Features.Schedule.Models.Enums;
 using Web.Features.Schedule.Models.Payload;
 using Web.Features.Schedule.Models.Tasks;
+using Web.Providers;
 using Web.Providers.Models;
+using static Web.Providers.ServiceCollectionExtensions;
 
 namespace Web.Features.Schedule.Endpoints.Generate;
 
@@ -15,6 +17,7 @@ public record Request
     public IReadOnlyList<DifficultyCapacityEntry> DifficultyCapacities { get; init; } = [];
     public IReadOnlyList<TaskTypePreferenceEntry> TaskTypePreferences { get; init; } = [];
     public int? OptimizationTimeInSeconds { get; init; }
+    public OptimizationClients Optimizer { get; init; } = OptimizationClients.Specialized;
 
     public GenerateScheduleRequest ToScheduleOptimizationRequest()
     {

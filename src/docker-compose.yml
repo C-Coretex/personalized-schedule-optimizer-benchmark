@@ -7,6 +7,8 @@ services:
       dockerfile: ./Dockerfile
     depends_on:
       - pso.specialized
+      - pso.ortools
+      - pso.timefold
     volumes:
       - ~/.vsdbg:/remote_debugger:rw   # VS installs vsdbg here
 
@@ -14,4 +16,16 @@ services:
     build:
       context: ./specialized
       dockerfile: ./Specialized.Api/Dockerfile
+    # No "ports:" mapping — not reachable from host, only from within the Docker network
+
+  pso.ortools:
+    build:
+      context: ./ortools
+      dockerfile: ./OrTools.Api/Dockerfile
+    # No "ports:" mapping — not reachable from host, only from within the Docker network
+
+  pso.timefold:
+    build:
+      context: ./timefold
+      dockerfile: ./Dockerfile
     # No "ports:" mapping — not reachable from host, only from within the Docker network

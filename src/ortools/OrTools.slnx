@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="OrTools.Api/OrTools.Api.csproj" />
+  <Project Path="OrTools.Optimizer/OrTools.Optimizer.csproj" />
+</Solution>
