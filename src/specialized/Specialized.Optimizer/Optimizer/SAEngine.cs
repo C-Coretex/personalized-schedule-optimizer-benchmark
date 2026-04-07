@@ -15,14 +15,14 @@ internal class SAEngine
     private readonly int _optimizationTimeInSeconds;
     private readonly int _optimizationTimeInMilliseconds;
 
-    public SAEngine(MoveSelector moveSelector, Random random)
+    public SAEngine(MoveSelector moveSelector, Random random, int optimizationTimeInSeconds = 15)
     {
         _random = random;
         _moveSelector = moveSelector;
 
         _initialHard = 2;
         _initialSoft = 1_000;
-        _optimizationTimeInSeconds = 15;
+        _optimizationTimeInSeconds = optimizationTimeInSeconds;
         _optimizationTimeInMilliseconds = _optimizationTimeInSeconds * 1000;
     }
 
@@ -63,11 +63,11 @@ internal class SAEngine
             }
 
             //Replace with logger.Debug
-            if (++iteration % 50_000 == 0)
-                Console.WriteLine($"Iteration {iteration}, best score: {bestDomainScore}, time elapsed: {sw.Elapsed.TotalSeconds:F1}s");
+            if ((++iteration + _moveSelector.LAHCIterations) % 50_000 == 0)
+                Console.WriteLine($"Total iterations {iteration + _moveSelector.LAHCIterations} (SA {iteration}/ LAHC {_moveSelector.LAHCIterations}), best score: {bestDomainScore}, time elapsed: {sw.Elapsed.TotalSeconds:F1}s");
         }
 
-        Console.WriteLine($"Total iterations: {iteration}, best solution: {bestDomainScore}");
+        Console.WriteLine($"Total iterations {iteration + _moveSelector.LAHCIterations} (SA {iteration}/ LAHC {_moveSelector.LAHCIterations}), best solution: {bestDomainScore}");
 
         return bestDomain;
     }

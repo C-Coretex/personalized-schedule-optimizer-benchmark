@@ -211,7 +211,7 @@ function computeOverlapLayout(tasks) {
   return layout;
 }
 
-function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities = []) {
+function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities = [], taskTypePreferences = []) {
   calEventTasks = [];
   const totalPx = (CAL_END_HOUR - CAL_START_HOUR) * CAL_HOUR_PX;
 
@@ -227,7 +227,8 @@ function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities =
   for (const cw of categoryWindows) { const key = calDateKey(new Date(cw.startDateTime));  if (cwByDay[key]) cwByDay[key].push(cw); }
 
   // ── Header ──
-  const diffCapMap = new Map(difficultyCapacities.map(e => [e.date, e.capacity]));
+  const diffCapMap  = new Map(difficultyCapacities.map(e => [e.date, e.capacity]));
+  const typePrefsMap = new Map(taskTypePreferences.map(e => [e.date, e.preferences]));
 
   let headerHtml = '<div class="cal-gutter-header"></div>';
   for (const d of dates) {
@@ -249,10 +250,17 @@ function buildCalGrid(dates, tasks, categoryWindows = [], difficultyCapacities =
            ${diffLabel ? `<span class="cal-day-stat diff" title="Total difficulty${capacity != null ? ' / daily cap' : ''}">D ${diffLabel}</span>` : ''}
          </div>`
       : '';
+    const dayPrefs = typePrefsMap.get(key) || [];
+    const prefsHtml = dayPrefs.length
+      ? `<div class="cal-day-prefs">${dayPrefs.map(p =>
+          `<span class="cal-day-pref" title="${p.type}">${p.type} ×${p.weight}</span>`
+        ).join('')}</div>`
+      : '';
     headerHtml += `<div class="cal-day-header">
       <div class="cal-day-name">${DAY_NAMES[d.getDay()]}</div>
       <div>${d.getDate()} ${MONTH_ABBR[d.getMonth()]}</div>
       ${statsHtml}
+      ${prefsHtml}
     </div>`;
   }
   document.getElementById('cal-header-row').innerHTML = headerHtml;
@@ -437,7 +445,7 @@ export function renderCalendar(item) {
   }
 
   buildCalLegend(enriched);
-  buildCalGrid(dates, enriched, request.categoryWindows || [], request.difficultyCapacities || []);
+  buildCalGrid(dates, enriched, request.categoryWindows || [], request.difficultyCapacities || [], request.taskTypePreferences || []);
   renderUnscheduled(item.unscheduledDynamicTasks);
   section.classList.remove('hidden');
 }

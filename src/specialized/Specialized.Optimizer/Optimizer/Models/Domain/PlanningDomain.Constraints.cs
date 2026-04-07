@@ -34,9 +34,13 @@ internal partial record PlanningDomain
 
     private void InitConstraintValues(Domain domain)
     {
-        var nonRepeatingTasks = domain.Tasks.Where(t => t.Repeating is null);
+        var weekTasks = domain.Tasks.OrderBy(t => t.Id).Where(t => t.IsWeekRepeating).ToArray();
+        WeekRepeatingTasksCount = domain.Days.GroupBy(d => d.WeekNumber).OrderBy(g => g.Key).ToDictionary(g => g.Key, g =>
+            weekTasks.OrderBy(t => t.Id).ToDictionary(wt => wt.Id, _ => 0));
 
-        var repeating = domain.Tasks.Where(t => t.Repeating is not null)
+        var nonRepeatingTasks = domain.Tasks.OrderBy(t => t.Id).Where(t => t.Repeating is null);
+
+        var repeating = domain.Tasks.OrderBy(t => t.Id).Where(t => t.Repeating is not null)
             .SelectMany(t => Enumerable.Repeat(t, 
                 Math.Min(t.Repeating!.OptWeekCount * WeekRepeatingTasksCount.Count, t.Repeating!.OptDayCount * domain.Days.Length)));
 
@@ -100,7 +104,8 @@ internal partial record PlanningDomain
         //update all total constraints in one go
         foreach (var planningDay in PlanningDays)
         {
-            sc7_totalDifficultyDifference += Math.Pow((planningDay.TotalDifficulty - averageDifficulty), 2);
+            var dayDifference = (planningDay.TotalDifficulty - averageDifficulty);
+            sc7_totalDifficultyDifference += dayDifference * dayDifference;
 
             HC1_TotalConstraint += planningDay.HC1_NoTaskOverlaps;
             HC7_TotalConstraint += planningDay.HC7_RespectDayMinOptCountConstraint;

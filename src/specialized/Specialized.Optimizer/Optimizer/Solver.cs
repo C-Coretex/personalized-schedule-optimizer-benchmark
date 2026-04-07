@@ -22,6 +22,7 @@ public class Solver
         //init
         var staticDomain = new Domain(request);
         var planningDomain = new PlanningDomain(staticDomain);
+        var optimizationTimeInSeconds = request.OptimizationTimeInSeconds;
 
         //construction
         planningDomain = ConstructionHeuristics.Construct(planningDomain, _random);
@@ -31,7 +32,7 @@ public class Solver
         var moveSelector = new MoveSelector(_random);
 
         //optimization stage 1.
-        var saStage = new SAEngine(moveSelector, _random);
+        var saStage = new SAEngine(moveSelector, _random, optimizationTimeInSeconds);
         planningDomain = saStage.Run(planningDomain);
 
         //optimization stage 2.

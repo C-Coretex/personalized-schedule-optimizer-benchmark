@@ -153,13 +153,13 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
                     sum += Math.Max(0, g.Key.Repeating!.MinWeekCount - countInWeek) + Math.Max(0, countInWeek - g.Key.Repeating!.OptWeekCount);
                 }
                 return sum;
-            }) + nonAddedTasks.Sum(t => t.Repeating!.MinWeekCount);
+            }) + nonAddedTasks.Sum(t => t.Repeating!.MinWeekCount * weeks.Length);
     }
 
     //day repeating task must be scheduled at least minDayCount times in the day and at most optDayCount times
     private int HC7(GenerateScheduleRequest request, ScheduledTask<DynamicTask>[] tasksTimeline)
     {
-        var days = request.PlanningHorizon.GetDays();
+        var days = request.PlanningHorizon.GetDays().ToArray();
 
         var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating is not null)
             .Except(tasksTimeline.Select(tt => tt.Task));
@@ -174,7 +174,7 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
                     sum += Math.Max(0, g.Key.Repeating!.MinDayCount - countInDay) + Math.Max(0, countInDay - g.Key.Repeating!.OptDayCount);
                 }
                 return sum;
-            }) + nonAddedTasks.Sum(t => t.Repeating!.MinDayCount);
+            }) + nonAddedTasks.Sum(t => t.Repeating!.MinDayCount * days.Length);
     }
 
     //task cannot be placed outside of planning horizon
@@ -255,10 +255,10 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
     {
         var weeks = request.PlanningHorizon.GetWeeks().ToArray();
 
-        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating?.OptWeekCount > 1)
+        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating is not null)
             .Except(tasksTimeline.Select(tt => tt.Task));
 
-        return tasksTimeline.Where(t => t.Task.Repeating?.OptWeekCount > 1).GroupBy(t => t.Task)
+        return tasksTimeline.Where(t => t.Task.Repeating is not null).GroupBy(t => t.Task)
             .Sum(g =>
             {
                 var sum = 0;
@@ -268,18 +268,18 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
                     sum += Math.Max(0, g.Key.Repeating!.OptWeekCount - countInWeek);
                 }
                 return sum;
-            }) + nonAddedTasks.Sum(t => t.Repeating!.OptWeekCount);
+            }) + nonAddedTasks.Sum(t => t.Repeating!.OptWeekCount * weeks.Length);
     }
 
     //minimize difference between actual and optimal number of scheduled occurrences for day repeating tasks
     private int SC6(GenerateScheduleRequest request, ScheduledTask<DynamicTask>[] tasksTimeline)
     {
-        var days = request.PlanningHorizon.GetDays();
+        var days = request.PlanningHorizon.GetDays().ToArray();
 
-        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating?.OptDayCount > 1)
+        var nonAddedTasks = request.DynamicTasks.Where(t => t.Repeating is not null)
             .Except(tasksTimeline.Select(tt => tt.Task));
 
-        return tasksTimeline.Where(t => t.Task.Repeating?.OptDayCount > 1).GroupBy(t => t.Task)
+        return tasksTimeline.Where(t => t.Task.Repeating is not null).GroupBy(t => t.Task)
             .Sum(g =>
             {
                 var sum = 0;
@@ -289,7 +289,7 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
                     sum += Math.Max(0, g.Key.Repeating!.OptDayCount - countInDay);
                 }
                 return sum;
-            }) + nonAddedTasks.Sum(t => t.Repeating!.OptDayCount);
+            }) + nonAddedTasks.Sum(t => t.Repeating!.OptDayCount * days.Length);
     }
 
     //minimize difficulty difference between days

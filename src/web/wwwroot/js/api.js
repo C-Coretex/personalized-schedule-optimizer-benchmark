@@ -1,4 +1,4 @@
-import { renderForm, showHistoryBanner, hideHistoryBanner } from './state.js';
+import { renderForm, syncJson, showHistoryBanner, hideHistoryBanner } from './state.js';
 import { renderCalendar } from './calendar.js';
 
 // ─── API Schema ───────────────────────────────────────────────────────────────
@@ -222,7 +222,7 @@ function buildLlmPrompt(variant = 'week-light') {
     '- SC2 (Daily Difficulty Capacity): difficultyCapacities[date].capacity limits total task difficulty per day. Set capacity ≈ sum of difficulties you expect scheduled that day (10–20 is typical). Exceeding capacity is penalized ×1250.',
     '- SC3 (Difficult Task Strategy): Tasks with difficulty ≥ 4 are affected by difficultTaskSchedulingStrategy. "Cluster" groups them together; "Even" spreads them apart.',
     '- SC4 (Type Preferences): taskTypePreferences boost scheduling of matching task types on given days (e.g., Physical tasks on weekends).',
-    '- SC5/SC6 (Opt Counts): optWeekCount / optDayCount = the ideal target. The optimizer tries to reach it. Always set optWeekCount >= minWeekCount and optDayCount >= minDayCount.',
+    '- SC5/SC6 (Opt Counts): optWeekCount / optDayCount = the ideal target AND the hard cap — the optimizer will never schedule a task more times than optWeekCount per week or optDayCount per day. Always set optWeekCount >= minWeekCount and optDayCount >= minDayCount. CRITICAL: if a task has minDayCount: 1 (daily habit), optWeekCount must be at least 7 (one per day × 7 days/week) — otherwise the task cannot be scheduled the required number of times. Rule of thumb: optWeekCount >= minDayCount × 7.',
     '- SC7 (Difficulty Balance): The optimizer tries to keep total daily difficulty balanced across days. Mix task difficulties rather than clustering all hard tasks on one day.',
     '',
     '### Common pitfalls to avoid',
@@ -230,6 +230,7 @@ function buildLlmPrompt(variant = 'week-light') {
     '- Setting minWeekCount larger than the number of available windows per week causes HC6 violations.',
     '- A dynamic task with categories: ["Work"] but no categoryWindow for "Work" can never be scheduled (HC5 violation).',
     '- A required task (isRequired: true) with a category that has no windows in the planning horizon will always be unscheduled.',
+    '- optWeekCount and optDayCount are hard scheduling caps, not just targets. A task with minDayCount: 1 and optWeekCount: 1 can only be scheduled once total across the entire week — it cannot appear daily. For daily habits, set optWeekCount >= 7.',
     '',
     '## Instructions',
     'Generate realistic, diverse test data. Return ONLY the raw JSON object — no explanation, no markdown code fences.',
@@ -344,6 +345,8 @@ export async function submit() {
 
 // ─── Generated IDs panel ─────────────────────────────────────────────────────
 
+let activeScheduleId = null;
+
 function loadHistoryEntry(item, li) {
   document.querySelectorAll('#generated-ids-list li.ids-active')
     .forEach(el => el.classList.remove('ids-active'));
@@ -351,9 +354,9 @@ function loadHistoryEntry(item, li) {
 
   const meta = item.scheduleJobMetadata;
   const ta = document.getElementById('json-preview');
-  ta.value = JSON.stringify(meta.request, null, 2);
-  ta.classList.remove('json-invalid');
   renderForm(meta.request);
+  syncJson();
+  ta.classList.remove('json-invalid');
   showHistoryBanner(meta.id);
   renderCalendar({ ...meta, unscheduledDynamicTasks: item.unscheduledDynamicTasks });
 
@@ -374,8 +377,8 @@ const CONSTRAINT_INFO = {
   HC3: { fmt: s => `÷60 → ${Math.ceil(s / 60)}` },
   HC4: { fmt: s => `÷60 → ${Math.ceil(s / 60)}` },
   HC8: { fmt: s => `÷60 → ${Math.ceil(s / 60)}` },
-  SC1: { fmt: s => `×1000 → ${1000 * s}` },
-  SC2: { fmt: s => `×1250 → ${1250 * s}` },
+  SC1: { fmt: s => `×100 → ${100 * s}` },
+  SC2: { fmt: s => `×500 → ${500 * s}` },
   SC5: { fmt: s => `×50 → ${50 * s}` },
   SC6: { fmt: s => `×50 → ${50 * s}` },
 };
@@ -476,8 +479,14 @@ export async function loadGeneratedIds() {
         badge.textContent = `H: ${item.score.score.hardScore} | S: ${item.score.score.softScore}`;
         li.appendChild(badge);
         attachCombinedScoreTooltip(badge, item.score);
+      } else {
+        const spinner = document.createElement('span');
+        spinner.className = 'ids-spinner';
+        li.appendChild(spinner);
       }
+      li.dataset.scheduleId = item.scheduleJobMetadata.id;
       li.addEventListener('click', async () => {
+        activeScheduleId = item.scheduleJobMetadata.id;
         try {
           const fresh = await fetch('/schedule/generated');
           if (!fresh.ok) throw new Error();
@@ -489,6 +498,13 @@ export async function loadGeneratedIds() {
         }
       });
       list.appendChild(li);
+    }
+
+    if (activeScheduleId) {
+      const activeLi = [...list.querySelectorAll('li')].find(
+        li => li.dataset.scheduleId === activeScheduleId
+      );
+      if (activeLi) activeLi.classList.add('ids-active');
     }
   } catch {
     list.innerHTML = '<li class="ids-empty">Failed to load IDs.</li>';

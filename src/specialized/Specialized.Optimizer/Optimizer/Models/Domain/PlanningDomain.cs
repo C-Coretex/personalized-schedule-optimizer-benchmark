@@ -9,10 +9,6 @@ internal partial record PlanningDomain
     {
         Domain = domain;
 
-        var weekTasks = domain.Tasks.Where(t => t.IsWeekRepeating).ToArray();
-        WeekRepeatingTasksCount = domain.Days.GroupBy(d => d.WeekNumber).ToDictionary(g => g.Key, g =>
-            weekTasks.ToDictionary(wt => wt.Id, _ => 0));
-
         PlanningDays = [.. domain.Days.Select(day => new PlanningDay(day, this))];
 
         InitConstraintValues(domain);

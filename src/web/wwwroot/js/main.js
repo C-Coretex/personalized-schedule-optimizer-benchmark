@@ -8,11 +8,51 @@ import {
   copySchemaToClipboard, copyPromptToClipboard, loadSampleJson,
 } from './api.js';
 
+function calcDefaultOptTime(startDate, endDate) {
+  if (!startDate || !endDate) return 15;
+  const days = Math.round((new Date(endDate) - new Date(startDate)) / 86400000) + 1;
+  return days >= 30 ? 30 : 15;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Planning horizon & strategy
-  document.getElementById('horizon-start').addEventListener('input', syncJson);
-  document.getElementById('horizon-end').addEventListener('input', syncJson);
+  let userOverrodeOptTime = false;
+
+  function onHorizonChange() {
+    if (!userOverrodeOptTime) {
+      const start = document.getElementById('horizon-start').value;
+      const end   = document.getElementById('horizon-end').value;
+      const t = calcDefaultOptTime(start, end);
+      document.getElementById('opt-time').value = t;
+      document.getElementById('opt-time-value').textContent = `${t}s`;
+    }
+    syncJson();
+  }
+
+  document.getElementById('horizon-start').addEventListener('input', onHorizonChange);
+  document.getElementById('horizon-end').addEventListener('input', onHorizonChange);
   document.getElementById('strategy').addEventListener('input', syncJson);
+
+  // Optimization time slider
+  document.getElementById('opt-time').addEventListener('input', e => {
+    const val = parseInt(e.target.value);
+    document.getElementById('opt-time-value').textContent = `${val}s`;
+    const start = document.getElementById('horizon-start').value;
+    const end   = document.getElementById('horizon-end').value;
+    userOverrodeOptTime = val !== calcDefaultOptTime(start, end);
+    syncJson();
+  });
+
+  // Reset optimization time to auto-calculated default
+  document.getElementById('opt-time-reset').addEventListener('click', () => {
+    const start = document.getElementById('horizon-start').value;
+    const end   = document.getElementById('horizon-end').value;
+    const t = calcDefaultOptTime(start, end);
+    document.getElementById('opt-time').value = t;
+    document.getElementById('opt-time-value').textContent = `${t}s`;
+    userOverrodeOptTime = false;
+    syncJson();
+  });
 
   // Add item buttons
   document.getElementById('add-fixed-task').addEventListener('click',        () => addFixedTask());
@@ -39,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     jsonDebounce = setTimeout(() => {
       try {
         renderForm(JSON.parse(e.target.value));
+        syncJson();
         e.target.classList.remove('json-invalid');
       } catch {
         e.target.classList.add('json-invalid');
@@ -47,5 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   loadGeneratedIds();
+  setInterval(loadGeneratedIds, 1000);
   syncJson();
 });

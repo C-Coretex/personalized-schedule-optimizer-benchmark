@@ -28,12 +28,16 @@ internal static class ConstructionHeuristics
         var dailyRepeatingTasks = repeatingTasks.Where(t => t.Repeating!.MinDayCount > 0).ToArray();
         foreach (var day in domain.PlanningDays.ShuffleElements(random))
         {
-            foreach (var task in dailyRepeatingTasks.Where(domain.AvailableTasksPool.ContainsKey))
+            foreach (var task in dailyRepeatingTasks)
             {
+                if (!domain.AvailableTasksPool.TryGetValue(task, out var tasksLeft))
+                    continue;
+
                 var taskCount = day.DayRepeatingTasksCount[task.Id];
-                for (var i = taskCount; i < task.Repeating!.MinDayCount; i++)
+                for (var i = taskCount; i < task.Repeating!.MinDayCount && tasksLeft > 0; i++)
                 {
-                    day.AddScheduledTaskInTimeWindow(task, TimeOnly.MinValue);
+                    if(day.AddScheduledTaskInTimeWindow(task, TimeOnly.MinValue))
+                        tasksLeft--;
                 }
             }
         }
@@ -44,11 +48,15 @@ internal static class ConstructionHeuristics
 
         foreach (var week in weekDays)
         {
-            foreach (var task in weeklyRepeatingTasks.Where(domain.AvailableTasksPool.ContainsKey))
+            foreach (var task in weeklyRepeatingTasks)
             {
+                if (!domain.AvailableTasksPool.TryGetValue(task, out var tasksLeft))
+                    continue;
+
                 var taskCount = domain.WeekRepeatingTasksCount[week.Key][task.Id];
-                for (var i = taskCount; i < task.Repeating!.MinWeekCount; i++)
+                for (var i = taskCount; i < task.Repeating!.MinWeekCount && tasksLeft > 0; i++)
                 {
+
                     var possibleDays = week.Where(d => d.DayRepeatingTasksCount[task.Id] < task.Repeating!.OptDayCount).ToArray();
                     var actualFreeTimeWindows = domain.GetActualFreeTimeWindowsFor(task, random, possibleDays: possibleDays);
                     
@@ -56,7 +64,8 @@ internal static class ConstructionHeuristics
                         continue;
 
                     var randomTimeWindow = actualFreeTimeWindows.RandomElement(random);
-                    randomTimeWindow.Day.AddScheduledTask(task, randomTimeWindow.TimeWindow.Start);
+                    if(randomTimeWindow.Day.AddScheduledTask(task, randomTimeWindow.TimeWindow.Start))
+                        tasksLeft--;
                 }
             }
         }

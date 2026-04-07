@@ -14,5 +14,6 @@ namespace Web.Providers.Models
         public required DifficultTaskSchedulingStrategy DifficultTaskSchedulingStrategy { get; init; }
         public IReadOnlyList<DifficultyCapacityEntry> DifficultyCapacities { get; init; } = [];
         public IReadOnlyList<TaskTypePreferenceEntry> TaskTypePreferences { get; init; } = [];
+        public int OptimizationTimeInSeconds { get; init; } = 15;
     }
 }

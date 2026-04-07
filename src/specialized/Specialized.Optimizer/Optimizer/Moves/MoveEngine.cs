@@ -121,7 +121,7 @@ internal class MoveEngine
         {
             var selectedTimeWindow = scope switch
             {
-                MoveScope.Operational => GetTacticalTimeWindow (task, day), //operational and tactical are the same in this move
+                MoveScope.Operational => GetTacticalTimeWindow(task, day), //operational and tactical are the same in this move
                 MoveScope.Tactical => GetTacticalTimeWindow(task, day),
                 MoveScope.SemiStrategic => GetStrategicTimeWindow(task, day), //semi-strategic and strategic are the same in this move
                 MoveScope.Strategic => GetStrategicTimeWindow(task, day),
@@ -147,8 +147,6 @@ internal class MoveEngine
         (TimeOnly? Start, PlanningDay? Day) GetTacticalTimeWindow(ScheduledTask task, PlanningDay day)
         {
             var randomFreeTimeWindow = task.Task.FreeTimeWindowsByDate[day.Day.Date].RandomElement(_random);
-            if (randomFreeTimeWindow.Start <= task.Start && randomFreeTimeWindow.End >= task.End)
-                return (null, null);
 
             var minutesWindow = (int)(randomFreeTimeWindow.End.AddMinutes(-task.Task.Duration) - randomFreeTimeWindow.Start).TotalMinutes;
             return (randomFreeTimeWindow.Start.AddMinutes(_random.Next(minutesWindow)), day);
@@ -157,8 +155,6 @@ internal class MoveEngine
         (TimeOnly? Start, PlanningDay? Day) GetStrategicTimeWindow(ScheduledTask task, PlanningDay day)
         {
             var randomFreeTimeWindow = task.Task.FreeTimeWindows.RandomElement(_random);
-            if (randomFreeTimeWindow.Start <= task.Start && randomFreeTimeWindow.End >= task.End)
-                return (null, null);
 
             var minutesWindow = (int)(randomFreeTimeWindow.End.AddMinutes(-task.Task.Duration) - randomFreeTimeWindow.Start).TotalMinutes;
             return (randomFreeTimeWindow.Start.AddMinutes(_random.Next(minutesWindow)), domain.PlanningDays.First(d => d.Day == randomFreeTimeWindow.Day));

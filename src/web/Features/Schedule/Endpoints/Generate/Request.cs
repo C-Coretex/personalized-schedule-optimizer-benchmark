@@ -14,15 +14,24 @@ public record Request
     public required DifficultTaskSchedulingStrategy DifficultTaskSchedulingStrategy { get; init; }
     public IReadOnlyList<DifficultyCapacityEntry> DifficultyCapacities { get; init; } = [];
     public IReadOnlyList<TaskTypePreferenceEntry> TaskTypePreferences { get; init; } = [];
+    public int? OptimizationTimeInSeconds { get; init; }
 
-    public GenerateScheduleRequest ToScheduleOptimizationRequest() => new()
+    public GenerateScheduleRequest ToScheduleOptimizationRequest()
     {
-        FixedTasks = FixedTasks.Select(t => t.ToProviderModel()).ToList(),
-        DynamicTasks = DynamicTasks.Select(t => t.ToProviderModel()).ToList(),
-        PlanningHorizon = PlanningHorizon.ToProviderModel(),
-        CategoryWindows = CategoryWindows.Select(w => w.ToProviderModel()).ToList(),
-        DifficultTaskSchedulingStrategy = DifficultTaskSchedulingStrategy.ToProviderModel(),
-        DifficultyCapacities = DifficultyCapacities.Select(d => d.ToProviderModel()).ToList(),
-        TaskTypePreferences = TaskTypePreferences.Select(p => p.ToProviderModel()).ToList()
-    };
+        var days = PlanningHorizon.EndDate.DayNumber - PlanningHorizon.StartDate.DayNumber + 1;
+        var defaultSeconds = days >= 30 ? 30 : 15;
+        var optimizationTime = Math.Clamp(OptimizationTimeInSeconds ?? defaultSeconds, 1, 60);
+
+        return new()
+        {
+            FixedTasks = FixedTasks.Select(t => t.ToProviderModel()).ToList(),
+            DynamicTasks = DynamicTasks.Select(t => t.ToProviderModel()).ToList(),
+            PlanningHorizon = PlanningHorizon.ToProviderModel(),
+            CategoryWindows = CategoryWindows.Select(w => w.ToProviderModel()).ToList(),
+            DifficultTaskSchedulingStrategy = DifficultTaskSchedulingStrategy.ToProviderModel(),
+            DifficultyCapacities = DifficultyCapacities.Select(d => d.ToProviderModel()).ToList(),
+            TaskTypePreferences = TaskTypePreferences.Select(p => p.ToProviderModel()).ToList(),
+            OptimizationTimeInSeconds = optimizationTime
+        };
+    }
 }

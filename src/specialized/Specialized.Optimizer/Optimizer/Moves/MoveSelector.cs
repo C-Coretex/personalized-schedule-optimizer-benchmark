@@ -1,5 +1,4 @@
-﻿using Specialized.Optimizer.Optimizer.Helpers;
-using Specialized.Optimizer.Optimizer.Models.Domain;
+﻿using Specialized.Optimizer.Optimizer.Models.Domain;
 using static Specialized.Optimizer.Optimizer.Moves.MoveEngine;
 
 namespace Specialized.Optimizer.Optimizer.Moves;
@@ -16,6 +15,7 @@ internal class MoveSelector
     private readonly Random _random;
     private readonly MoveEngine _moveEngine;
     private readonly LAHCEngine _lahcEngine;
+    public int LAHCIterations { get; private set; }
 
     public PlanningDomain MakeMove(PlanningDomain domain, bool includeRuinRecreate = true, bool createSnapshot = true)
         => MakeMove(domain, out _, includeRuinRecreate, createSnapshot);
@@ -46,7 +46,9 @@ internal class MoveSelector
 
             //now run short LAHC to construct something SA can accept
             //TODO: can be done in parallel to not stop actual SA run, since this could take a while because of large amount of LAHC iterations
-            domain = _lahcEngine.Run(domain, optimizationIterations: Math.Min(10_000, difference * 100));
+            var lahcIterations = Math.Min(10_000, difference * 100);
+            domain = _lahcEngine.Run(domain, optimizationIterations: lahcIterations);
+            LAHCIterations += lahcIterations;
 
             return domain;
         }
@@ -65,7 +67,7 @@ internal class MoveSelector
             moveTypeSelected = MoveType.Swap;
             var scope = _random.NextDouble() switch
             {
-                0.75 => MoveScope.Tactical,
+                < 0.75 => MoveScope.Tactical,
                 _ => MoveScope.Strategic
             };
             return _moveEngine.SwapTasks(domain, scope, createSnapshot: createSnapshot);
@@ -75,15 +77,15 @@ internal class MoveSelector
             moveTypeSelected = MoveType.CascadeMove;
             var maxCascadeSequence = _random.NextDouble() switch
             {
-                0.35 => 1,
-                0.3 + (0.35) => 2,
-                0.2 + (0.3 + 0.35) => 3,
-                0.1 + (0.2 + 0.3 + 0.35) => 4,
+                < 0.35 => 1,
+                < 0.3 + (0.35) => 2,
+                < 0.2 + (0.3 + 0.35) => 3,
+                < 0.1 + (0.2 + 0.3 + 0.35) => 4,
                 _ => 5 //0.05
             };
             var scope = _random.NextDouble() switch
             {
-                0.75 => MoveScope.Tactical,
+                < 0.75 => MoveScope.Tactical,
                 _ => MoveScope.Strategic
             };
 

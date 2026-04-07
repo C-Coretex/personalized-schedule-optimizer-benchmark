@@ -29,7 +29,7 @@ internal partial record PlanningDay
         SC4_TypeWeightsConstraint = Day.FixedTasks.Sum(ft => 
             Day.TypeWeights.Where(tw => ft.Task.Types.Contains(tw.Key)).Select(tw => tw.Value).Sum());
 
-        foreach (var repeatingTask in domain.Domain.Tasks.Where(t => t.IsDayRepeating))
+        foreach (var repeatingTask in domain.Domain.Tasks.Where(t => t.Repeating is not null))
         {
             HC7_RespectDayMinOptCountConstraint += repeatingTask.Repeating!.MinDayCount ?? 0;
             SC6_MinimizeDifferenceFromDayOptConstraint += repeatingTask.Repeating!.OptDayCount;

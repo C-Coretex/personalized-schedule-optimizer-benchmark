@@ -17,12 +17,13 @@ internal class LAHCEngine
         _moveSelector = moveSelector;
 
         _optimizationIterations = optimizationIterations;
-        _bufferSize = bufferSize ?? optimizationIterations / 10;
+        _bufferSize = bufferSize ?? optimizationIterations / 30;
         _ruinEnabled = ruinEnabled;
     }
     public PlanningDomain Run(PlanningDomain domain, int? optimizationIterations = null)
     {
-        var bufferSize = optimizationIterations is not null ? optimizationIterations.Value / 10 : _bufferSize;
+        //smaller buffer size for more greedy search for local optima (since we have only few iterations to recreate after ruin)
+        var bufferSize = optimizationIterations is not null ? optimizationIterations.Value / 30 : _bufferSize;
         optimizationIterations ??= _optimizationIterations;
         var current = domain;
         var currentScore = current.CalculateConstraintScore();

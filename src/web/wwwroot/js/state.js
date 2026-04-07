@@ -13,6 +13,7 @@ export function readState() {
       endDate:   document.getElementById('horizon-end').value   || null,
     },
     difficultTaskSchedulingStrategy: document.getElementById('strategy').value,
+    optimizationTimeInSeconds: parseInt(document.getElementById('opt-time').value) || 15,
 
     fixedTasks: [...document.querySelectorAll('#fixed-tasks-list .task-item')].map(el => ({
       name:       el.querySelector('.ft-name').value || '',
@@ -77,6 +78,9 @@ export function renderForm(s) {
   document.getElementById('horizon-start').value = s.planningHorizon?.startDate ?? '';
   document.getElementById('horizon-end').value   = s.planningHorizon?.endDate   ?? '';
   document.getElementById('strategy').value      = s.difficultTaskSchedulingStrategy ?? 'Cluster';
+  const optTime = s.optimizationTimeInSeconds ?? 15;
+  document.getElementById('opt-time').value      = optTime;
+  document.getElementById('opt-time-value').textContent = `${optTime}s`;
 
   document.getElementById('fixed-tasks-list').innerHTML          = '';
   document.getElementById('dynamic-tasks-list').innerHTML        = '';
@@ -97,6 +101,7 @@ export function renderForm(s) {
 export const DEFAULT_STATE = {
   planningHorizon: { startDate: null, endDate: null },
   difficultTaskSchedulingStrategy: 'Cluster',
+  optimizationTimeInSeconds: 15,
   fixedTasks: [],
   dynamicTasks: [],
   categoryWindows: [],
