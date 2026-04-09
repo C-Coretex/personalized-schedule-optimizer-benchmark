@@ -17,14 +17,14 @@ internal class MoveSelector
     private readonly LAHCEngine _lahcEngine;
     public int LAHCIterations { get; private set; }
 
-    public PlanningDomain MakeMove(PlanningDomain domain, bool includeRuinRecreate = true, bool createSnapshot = true)
-        => MakeMove(domain, out _, includeRuinRecreate, createSnapshot);
+    public PlanningDomain MakeMove(PlanningDomain domain, double leftPercent, bool includeRuinRecreate = true, bool createSnapshot = true)
+        => MakeMove(domain, leftPercent, out _, includeRuinRecreate, createSnapshot);
 
-    public PlanningDomain MakeMove(PlanningDomain domain, out MoveType moveTypeSelected, bool includeRuinRecreate = true, bool createSnapshot = true)
+    public PlanningDomain MakeMove(PlanningDomain domain, double leftPercent, out MoveType moveTypeSelected, bool includeRuinRecreate = true, bool createSnapshot = true)
     {
         var randomDouble = _random.NextDouble();
 
-        var ruinRecreateChance = includeRuinRecreate ? 0.01 : 0;
+        var ruinRecreateChance = includeRuinRecreate ? (Math.Max(0.01, 0.5 * (1.0 - leftPercent))) : 0;// 5% early -> 1% late
         if (randomDouble <= ruinRecreateChance)
         {
             moveTypeSelected = MoveType.RuinRecreate;
@@ -36,17 +36,14 @@ internal class MoveSelector
                 _ => MoveScope.Strategic //0.1
             };
 
-            var previousAvailableItems = domain.AvailableTasksPool.Values.Sum();
-            domain = _moveEngine.RuinRecreate(domain, scope, createSnapshot: createSnapshot);
-            var newAvailableItems = domain.AvailableTasksPool.Values.Sum();
+            domain = _moveEngine.RuinRecreate(domain, scope, out var deletedTasksCount, createSnapshot: createSnapshot);
 
-            var difference = Math.Abs(newAvailableItems - previousAvailableItems);
-            if (difference == 0)
+            if (deletedTasksCount == 0)
                 return domain;
 
             //now run short LAHC to construct something SA can accept
             //TODO: can be done in parallel to not stop actual SA run, since this could take a while because of large amount of LAHC iterations
-            var lahcIterations = Math.Min(10_000, difference * 100);
+            var lahcIterations = Math.Min(10_000, deletedTasksCount * 100);
             domain = _lahcEngine.Run(domain, optimizationIterations: lahcIterations);
             LAHCIterations += lahcIterations;
 
@@ -72,7 +69,7 @@ internal class MoveSelector
             };
             return _moveEngine.SwapTasks(domain, scope, createSnapshot: createSnapshot);
         }
-        else //0.44
+        else //0.4 -> 0.44
         {
             moveTypeSelected = MoveType.CascadeMove;
             var maxCascadeSequence = _random.NextDouble() switch

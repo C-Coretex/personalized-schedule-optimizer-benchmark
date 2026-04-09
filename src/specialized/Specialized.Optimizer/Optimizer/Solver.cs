@@ -35,6 +35,16 @@ public class Solver
         var saStage = new SAEngine(moveSelector, _random, optimizationTimeInSeconds);
         planningDomain = saStage.Run(planningDomain);
 
+        var t = planningDomain.CalculateConstraintScore();
+
+        Console.WriteLine("SC1: " + planningDomain.SC1_TotalPriorityConstraint);
+        Console.WriteLine("SC2: " + planningDomain.SC2_TotalConstraint);
+        Console.WriteLine("SC3: " + planningDomain.SC3_TotalConstraint);
+        Console.WriteLine("SC4: " + planningDomain.SC4_TotalConstraint);
+        Console.WriteLine("SC5: " + planningDomain.SC5_MinimizeDifferenceFromWeekOptConstraint);
+        Console.WriteLine("SC6: " + planningDomain.SC6_TotalConstraint);
+        Console.WriteLine("SC7: " + planningDomain.SC7_TotalDifficultyDifference);
+
         //optimization stage 2.
         //probably run in parallel if several differentiating versions present
         //probably we don't need to combine LAHC and SA

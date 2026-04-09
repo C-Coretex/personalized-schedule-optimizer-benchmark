@@ -1,6 +1,4 @@
-﻿using Specialized.Optimizer.Models.Tasks;
-
-namespace Specialized.Optimizer.Optimizer.Models.Domain;
+﻿namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
 internal partial record PlanningDay
 {
@@ -8,6 +6,7 @@ internal partial record PlanningDay
 
     public int HC7_RespectDayMinOptCountConstraint { get; private set; } = 0;
 
+    private bool _isDayRepeatingTasksCountFieldCloned = true;
     public Dictionary<Guid, int> DayRepeatingTasksCount { get; private set; }
 
     public int TotalDifficulty { get; private set; } = 0;
@@ -55,6 +54,12 @@ internal partial record PlanningDay
     {
         if (task.Repeating is null)
             return;
+
+        if (!_isDayRepeatingTasksCountFieldCloned)
+        {
+            DayRepeatingTasksCount = new(DayRepeatingTasksCount);
+            _isDayRepeatingTasksCountFieldCloned = true;
+        }
 
         var coefficient = add ? 1 : -1;
 

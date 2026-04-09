@@ -49,9 +49,6 @@ internal static class RandomHelpers
     public static bool RandomBool(this Random random)
         => random.Next() > int.MaxValue / 2; //a fast and simple way to return bool
 
-    public static bool RandomByPercent(this Random random, int percent)
-        => random.Next(100) < percent;
-
     public static T[] ShuffleElements<T>(this T[] source, Random? random = null)
     {
         if (source == null)

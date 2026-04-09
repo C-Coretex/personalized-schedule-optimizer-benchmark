@@ -39,9 +39,6 @@ internal class MoveEngine
 
     public PlanningDomain RemoveTask(PlanningDomain domain, bool createSnapshot = true)
     {
-        if (domain.AvailableTasksPool.Count == 0)
-            return domain;
-
         if (createSnapshot)
             domain = domain.GetSnapshot();
 
@@ -90,8 +87,8 @@ internal class MoveEngine
         (TimeOnly? Start, PlanningDay? Day) GetTacticalTimeWindow(ScheduledTask task, PlanningDay day)
         {
             var randomFreeTimeWindow = task.Task.FreeTimeWindowsByDate[day.Day.Date].RandomElement(_random);
-            if (randomFreeTimeWindow.Start <= task.Start && randomFreeTimeWindow.End >= task.End)
-                return (null, null);
+          //  if (randomFreeTimeWindow.Start <= task.Start && randomFreeTimeWindow.End >= task.End)
+             //   return (null, null);
 
             var minutesWindow = (int)(randomFreeTimeWindow.End.AddMinutes(-task.Task.Duration) - randomFreeTimeWindow.Start).TotalMinutes;
             return (randomFreeTimeWindow.Start.AddMinutes(_random.Next(minutesWindow)), day);
@@ -140,7 +137,9 @@ internal class MoveEngine
             day = selectedTimeWindow.Day;
         }
 
-        day.AddScheduledTaskInTimeWindow(task.Task, TimeOnly.MinValue, stopIfUnfeasible: true);
+        var terminalWindows = ScheduledTask.GetActualTimeWindowsForDay(day, task.Task).ToArray();
+        if (terminalWindows.Length > 0)
+            day.AddScheduledTask(task.Task, terminalWindows.RandomElement(_random).Start, stopIfUnfeasible: true);
 
         return domain;
 
@@ -161,72 +160,86 @@ internal class MoveEngine
         }
     }
 
-    public PlanningDomain RuinRecreate(PlanningDomain domain, MoveScope ruinScope, bool createSnapshot = true)
+    public PlanningDomain RuinRecreate(PlanningDomain domain, MoveScope ruinScope, out int deletedTasksCount, bool createSnapshot = true)
     {
         if (createSnapshot)
             domain = domain.GetSnapshot();
 
-        switch (ruinScope)
+        deletedTasksCount = ruinScope switch
         {
-            case MoveScope.Operational:
-                RuinOperational(); break;
-            case MoveScope.Tactical:
-                RuinTactical(); break;
-            case MoveScope.SemiStrategic:
-                RuinSemiStrategic(); break;
-            case MoveScope.Strategic:
-                RuinStrategic(); break;
-        }
+            MoveScope.Operational => RuinOperational(),
+            MoveScope.Tactical => RuinTactical(),
+            MoveScope.SemiStrategic => RuinSemiStrategic(),
+            MoveScope.Strategic => RuinStrategic(),
 
-        ConstructionHeuristics.Construct(domain, _random, createSnapshot: false);
+            _ => throw new NotImplementedException()
+        };
+
+        if(deletedTasksCount > 0)
+            ConstructionHeuristics.Construct(domain, _random, createSnapshot: false);
 
         return domain;
 
-        void RuinOperational()
+        int RuinOperational()
         {
             var day = domain.PlanningDays.RandomElement(_random);
             if (day.Day.Categories.Count == 0)
-                return;
+                return 0;
 
             var category = day.Day.Categories.RandomElement(_random);
             var tasksToRemove = day.ScheduledTasks.Where(c => c.Task.Categories.Contains(category)).ToArray();
             foreach(var task in tasksToRemove)
                 day.RemoveScheduledTask(task);
+
+            return tasksToRemove.Length;
         }
 
-        void RuinTactical()
+        int RuinTactical()
         {
             var day = domain.PlanningDays.RandomElement(_random);
-            foreach (var task in day.ScheduledTasks.ToArray())
+            var tasksToRemove = day.ScheduledTasks.ToArray();
+            foreach (var task in tasksToRemove)
                 day.RemoveScheduledTask(task);
+
+            return tasksToRemove.Length;
         }
 
-        void RuinSemiStrategic()
+        int RuinSemiStrategic()
         {
             if (domain.Domain.Categories.Length == 0)
-                return;
+                return 0;
 
+            var removedTasks = 0;
             var category = domain.Domain.Categories.RandomElement(_random);
             foreach(var day in domain.PlanningDays.Where(_ => _random.RandomBool()))
             {
                 var tasksToRemove = day.ScheduledTasks.Where(c => c.Task.Categories.Contains(category)).ToArray();
                 foreach (var task in tasksToRemove)
                     day.RemoveScheduledTask(task);
+
+                removedTasks += tasksToRemove.Length;
             }
+
+            return removedTasks;
         }
 
-        void RuinStrategic()
+        int RuinStrategic()
         {
-            var categories = domain.Domain.Categories.Where(c => _random.RandomByPercent(10)).ToArray();
+            var categories = domain.Domain.Categories.Where(c => _random.NextDouble() < 0.1).ToArray();
             if (categories.Length == 0)
-                return;
+                return 0;
 
+            var removedTasks = 0;
             foreach (var day in domain.PlanningDays.Where(_ => _random.RandomBool()))
             {
                 var tasksToRemove = day.ScheduledTasks.Where(c => c.Task.Categories.Overlaps(categories)).ToArray();
                 foreach (var task in tasksToRemove)
                     day.RemoveScheduledTask(task);
+
+                removedTasks += tasksToRemove.Length;
             }
+
+            return removedTasks;
         }
     }
 

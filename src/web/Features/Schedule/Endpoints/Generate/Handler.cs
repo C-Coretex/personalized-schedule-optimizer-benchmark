@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Web.Features.Schedule.Models.Schedule;
 using Web.Providers;
-using static Web.Providers.ServiceCollectionExtensions;
 
 namespace Web.Features.Schedule.Endpoints.Generate;
 

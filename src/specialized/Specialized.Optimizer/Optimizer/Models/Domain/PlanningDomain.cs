@@ -72,9 +72,7 @@ internal partial record PlanningDomain
         var snapshot = this with
         {
             AvailableTasksPool = new(AvailableTasksPool),
-            WeekRepeatingTasksCount = WeekRepeatingTasksCount.ToDictionary(
-                kvp => kvp.Key,
-                kvp => new Dictionary<Guid, int>(kvp.Value))
+            _isWeekRepeatingCountFieldCopied = false
         };
         snapshot.PlanningDays = [.. PlanningDays.Select(pd => pd.GetSnapshot(snapshot))];
 

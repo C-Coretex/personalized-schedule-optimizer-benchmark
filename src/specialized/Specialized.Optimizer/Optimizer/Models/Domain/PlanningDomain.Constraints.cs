@@ -14,6 +14,7 @@ internal partial record PlanningDomain
 
     public int HC7_TotalConstraint { get; private set; }
 
+    private bool _isWeekRepeatingCountFieldCopied = true;
     //<WeekNumber, <TaskId, TaskCount>>
     public Dictionary<int, Dictionary<Guid, int>> WeekRepeatingTasksCount { get; private set; }
 
@@ -122,6 +123,14 @@ internal partial record PlanningDomain
     {
         if (task.Repeating is null)
             return;
+
+        if(!_isWeekRepeatingCountFieldCopied)
+        {
+            WeekRepeatingTasksCount = WeekRepeatingTasksCount.ToDictionary(
+                kvp => kvp.Key,
+                kvp => new Dictionary<Guid, int>(kvp.Value));
+            _isWeekRepeatingCountFieldCopied = true;
+        }
 
         var coefficient = add ? 1 : -1;
 

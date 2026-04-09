@@ -29,7 +29,7 @@ internal record Day
     {
         PossibleTimeWindows = FreeTimeWindow.FromRequest(this, tasks, categories).OrderBy(ftw => ftw.Start).ToImmutableArray();
         WeekNumber = weekNumber;
-        DifficultFixedTasks = FixedTasks.Where(t => t.Task.Difficulty >= 4).ToImmutableArray();
+        DifficultFixedTasks = FixedTasks.Where(t => t.Task.Difficulty >= 6).ToImmutableArray();
 
         return this;
     }

@@ -16,6 +16,7 @@ internal partial record PlanningDay
     public Day Day { get; init; }
     public PlanningDomain Domain { get; init; }
 
+    private bool _isScheduledTasksFieldCloned = true;
     private SortedList<TimeOnly, ScheduledTask> _scheduledTasks = new(8);
     //actual planning property
     //can contain unfeasible values (overlapping tasks)
@@ -32,8 +33,8 @@ internal partial record PlanningDay
         return this with
         {
             Domain = domain,
-            _scheduledTasks = new(_scheduledTasks),
-            DayRepeatingTasksCount = new(DayRepeatingTasksCount)
+            _isScheduledTasksFieldCloned = false,
+            _isDayRepeatingTasksCountFieldCloned = false
         };
     }
 
@@ -51,6 +52,12 @@ internal partial record PlanningDay
             return false;
         if (!freeTimeWindows.Any(ftw => ftw.Start <= scheduledTask.Start && ftw.End >= scheduledTask.End))
             return false;
+
+        if (!_isScheduledTasksFieldCloned)
+        {
+            _scheduledTasks = new(_scheduledTasks);
+            _isScheduledTasksFieldCloned = true;
+        }
 
         while (!_scheduledTasks.TryAdd(start, scheduledTask))
         {
@@ -71,7 +78,6 @@ internal partial record PlanningDay
     /// <returns>True if added</returns>
     public bool AddScheduledTaskInTimeWindow(Task task, TimeOnly from, TimeOnly? to = null, bool stopIfUnfeasible = false)
     {
-        //TODO: cache if will be hot path
         var actualTimeWindow = ScheduledTask.GetActualTimeWindowsForDay(this, task, from, to).FirstOrDefault();
         if(stopIfUnfeasible && actualTimeWindow == null)
             return false;
@@ -87,6 +93,12 @@ internal partial record PlanningDay
     {
         if (!_scheduledTasks.TryGetValue(task.Start, out var existing) || existing.Task.Id != task.Task.Id)
             return;
+
+        if (!_isScheduledTasksFieldCloned)
+        {
+            _scheduledTasks = new(_scheduledTasks);
+            _isScheduledTasksFieldCloned = true;
+        }
 
         _scheduledTasks.Remove(task.Start);
 

@@ -34,7 +34,7 @@ internal class LAHCEngine
 
         for (var step = 0; step < optimizationIterations; step++)
         {
-            var candidate = _moveSelector.MakeMove(current, includeRuinRecreate: _ruinEnabled);
+            var candidate = _moveSelector.MakeMove(current, 0, includeRuinRecreate: _ruinEnabled);
             var candidateScore = candidate.CalculateConstraintScore();
 
             var i = step % bufferSize;
