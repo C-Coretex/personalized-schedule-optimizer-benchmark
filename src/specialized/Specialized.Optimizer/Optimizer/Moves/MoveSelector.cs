@@ -24,7 +24,7 @@ internal class MoveSelector
     {
         var randomDouble = _random.NextDouble();
 
-        var ruinRecreateChance = includeRuinRecreate ? (Math.Max(0.01, 0.5 * (1.0 - leftPercent))) : 0;// 5% early -> 1% late
+        var ruinRecreateChance = includeRuinRecreate ? (Math.Max(0.01, 0.05 * (1.0 - leftPercent))) : 0;// 5% early -> 1% late
         if (randomDouble <= ruinRecreateChance)
         {
             moveTypeSelected = MoveType.RuinRecreate;
