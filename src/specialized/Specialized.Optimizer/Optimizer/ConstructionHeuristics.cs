@@ -12,7 +12,6 @@ internal static class ConstructionHeuristics
 
         ConstructRepeatingTasks(domain, random);
 
-        //collect pool of tasks
         ConstructNonRepeatingTasks(domain, random);
 
         return domain;

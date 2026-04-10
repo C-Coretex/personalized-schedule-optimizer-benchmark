@@ -35,8 +35,6 @@ public class Solver
         var saStage = new SAEngine(moveSelector, _random, optimizationTimeInSeconds);
         planningDomain = saStage.Run(planningDomain);
 
-        var t = planningDomain.CalculateConstraintScore();
-
         Console.WriteLine("SC1: " + planningDomain.SC1_TotalPriorityConstraint);
         Console.WriteLine("SC2: " + planningDomain.SC2_TotalConstraint);
         Console.WriteLine("SC3: " + planningDomain.SC3_TotalConstraint);

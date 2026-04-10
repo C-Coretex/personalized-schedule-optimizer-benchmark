@@ -27,6 +27,10 @@ internal partial record PlanningDay
     //if we need to optimize - we can modify the value on tasks/adding/removing, not recalculate it from scratch
     private FreeTimeWindow[]? _actualTimeWindows;
     public IReadOnlyCollection<FreeTimeWindow> ActualTimeWindows => _actualTimeWindows ??= [.. GetActualTimeWindows()];
+    //we can optimize this. On every task added we find to which availableTimeWindow it belongs, then cut out time for this task
+    //then this task has links to first and second part of the time window. If the task is removed - we unite these time windows (+ task length)
+    //just check that there is no overlap (if there is then gg), but tbh not sure that we need it
+    //but I don't think we can cache task ActualTimeWindows (too many days+timeWindows to cache and copy on every Clone)
 
     public PlanningDay GetSnapshot(PlanningDomain domain)
     {
