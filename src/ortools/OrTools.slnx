@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="OrTools.Api/OrTools.Api.csproj" />
+  <Project Path="OrTools.Console/OrTools.Console.csproj" Id="56e9d891-7ce8-4614-9219-43b2850f0f5c" />
   <Project Path="OrTools.Optimizer/OrTools.Optimizer.csproj" />
 </Solution>
