@@ -129,22 +129,23 @@ internal static class ScheduleScorer
     // HC5: tasks not outside their category windows
     private static int HC5(GenerateScheduleRequest request, ScheduledTask[] dynamicTimeline)
     {
-        if (request.CategoryWindows.Count == 0) return 0;
-
-        var windowsByCategory = request.CategoryWindows
-            .GroupBy(cw => cw.Category)
+        var categoryTimeWindowsDict = request.CategoryWindows.GroupBy(cw => cw.Category)
             .ToDictionary(g => g.Key, g => g.ToArray());
 
-        return dynamicTimeline.Count(t =>
-        {
-            var dt = (DynamicTask)t.Task;
-            if (dt.Categories.Count == 0) return false;
-            return dt.Categories.All(c =>
+
+        var tt = dynamicTimeline.Where(t => ((DynamicTask)t.Task).Categories
+            .All(c => //check that all == if none has ANY
             {
-                if (!windowsByCategory.TryGetValue(c, out var windows)) return false;
-                return !windows.Any(w => t.Start >= w.StartDateTime && t.End <= w.EndDateTime);
-            });
-        });
+                var categoryTimeWindows = categoryTimeWindowsDict[c];
+                return !categoryTimeWindows.Any(ctw => t.Start >= ctw.StartDateTime && t.End <= ctw.EndDateTime);
+            }));
+
+        return dynamicTimeline.Count(t => ((DynamicTask)t.Task).Categories
+            .All(c => //check that all == if none has ANY
+            {
+                var categoryTimeWindows = categoryTimeWindowsDict[c];
+                return !categoryTimeWindows.Any(ctw => t.Start >= ctw.StartDateTime && t.End <= ctw.EndDateTime);
+            }));
     }
 
     // HC6: week-repeating tasks meet min/opt per week

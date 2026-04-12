@@ -128,7 +128,7 @@ public class Handler(IHttpContextAccessor httpContextAccessor, IMemoryCache cach
         var categoryTimeWindowsDict = request.CategoryWindows.GroupBy(cw => cw.Category)
             .ToDictionary(g => g.Key, g => g.ToArray());
         return tasksTimeline.Count(t => t.Task.Categories
-            .All(c =>
+            .All(c => //check that all == if none has ANY
             {
                 var categoryTimeWindows = categoryTimeWindowsDict[c];
                 return !categoryTimeWindows.Any(ctw => t.Start >= ctw.StartDateTime && t.End <= ctw.EndDateTime);
