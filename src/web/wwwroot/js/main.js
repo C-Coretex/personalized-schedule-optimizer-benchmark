@@ -6,6 +6,7 @@ import {
 import {
   submit, loadGeneratedIds, fetchSchema,
   copySchemaToClipboard, copyPromptToClipboard, loadSampleJson,
+  loadSampleMonthLight, loadSampleMonthHeavy,
 } from './api.js';
 
 function calcDefaultOptTime(startDate, endDate) {
@@ -68,7 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Schema / clipboard
   fetchSchema();
-  document.getElementById('load-sample-btn').addEventListener('click', loadSampleJson);
+  document.getElementById('load-sample-week-heavy-btn').addEventListener('click', loadSampleJson);
+  document.getElementById('load-sample-month-light-btn').addEventListener('click', loadSampleMonthLight);
+  document.getElementById('load-sample-month-heavy-btn').addEventListener('click', loadSampleMonthHeavy);
   document.getElementById('copy-schema-btn').addEventListener('click', copySchemaToClipboard);
   document.getElementById('copy-prompt-btn').addEventListener('click', copyPromptToClipboard);
 

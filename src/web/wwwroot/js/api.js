@@ -279,14 +279,26 @@ export async function copyPromptToClipboard(e) {
   }
 }
 
-export async function loadSampleJson() {
-  const res  = await fetch('/sample.json');
+async function loadSampleJsonFromFile(filename) {
+  const res  = await fetch(`/${filename}`);
   const data = await res.json();
   const ta   = document.getElementById('json-preview');
   ta.value = JSON.stringify(data, null, 2);
   ta.classList.remove('json-invalid');
   renderForm(data);
   hideHistoryBanner();
+}
+
+export async function loadSampleJson() {
+  await loadSampleJsonFromFile('sample.json');
+}
+
+export async function loadSampleMonthLight() {
+  await loadSampleJsonFromFile('month-light.json');
+}
+
+export async function loadSampleMonthHeavy() {
+  await loadSampleJsonFromFile('month-heavy.json');
 }
 
 // ─── Submit ───────────────────────────────────────────────────────────────────

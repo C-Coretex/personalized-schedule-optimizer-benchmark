@@ -418,7 +418,6 @@ public class Solver
         }
 
         //follow strategy for scheduling difficult tasks
-        //TODO: check
         void SC3()
         {
             //Consecutive gap sum = span − durations. If you sort n tasks by start time, the sum of gaps between neighbors telescopes to end[last] − start[first] − Σdurations. This avoids modeling pairwise ordering in CP-SAT entirely.
@@ -507,7 +506,6 @@ public class Solver
         }
 
         //maximize user defined task type preferences
-        //TODO: check
         void SC4()
         {
             var prefsByDay = request.TaskTypePreferences.ToDictionary(p => p.Date, p => p.Preferences);
@@ -532,7 +530,6 @@ public class Solver
         }
 
         //minimize difference between actual and optimal number of scheduled occurrences for week repeating tasks
-        //TODO: check
         void SC5()
         {
             var weeks = request.PlanningHorizon.GetWeeks().ToList();
@@ -572,7 +569,6 @@ public class Solver
         }
 
         //minimize difference between actual and optimal number of scheduled occurrences for day repeating tasks
-        //TODO: check
         void SC6()
         {
             var days = request.PlanningHorizon.GetDays().ToList();
@@ -603,7 +599,6 @@ public class Solver
         }
 
         //minimize difficulty difference between days
-        //TODO: check
         void SC7()
         {
             var days = request.PlanningHorizon.GetDays().ToList();
