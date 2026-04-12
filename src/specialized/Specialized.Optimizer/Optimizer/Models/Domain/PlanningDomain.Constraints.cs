@@ -57,6 +57,7 @@ internal partial record PlanningDomain
         }
 
         TotalDaysDifficultySum += PlanningDays.Sum(d => d.TotalDifficulty);
+        UpdateDayConstraints();
     }
 
     private void UpdateConstraintValues(ScheduledTask task, PlanningDay day, bool add)
@@ -92,6 +93,11 @@ internal partial record PlanningDomain
         var prevDayDifficulty = day.TotalDifficulty - (coefficient * task.Task.Difficulty);
         TotalDaysDifficultySum += day.TotalDifficulty - prevDayDifficulty;
 
+        UpdateDayConstraints();
+    }
+
+    private void UpdateDayConstraints()
+    {        
         //if loops would be a hot path we could do batches for such constraints (that require full loop)
         //also SC7 and other totals could be done without loop if it would REALLY be a hot path
         var averageDifficulty = (double)TotalDaysDifficultySum / PlanningDays.Length;
