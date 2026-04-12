@@ -70,6 +70,7 @@ var monitorTask = Task.Run(async () =>
 }, cts.Token);
 
 var requestModel = request.ToScheduleOptimizationRequest();
+requestModel = requestModel with { OptimizationTimeInSeconds = 5 };
 
 var stopwatch = Stopwatch.StartNew();
 

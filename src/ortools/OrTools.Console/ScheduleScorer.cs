@@ -340,7 +340,7 @@ internal static class ScheduleScorer
         return (int)Math.Ceiling(dayDifficulties.Sum(d => Math.Pow(d - avg, 2)));
     }
 
-    private static IEnumerable<DateOnly> GetDays(OrTools.Optimizer.Models.Payload.PlanningHorizon horizon)
+    private static IEnumerable<DateOnly> GetDays(Optimizer.Models.Payload.PlanningHorizon horizon)
     {
         var current = horizon.StartDate;
         while (current <= horizon.EndDate)
@@ -350,7 +350,7 @@ internal static class ScheduleScorer
         }
     }
 
-    private static IEnumerable<(DateOnly Start, DateOnly End)> GetWeeks(OrTools.Optimizer.Models.Payload.PlanningHorizon horizon)
+    private static IEnumerable<(DateOnly Start, DateOnly End)> GetWeeks(Optimizer.Models.Payload.PlanningHorizon horizon)
     {
         var calendar = CultureInfo.CurrentCulture.Calendar;
         var weekStart = horizon.StartDate;

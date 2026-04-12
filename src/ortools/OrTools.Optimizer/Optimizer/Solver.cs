@@ -1,6 +1,7 @@
 using Google.OrTools.LinearSolver;
 using Google.OrTools.Sat;
 using OrTools.Optimizer.Models;
+using OrTools.Optimizer.Models.Enums;
 using OrTools.Optimizer.Models.Tasks;
 
 namespace OrTools.Optimizer.Optimizer;
@@ -34,6 +35,9 @@ public class Solver
 
         var objective = Google.OrTools.Sat.LinearExpr.NewBuilder();
 
+        //we want to multiply every SC except SC7 by n, since we can't divide SC7/n because of integer vals
+        int numDays = request.PlanningHorizon.GetDays().Count();
+
         AddFixedTasks();
 
         AddDynamicTasks();
@@ -51,7 +55,7 @@ public class Solver
 
 
         SC1();
-       // SC2();
+        SC2();
         SC3();
         SC4();
         SC5();
@@ -62,30 +66,14 @@ public class Solver
 
         var solver = new CpSolver
         {
-            StringParameters = $"num_search_workers:8, max_time_in_seconds:{request.OptimizationTimeInSeconds}"
+            StringParameters = $"num_search_workers:1, max_time_in_seconds:{request.OptimizationTimeInSeconds}"
         };
         var status = solver.Solve(model);
 
-        var timeline = new List<TaskResponse>();
-        if (status is CpSolverStatus.Optimal or CpSolverStatus.Feasible)
-        {
-            foreach (var v in dynamicTaskVars)
-            {
-                bool isScheduled = v.Presence is null || solver.BooleanValue(v.Presence);
-                if (!isScheduled) continue;
 
-                var startTime = horizonOrigin.AddMinutes(solver.Value(v.Start));
-                var endTime = startTime.AddMinutes(v.Task.Duration);
-                timeline.Add(new TaskResponse { Id = v.Task.Id, StartTime = startTime, EndTime = endTime });
-            }
+        return PrepareResponse();
 
-            foreach (var ft in request.FixedTasks)
-                timeline.Add(new TaskResponse { Id = ft.Id, StartTime = ft.StartTime, EndTime = ft.EndTime });
-        }
-
-        return new GenerateScheduleResponse { TasksTimeline = timeline };
-
-
+        //private functions
         int ToMin(DateTime dt) => (int)(dt - horizonOrigin).TotalMinutes;
 
         int TimeOnlyToMinutes(TimeOnly to) => to.Hour * 60 + to.Minute;
@@ -130,6 +118,11 @@ public class Solver
             scheduledOnDayMap[(taskVar, dayIndex)] = result;
             return result;
         }
+
+        BoolVar GetScheduledBool(DynamicTaskVars taskVar, int dayIndex)
+            => taskVar.Presence is null
+                ? GetIsOnDay(taskVar, dayIndex)
+                : GetScheduledOnDay(taskVar, dayIndex);
 
         // Fixed tasks — pinned intervals with no decision variables
         void AddFixedTasks()
@@ -374,7 +367,7 @@ public class Solver
         {
             foreach (var dynamicTaskVar in dynamicTaskVars)
             {
-                var weight = (6 - dynamicTaskVar.Task.Priority) * 100 * -1;
+                var weight = (6 - dynamicTaskVar.Task.Priority) * 100 * numDays * -1;
                 if (dynamicTaskVar.Presence is null)
                     objective.Add(weight);
                 else
@@ -385,22 +378,30 @@ public class Solver
         //minimize total difficulty of scheduled tasks above daily difficulty capacities
         void SC2()
         {
-            var maxPossibleDailyDifficulty = dynamicTaskVars.Sum(v => v.Task.Difficulty);
+            var maxPossibleDailyDifficulty = dynamicTaskVars.Sum(v => v.Task.Difficulty)
+                + request.FixedTasks.Sum(ft => ft.Difficulty);
 
             foreach (var dc in request.DifficultyCapacities)
             {
                 var dayIndex = DayToIndex(dc.Date);
+                var dayDate = dc.Date.ToDateTime(TimeOnly.MinValue).Date;
 
                 var dayDifficulty = Google.OrTools.Sat.LinearExpr.NewBuilder();
 
+                // Fixed tasks on this day
+                foreach (var ft in request.FixedTasks)
+                {
+                    if (ft.StartTime.Date == dayDate)
+                        dayDifficulty.Add(ft.Difficulty);
+                }
+
+                // Dynamic tasks
                 foreach (var taskVar in dynamicTaskVars)
                 {
-                    var isOnDay = GetIsOnDay(taskVar, dayIndex);
-
-                    var weight = taskVar.Task.Difficulty * 500;
                     if (taskVar.Presence is null)
                     {
-                        dayDifficulty.AddTerm(isOnDay, weight);
+                        var isOnDay = GetIsOnDay(taskVar, dayIndex);
+                        dayDifficulty.AddTerm(isOnDay, taskVar.Task.Difficulty);
                     }
                     else
                     {
@@ -412,37 +413,272 @@ public class Solver
                 var overCapacity = model.NewIntVar(0, maxPossibleDailyDifficulty, $"sc2_over_{dc.Date:yyyyMMdd}");
                 model.Add(overCapacity >= dayDifficulty - dc.Capacity);
                 model.Add(overCapacity >= 0);
+                objective.AddTerm(overCapacity, 500 * numDays);
             }
         }
 
         //follow strategy for scheduling difficult tasks
+        //TODO: check
         void SC3()
         {
+            //Consecutive gap sum = span − durations. If you sort n tasks by start time, the sum of gaps between neighbors telescopes to end[last] − start[first] − Σdurations. This avoids modeling pairwise ordering in CP-SAT entirely.
+            //Conditional min/max via sentinels. Inactive tasks get start = horizonMax (won't win the min) and end = 0 (won't win the max), so AddMinEquality/AddMaxEquality naturally select only active tasks.
+            int coefficient = request.DifficultTaskSchedulingStrategy == DifficultTaskSchedulingStrategy.Cluster ? 1 : -1;
 
+            foreach (var day in request.PlanningHorizon.GetDays())
+            {
+                int dayIndex = DayToIndex(day);
+                var dayDate = day.ToDateTime(TimeOnly.MinValue).Date;
+
+                var effStarts = new List<IntVar>();
+                var effEnds = new List<IntVar>();
+                var activeList = new List<BoolVar>();
+                int fixedCount = 0;
+                int fixedDurSum = 0;
+                var durTerms = Google.OrTools.Sat.LinearExpr.NewBuilder();
+
+                // Fixed difficult tasks pinned to this day (always active)
+                foreach (var ft in request.FixedTasks.Where(ft => ft.Difficulty >= 6 && ft.StartTime.Date == dayDate))
+                {
+                    int start = ToMin(ft.StartTime);
+                    int end = ToMin(ft.EndTime);
+
+                    effStarts.Add(model.NewIntVar(start, start, $"sc3_fs_{ft.Id}_{dayIndex}"));
+                    effEnds.Add(model.NewIntVar(end, end, $"sc3_fe_{ft.Id}_{dayIndex}"));
+                    fixedDurSum += (end - start);
+                    fixedCount++;
+                }
+
+                // Dynamic difficult tasks that might land on this day
+                foreach (var dtv in dynamicTaskVars.Where(v => v.Task.Difficulty >= 6))
+                {
+                    var active = GetScheduledBool(dtv, dayIndex);
+                    activeList.Add(active);
+
+                    // When inactive, push start to horizonMax (won't be the min)
+                    var es = model.NewIntVar(0, horizonMax, $"sc3_es_{dtv.Task.Id}_{dayIndex}");
+                    model.Add(es == dtv.Start).OnlyEnforceIf(active);
+                    model.Add(es == horizonMax).OnlyEnforceIf(active.Not());
+                    effStarts.Add(es);
+
+                    // When inactive, push end to 0 (won't be the max)
+                    var ee = model.NewIntVar(0, horizonMax, $"sc3_ee_{dtv.Task.Id}_{dayIndex}");
+                    model.Add(ee == dtv.End).OnlyEnforceIf(active);
+                    model.Add(ee == 0).OnlyEnforceIf(active.Not());
+                    effEnds.Add(ee);
+
+                    durTerms.AddTerm(active, dtv.Task.Duration);
+                }
+
+                int totalCandidates = effStarts.Count;
+                if (totalCandidates < 2) continue;
+
+                // Count of active difficult tasks on this day
+                var countBuilder = Google.OrTools.Sat.LinearExpr.NewBuilder();
+                countBuilder.Add(fixedCount);
+                foreach (var a in activeList)
+                    countBuilder.AddTerm(a, 1);
+
+                var count = model.NewIntVar(0, totalCandidates, $"sc3_cnt_{dayIndex}");
+                model.Add(count == countBuilder);
+
+                var hasMultiple = model.NewBoolVar($"sc3_multi_{dayIndex}");
+                model.Add(count >= 2).OnlyEnforceIf(hasMultiple);
+                model.Add(count <= 1).OnlyEnforceIf(hasMultiple.Not());
+
+                // Conditional min/max across all candidates
+                var minStart = model.NewIntVar(0, horizonMax, $"sc3_min_{dayIndex}");
+                var maxEnd = model.NewIntVar(0, horizonMax, $"sc3_max_{dayIndex}");
+                model.AddMinEquality(minStart, effStarts);
+                model.AddMaxEquality(maxEnd, effEnds);
+
+                // Total duration of active difficult tasks on this day
+                durTerms.Add(fixedDurSum);
+                var sumDur = model.NewIntVar(0, totalCandidates * minutesPerDay, $"sc3_dur_{dayIndex}");
+                model.Add(sumDur == durTerms);
+
+                // Consecutive gap sum = span - durations (only when 2+ tasks)
+                var gap = model.NewIntVar(0, minutesPerDay, $"sc3_gap_{dayIndex}");
+                model.Add(gap == maxEnd - minStart - sumDur).OnlyEnforceIf(hasMultiple);
+                model.Add(gap == 0).OnlyEnforceIf(hasMultiple.Not());
+
+                objective.AddTerm(gap, coefficient * numDays);
+            }
         }
 
         //maximize user defined task type preferences
+        //TODO: check
         void SC4()
         {
+            var prefsByDay = request.TaskTypePreferences.ToDictionary(p => p.Date, p => p.Preferences);
 
+            foreach (var day in request.PlanningHorizon.GetDays())
+            {
+                if (!prefsByDay.TryGetValue(day, out var prefs)) continue;
+                int dayIndex = DayToIndex(day);
+
+                foreach (var dtv in dynamicTaskVars)
+                {
+                    int matchWeight = prefs
+                        .Where(p => dtv.Task.Types.Contains(p.Type))
+                        .Sum(p => p.Weight);
+
+                    if (matchWeight == 0) continue;
+
+                    var scheduled = GetScheduledBool(dtv, dayIndex);
+                    objective.AddTerm(scheduled, -1 * matchWeight * numDays);
+                }
+            }
         }
 
         //minimize difference between actual and optimal number of scheduled occurrences for week repeating tasks
+        //TODO: check
         void SC5()
         {
+            var weeks = request.PlanningHorizon.GetWeeks().ToList();
 
+            foreach (var taskGroup in dynamicTaskVars.GroupBy(v => v.Task))
+            {
+                var rep = taskGroup.Key.Repeating;
+                if (rep is null || rep.OptWeekCount <= 0) continue;
+
+                foreach (var week in weeks)
+                {
+                    int weekStartIdx = DayToIndex(week.Start);
+                    int weekEndIdx = DayToIndex(week.End);
+
+                    var inWeekBools = new List<BoolVar>();
+
+                    foreach (var taskVar in taskGroup)
+                    {
+                        // Each task var lives on exactly one day, so summing
+                        // GetScheduledBool across the week's days gives 0 or 1
+                        for (int d = weekStartIdx; d <= weekEndIdx; d++)
+                        {
+                            inWeekBools.Add(GetScheduledBool(taskVar, d));
+                        }
+                    }
+
+                    // deficit = max(0, OptWeekCount - weeklyCount)
+                    // Achieved by: deficit >= 0 (domain), deficit >= opt - count (constraint),
+                    // and the minimizer pushes it down to the true max.
+                    var deficit = model.NewIntVar(0, rep.OptWeekCount,
+                        $"sc5_def_{taskGroup.Key.Id}_{week.Start}");
+                    model.Add(deficit >= rep.OptWeekCount - Google.OrTools.Sat.LinearExpr.Sum(inWeekBools));
+
+                    objective.AddTerm(deficit, 50 * numDays);
+                }
+            }
         }
 
         //minimize difference between actual and optimal number of scheduled occurrences for day repeating tasks
+        //TODO: check
         void SC6()
         {
+            var days = request.PlanningHorizon.GetDays().ToList();
 
+            foreach (var taskGroup in dynamicTaskVars.GroupBy(v => v.Task))
+            {
+                var rep = taskGroup.Key.Repeating;
+                if (rep is null || rep.OptDayCount <= 0) continue;
+
+                foreach (var day in days)
+                {
+                    int dayIndex = DayToIndex(day);
+
+                    var dayBools = new List<BoolVar>();
+
+                    foreach (var taskVar in taskGroup)
+                    {
+                        dayBools.Add(GetScheduledBool(taskVar, dayIndex));
+                    }
+
+                    var deficit = model.NewIntVar(0, rep.OptDayCount,
+                        $"sc6_def_{taskGroup.Key.Id}_{day}");
+                    model.Add(deficit >= rep.OptDayCount - Google.OrTools.Sat.LinearExpr.Sum(dayBools));
+
+                    objective.AddTerm(deficit, 50 * numDays);
+                }
+            }
         }
 
         //minimize difficulty difference between days
+        //TODO: check
         void SC7()
         {
+            var days = request.PlanningHorizon.GetDays().ToList();
+            int numDays = days.Count;
+            if (numDays < 2) return;
 
+            var maxDailyDiff = dynamicTaskVars.Sum(v => v.Task.Difficulty)
+                + request.FixedTasks.Sum(ft => ft.Difficulty);
+
+            var dayDiffVars = new List<IntVar>();
+
+            foreach (var day in days)
+            {
+                int dayIndex = DayToIndex(day);
+                var dayDate = day.ToDateTime(TimeOnly.MinValue).Date;
+
+                var diffExpr = Google.OrTools.Sat.LinearExpr.NewBuilder();
+
+                // Fixed tasks on this day
+                foreach (var ft in request.FixedTasks)
+                {
+                    if (ft.StartTime.Date == dayDate)
+                        diffExpr.Add(ft.Difficulty);
+                }
+
+                // Dynamic tasks
+                foreach (var dtv in dynamicTaskVars)
+                {
+                    diffExpr.AddTerm(GetScheduledBool(dtv, dayIndex), dtv.Task.Difficulty);
+                }
+
+                var dayDiff = model.NewIntVar(0, maxDailyDiff, $"sc7_diff_{dayIndex}");
+                model.Add(dayDiff == diffExpr);
+                dayDiffVars.Add(dayDiff);
+            }
+
+            // n * Σdᵢ²
+            foreach (var (dayDiff, idx) in dayDiffVars.Select((d, i) => (d, i)))
+            {
+                var sq = model.NewIntVar(0, (long)maxDailyDiff * maxDailyDiff, $"sc7_sq_{idx}");
+                model.AddMultiplicationEquality(sq, [dayDiff, dayDiff]);
+                objective.AddTerm(sq, numDays);
+            }
+
+            // - (Σdᵢ)²
+            long maxTotal = (long)maxDailyDiff * numDays;
+            var totalDiff = model.NewIntVar(0, maxTotal, "sc7_total");
+            model.Add(totalDiff == Google.OrTools.Sat.LinearExpr.Sum(dayDiffVars));
+
+            var totalSq = model.NewIntVar(0, maxTotal * maxTotal, "sc7_totalSq");
+            model.AddMultiplicationEquality(totalSq, [totalDiff, totalDiff]);
+
+            objective.AddTerm(totalSq, -1);
+        }
+
+        GenerateScheduleResponse PrepareResponse()
+        {
+            var timeline = new List<TaskResponse>();
+            if (status is CpSolverStatus.Optimal or CpSolverStatus.Feasible)
+            {
+                foreach (var v in dynamicTaskVars)
+                {
+                    bool isScheduled = v.Presence is null || solver.BooleanValue(v.Presence);
+                    if (!isScheduled) continue;
+
+                    var startTime = horizonOrigin.AddMinutes(solver.Value(v.Start));
+                    var endTime = startTime.AddMinutes(v.Task.Duration);
+                    timeline.Add(new TaskResponse { Id = v.Task.Id, StartTime = startTime, EndTime = endTime });
+                }
+
+                foreach (var ft in request.FixedTasks)
+                    timeline.Add(new TaskResponse { Id = ft.Id, StartTime = ft.StartTime, EndTime = ft.EndTime });
+            }
+
+            return new GenerateScheduleResponse { TasksTimeline = timeline };
         }
     }
 }

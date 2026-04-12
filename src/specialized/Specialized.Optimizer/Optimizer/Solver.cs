@@ -1,6 +1,5 @@
 ﻿using Specialized.Optimizer.Models;
 using Specialized.Optimizer.Models.Tasks;
-using Specialized.Optimizer.Optimizer.Helpers;
 using Specialized.Optimizer.Optimizer.Models.Domain;
 using Specialized.Optimizer.Optimizer.Moves;
 
