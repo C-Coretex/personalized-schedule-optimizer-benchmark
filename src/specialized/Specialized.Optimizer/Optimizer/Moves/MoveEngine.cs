@@ -26,7 +26,7 @@ internal class MoveEngine
         if (freeTimeWindows.Length == 0)
             return domain;
 
-        var selectedTimeWindow = freeTimeWindows.RandomElement(_random);
+        var selectedTimeWindow = freeTimeWindows[0];
 
         if(!selectedTimeWindow.Day.AddScheduledTask(task.Key, selectedTimeWindow.TimeWindow.Start, stopIfUnfeasible: replace) 
             && replace)
@@ -86,22 +86,17 @@ internal class MoveEngine
 
         (TimeOnly? Start, PlanningDay? Day) GetTacticalTimeWindow(ScheduledTask task, PlanningDay day)
         {
-            var randomFreeTimeWindow = task.Task.FreeTimeWindowsByDate[day.Day.Date].RandomElement(_random);
-          //  if (randomFreeTimeWindow.Start <= task.Start && randomFreeTimeWindow.End >= task.End)
-             //   return (null, null);
-
-            var minutesWindow = (int)(randomFreeTimeWindow.End.AddMinutes(-task.Task.Duration) - randomFreeTimeWindow.Start).TotalMinutes;
-            return (randomFreeTimeWindow.Start.AddMinutes(_random.Next(minutesWindow)), day);
+            var firstFreeTimeWindow = task.Task.FreeTimeWindowsByDate[day.Day.Date][0];
+            return (firstFreeTimeWindow.Start, day);
         }
 
         (TimeOnly? Start, PlanningDay? Day) GetStrategicTimeWindow(ScheduledTask task, PlanningDay day)
         {
-            var randomFreeTimeWindow = task.Task.FreeTimeWindows.RandomElement(_random);
-            if (randomFreeTimeWindow.Start <= task.Start && randomFreeTimeWindow.End >= task.End)
+            var firstFreeTimeWindow = task.Task.FreeTimeWindows[0];
+            if (firstFreeTimeWindow.Start <= task.Start && firstFreeTimeWindow.End >= task.End)
                 return (null, null);
 
-            var minutesWindow = (int)(randomFreeTimeWindow.End.AddMinutes(-task.Task.Duration) - randomFreeTimeWindow.Start).TotalMinutes;
-            return (randomFreeTimeWindow.Start.AddMinutes(_random.Next(minutesWindow)), domain.PlanningDays.First(d => d.Day == randomFreeTimeWindow.Day));
+            return (firstFreeTimeWindow.Start, domain.PlanningDays.First(d => d.Day == firstFreeTimeWindow.Day));
         }
     }
 
@@ -139,24 +134,20 @@ internal class MoveEngine
 
         var terminalWindows = ScheduledTask.GetActualTimeWindowsForDay(day, task.Task).ToArray();
         if (terminalWindows.Length > 0)
-            day.AddScheduledTask(task.Task, terminalWindows.RandomElement(_random).Start, stopIfUnfeasible: true);
+            day.AddScheduledTask(task.Task, terminalWindows[0].Start, stopIfUnfeasible: true);
 
         return domain;
 
         (TimeOnly? Start, PlanningDay? Day) GetTacticalTimeWindow(ScheduledTask task, PlanningDay day)
         {
-            var randomFreeTimeWindow = task.Task.FreeTimeWindowsByDate[day.Day.Date].RandomElement(_random);
-
-            var minutesWindow = (int)(randomFreeTimeWindow.End.AddMinutes(-task.Task.Duration) - randomFreeTimeWindow.Start).TotalMinutes;
-            return (randomFreeTimeWindow.Start.AddMinutes(_random.Next(minutesWindow)), day);
+            var firstFreeTimeWindow = task.Task.FreeTimeWindowsByDate[day.Day.Date][0];
+            return (firstFreeTimeWindow.Start, day);
         }
 
         (TimeOnly? Start, PlanningDay? Day) GetStrategicTimeWindow(ScheduledTask task, PlanningDay day)
         {
-            var randomFreeTimeWindow = task.Task.FreeTimeWindows.RandomElement(_random);
-
-            var minutesWindow = (int)(randomFreeTimeWindow.End.AddMinutes(-task.Task.Duration) - randomFreeTimeWindow.Start).TotalMinutes;
-            return (randomFreeTimeWindow.Start.AddMinutes(_random.Next(minutesWindow)), domain.PlanningDays.First(d => d.Day == randomFreeTimeWindow.Day));
+            var firstFreeTimeWindow = task.Task.FreeTimeWindows[0];
+            return (firstFreeTimeWindow.Start, domain.PlanningDays.First(d => d.Day == firstFreeTimeWindow.Day));
         }
     }
 

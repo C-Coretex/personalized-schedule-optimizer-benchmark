@@ -25,7 +25,8 @@ internal static class ConstraintHelpers
             + -1 * domain.SC4_TotalConstraint
             + 50 * domain.SC5_MinimizeDifferenceFromWeekOptConstraint
             + 50 * domain.SC6_TotalConstraint
-            + domain.SC7_TotalDifficultyDifference;
+            + domain.SC7_TotalDifficultyDifference
+            + domain.SC8_TimeConsistencyConstraint; //SC8: penalise spread of repeating-task start times across days
 
         return new(hcScore, scScore);
     }

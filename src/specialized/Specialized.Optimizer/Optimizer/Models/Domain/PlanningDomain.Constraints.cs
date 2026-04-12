@@ -33,6 +33,8 @@ internal partial record PlanningDomain
     public int TotalDaysDifficultySum { get; private set; } = 0;
     public int SC7_TotalDifficultyDifference { get; private set; } = 0;
 
+    public int SC8_TimeConsistencyConstraint { get; private set; } = 0;
+
     private void InitConstraintValues(Domain domain)
     {
         var weekTasks = domain.Tasks.OrderBy(t => t.Id).Where(t => t.IsWeekRepeating).ToArray();
@@ -102,6 +104,7 @@ internal partial record PlanningDomain
         SC4_TotalConstraint = 0;
         SC6_TotalConstraint = 0;
         var sc7_totalDifficultyDifference = 0d;
+        var repeatingStartSums = new Dictionary<Guid, (long Sum, long SumSq, int Count)>();
         //update all total constraints in one go
         foreach (var planningDay in PlanningDays)
         {
@@ -114,9 +117,28 @@ internal partial record PlanningDomain
             SC3_TotalConstraint += planningDay.SC3_DifficultTaskSchedulingConstraint;
             SC4_TotalConstraint += planningDay.SC4_TypeWeightsConstraint;
             SC6_TotalConstraint += planningDay.SC6_MinimizeDifferenceFromDayOptConstraint;
+
+            // SC8: collect start times of repeating task instances across all days
+            foreach (var st in planningDay.ScheduledTasks)
+            {
+                if (st.Task.Repeating is null) continue;
+                var m = st.Start.Hour * 60 + st.Start.Minute;
+                repeatingStartSums.TryGetValue(st.Task.Id, out var cur);
+                repeatingStartSums[st.Task.Id] = (cur.Sum + m, cur.SumSq + (long)m * m, cur.Count + 1);
+            }
         }
 
         SC7_TotalDifficultyDifference = (int)Math.Ceiling(sc7_totalDifficultyDifference);
+
+        // SC8: sum of start-time variance (minutes²) across all repeating tasks
+        // Higher variance → more spread → worse score
+        var sc8 = 0d;
+        foreach (var (_, (sum, sumSq, count)) in repeatingStartSums)
+        {
+            if (count <= 1) continue;
+            sc8 += (double)sumSq / count - (double)sum * sum / ((double)count * count);
+        }
+        SC8_TimeConsistencyConstraint = (int)Math.Ceiling(sc8);
     }
 
     private void UpdateWeekMinOpt(Task task, Day day, bool add)
