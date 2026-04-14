@@ -5,9 +5,6 @@ import ai.timefold.solver.core.api.domain.solution.PlanningScore;
 import ai.timefold.solver.core.api.domain.solution.PlanningSolution;
 import ai.timefold.solver.core.api.domain.solution.ProblemFactCollectionProperty;
 import ai.timefold.solver.core.api.domain.solution.ProblemFactProperty;
-import ai.timefold.solver.core.api.domain.valuerange.CountableValueRange;
-import ai.timefold.solver.core.api.domain.valuerange.ValueRangeFactory;
-import ai.timefold.solver.core.api.domain.valuerange.ValueRangeProvider;
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
 import com.pso.timefold.domain.enums.DifficultTaskSchedulingStrategy;
 import lombok.Getter;
@@ -53,20 +50,4 @@ public class ScheduleSolution {
 
     @PlanningScore
     private HardSoftScore score;
-
-    /**
-     * Value range for startMinute planning variable.
-     * Covers the full planning horizon at 15-minute granularity.
-     * Example: 7-day horizon → range [0, 10080) step 15 → 672 slots.
-     */
-    @ValueRangeProvider
-    public CountableValueRange<Integer> getStartMinuteRange() {
-        int horizonMinutes = computeHorizonMinutes();
-        return ValueRangeFactory.createIntValueRange(0, horizonMinutes, 15);
-    }
-
-    private int computeHorizonMinutes() {
-        if (planningHorizon == null) return 7 * 24 * 60;
-        return (int) planningHorizon.getDays() * 24 * 60;
-    }
 }
