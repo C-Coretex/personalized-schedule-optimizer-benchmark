@@ -2,6 +2,8 @@ package com.pso.timefold;
 
 import ai.timefold.solver.core.api.solver.Solver;
 import ai.timefold.solver.core.api.solver.SolverFactory;
+import ai.timefold.solver.core.config.solver.SolverConfig;
+import ai.timefold.solver.core.config.solver.termination.TerminationConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -64,11 +66,16 @@ public class ScheduleConsoleApp {
         System.out.printf("Created %d task assignment slots%n", initialSolution.getTaskAssignments().size());
 
         // 3. Solve synchronously using SolverFactory (reads solverConfig.xml from classpath)
-        System.out.printf("Solving for up to %d seconds...%n", request.getOptimizationTimeInSeconds());
+        int timeSeconds = request.getOptimizationTimeInSeconds() > 0
+                ? request.getOptimizationTimeInSeconds() : 15;
+        System.out.printf("Solving for up to %d seconds...%n", timeSeconds);
         long startMs = System.currentTimeMillis();
 
-        SolverFactory<ScheduleSolution> factory =
-                SolverFactory.createFromXmlResource("solverConfig.xml");
+        // Override termination from request so the solver honours optimizationTimeInSeconds
+        SolverConfig solverConfig = SolverConfig.createFromXmlResource("solverConfig.xml");
+        solverConfig.setTerminationConfig(
+                new TerminationConfig().withSpentLimit(java.time.Duration.ofSeconds(timeSeconds)));
+        SolverFactory<ScheduleSolution> factory = SolverFactory.create(solverConfig);
         Solver<ScheduleSolution> solver = factory.buildSolver();
         ScheduleSolution solution = solver.solve(initialSolution);
 

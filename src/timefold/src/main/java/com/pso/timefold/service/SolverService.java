@@ -1,8 +1,10 @@
 package com.pso.timefold.service;
 
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
+import ai.timefold.solver.core.api.solver.SolverConfigOverride;
 import ai.timefold.solver.core.api.solver.SolverManager;
 import ai.timefold.solver.core.api.solver.SolverStatus;
+import ai.timefold.solver.core.config.solver.termination.TerminationConfig;
 import com.pso.timefold.domain.ScheduleSolution;
 import com.pso.timefold.dto.GenerateScheduleRequest;
 import com.pso.timefold.dto.ScheduledTask;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Orchestrates Timefold solving jobs.
- * Wraps SolverManager (auto-configured by timefold-solver-spring-boot-starter).
+ * Uses SolverManager (Spring-managed) with per-job SolverConfigOverride so
+ * each request can supply its own optimizationTimeInSeconds.
  */
 @Service
 public class SolverService {
@@ -43,10 +47,15 @@ public class SolverService {
      */
     public UUID submitJob(GenerateScheduleRequest request) {
         UUID jobId = UUID.randomUUID();
-        log.info("Starting solver job {} with {} dynamic tasks, {} fixed tasks",
+
+        int timeSeconds = request.getOptimizationTimeInSeconds() > 0
+                ? request.getOptimizationTimeInSeconds() : 15;
+
+        log.info("Starting solver job {} — {} dynamic tasks, {} fixed tasks, {}s budget",
                 jobId,
                 request.getDynamicTasks() != null ? request.getDynamicTasks().size() : 0,
-                request.getFixedTasks() != null ? request.getFixedTasks().size() : 0);
+                request.getFixedTasks() != null ? request.getFixedTasks().size() : 0,
+                timeSeconds);
 
         ScheduleSolution initialSolution = ScheduleProblemBuilder.buildSolution(request);
         bestSolutions.put(jobId, initialSolution);
@@ -54,6 +63,9 @@ public class SolverService {
         solverManager.solveBuilder()
                 .withProblemId(jobId)
                 .withProblemFinder(id -> bestSolutions.get(id))
+                .withConfigOverride(new SolverConfigOverride<ScheduleSolution>()
+                        .withTerminationConfig(new TerminationConfig()
+                                .withSpentLimit(Duration.ofSeconds(timeSeconds))))
                 .withBestSolutionConsumer(solution -> {
                     bestSolutions.put(jobId, solution);
                     log.debug("Job {} new best score: {}", jobId,

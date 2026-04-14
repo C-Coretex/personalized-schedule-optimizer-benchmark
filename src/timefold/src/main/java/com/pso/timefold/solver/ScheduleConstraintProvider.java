@@ -2,19 +2,26 @@ package com.pso.timefold.solver;
 
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
 import ai.timefold.solver.core.api.score.stream.Constraint;
+import ai.timefold.solver.core.api.score.stream.ConstraintCollectors;
 import ai.timefold.solver.core.api.score.stream.ConstraintFactory;
 import ai.timefold.solver.core.api.score.stream.ConstraintProvider;
-import com.pso.timefold.domain.TaskAssignment;
+import ai.timefold.solver.core.api.score.stream.Joiners;
+import com.pso.timefold.domain.*;
+import com.pso.timefold.domain.enums.DifficultTaskSchedulingStrategy;
+
+import java.time.temporal.ChronoUnit;
 
 /**
  * Timefold constraint provider for the schedule optimizer.
  *
- * All constraints are currently placeholders (filter → false) so they compile
- * and are visible in score analysis but never penalize anything.
- * Score will always be 0hard/0soft until constraints are implemented.
- *
  * Constraint IDs match the web scoring logic in
  * web/Features/Schedule/Endpoints/GetGenerated/Handler.cs.
+ *
+ * HC8 remains a stub: the planning variable range [0, horizonMinutes) already
+ * prevents any out-of-horizon assignment — the constraint can never fire.
+ *
+ * HC3, HC4, HC5 are now real constraints (previously stubs when per-entity
+ * pre-filtering was in use; now enforced here since the value range is shared).
  */
 public class ScheduleConstraintProvider implements ConstraintProvider {
 
@@ -23,21 +30,29 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
         return new Constraint[]{
                 // Hard constraints
                 hc1NoOverlapBetweenAssignments(factory),
+                hc1bNoOverlapWithFixedTasks(factory),
                 hc2RequiredTasksMustBeScheduled(factory),
                 hc3TaskWithinTimeWindow(factory),
                 hc4TaskBeforeDeadline(factory),
                 hc5TaskWithinCategoryWindows(factory),
-                hc6RepeatingMinWeekCount(factory),
-                hc7RepeatingMinDayCount(factory),
-                hc8TaskWithinPlanningHorizon(factory),
+                hc6aRepeatingZeroOccurrencesInWeek(factory),
+                hc6bRepeatingUnderMinWeekCount(factory),
+                hc6cRepeatingOverOptWeekCount(factory),
+                hc7aRepeatingZeroOccurrencesInDay(factory),
+                hc7bRepeatingUnderMinDayCount(factory),
+                hc7cRepeatingOverOptDayCount(factory),
+                hc8TaskWithinPlanningHorizon(factory),   // stub — range enforces this
                 hc9NonRepeatingTaskAtMostOnce(factory),
                 // Soft constraints
                 sc1MaximizeScheduledTaskPriority(factory),
                 sc2MinimizeDifficultyAboveCapacity(factory),
                 sc3ClusterDifficultTasks(factory),
+                sc3EvenDifficultTasks(factory),
                 sc4TaskTypePreferences(factory),
-                sc5WeekRepeatingOptimalCount(factory),
-                sc6DayRepeatingOptimalCount(factory),
+                sc5aWeekRepeatingZeroOccurrences(factory),
+                sc5bWeekRepeatingUnderOptCount(factory),
+                sc6aDayRepeatingZeroOccurrences(factory),
+                sc6bDayRepeatingUnderOptCount(factory),
                 sc7MinimizeDifficultyImbalance(factory)
         };
     }
@@ -47,93 +62,239 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
     // -------------------------------------------------------------------------
 
     /**
-     * HC1: No two task assignments may overlap in time.
+     * HC1: No two dynamic task assignments may overlap in time.
      * Penalty unit: count of overlapping pairs.
-     * TODO: implement using forEachUniquePair + overlap check on startMinute/endMinute
      */
     private Constraint hc1NoOverlapBetweenAssignments(ConstraintFactory factory) {
-        return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
+        return factory.forEachUniquePair(TaskAssignment.class,
+                        Joiners.filtering((a, b) ->
+                                a.getStartMinute() != null && b.getStartMinute() != null &&
+                                a.getStartMinute() < b.getEndMinute() &&
+                                b.getStartMinute() < a.getEndMinute()))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("HC1: No overlap between assignments");
     }
 
     /**
+     * HC1b: No dynamic task assignment may overlap with a fixed task.
+     * Penalty unit: count of overlapping (assignment, fixedTask) pairs.
+     */
+    private Constraint hc1bNoOverlapWithFixedTasks(ConstraintFactory factory) {
+        return factory.forEach(TaskAssignment.class)
+                .filter(ta -> ta.getStartMinute() != null && ta.getHorizonStart() != null)
+                .join(FixedTask.class,
+                        Joiners.filtering((ta, ft) -> {
+                            if (ft.getStartTime() == null || ft.getEndTime() == null) return false;
+                            long ftStart = ChronoUnit.MINUTES.between(
+                                    ta.getHorizonStart().atStartOfDay(), ft.getStartTime());
+                            long ftEnd = ChronoUnit.MINUTES.between(
+                                    ta.getHorizonStart().atStartOfDay(), ft.getEndTime());
+                            return ta.getStartMinute() < ftEnd && ta.getEndMinute() > ftStart;
+                        }))
+                .penalize(HardSoftScore.ONE_HARD)
+                .asConstraint("HC1b: No overlap with fixed tasks");
+    }
+
+    /**
      * HC2: All required non-repeating DynamicTasks must be scheduled (startMinute != null).
-     * Penalty unit: count of unscheduled required tasks.
-     * TODO: filter required tasks where startMinute is null
+     * For required repeating tasks, HC6/HC7 enforce the minimum occurrence counts.
+     * Penalty unit: count of unscheduled required non-repeating tasks.
      */
     private Constraint hc2RequiredTasksMustBeScheduled(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
+                .filter(a -> a.getTask().isRequired()
+                          && a.getTask().getRepeating() == null
+                          && a.getStartMinute() == null)
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("HC2: Required tasks must be scheduled");
     }
 
     /**
-     * HC3: Tasks must be within their daily time windows (windowStart / windowEnd).
-     * Penalty unit: minutes outside window.
-     * TODO: check time-of-day derived from startMinute against task.windowStart/windowEnd
+     * HC3: Tasks must be within their daily time windows (WindowStart / WindowEnd).
+     * Penalty unit: total minutes of violation per assignment.
+     * If no window is set, the full day [0, 1440) is assumed.
      */
     private Constraint hc3TaskWithinTimeWindow(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_HARD)
+                .filter(a -> a.getStartMinute() != null)
+                .filter(a -> {
+                    int winStart = a.getTask().getWindowStart() != null
+                            ? a.getTask().getWindowStart().getHour() * 60 + a.getTask().getWindowStart().getMinute() : 0;
+                    int winEnd = a.getTask().getWindowEnd() != null
+                            ? a.getTask().getWindowEnd().getHour() * 60 + a.getTask().getWindowEnd().getMinute() : 24 * 60;
+                    return a.getTimeOfDayStart() < winStart || a.getTimeOfDayEnd() > winEnd;
+                })
+                .penalize(HardSoftScore.ONE_HARD, a -> {
+                    int winStart = a.getTask().getWindowStart() != null
+                            ? a.getTask().getWindowStart().getHour() * 60 + a.getTask().getWindowStart().getMinute() : 0;
+                    int winEnd = a.getTask().getWindowEnd() != null
+                            ? a.getTask().getWindowEnd().getHour() * 60 + a.getTask().getWindowEnd().getMinute() : 24 * 60;
+                    int violation = 0;
+                    if (a.getTimeOfDayStart() < winStart) violation += winStart - a.getTimeOfDayStart();
+                    if (a.getTimeOfDayEnd() > winEnd) violation += a.getTimeOfDayEnd() - winEnd;
+                    return violation;
+                })
                 .asConstraint("HC3: Task within time window");
     }
 
     /**
      * HC4: Tasks must complete before their deadline.
      * Penalty unit: minutes past deadline.
-     * TODO: convert endMinute to absolute time and compare with task.deadline
      */
     private Constraint hc4TaskBeforeDeadline(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_HARD)
+                .filter(a -> a.getStartMinute() != null
+                          && a.getTask().getDeadline() != null
+                          && a.getHorizonStart() != null)
+                .filter(a -> {
+                    int deadlineMin = (int) ChronoUnit.MINUTES.between(
+                            a.getHorizonStart().atStartOfDay(), a.getTask().getDeadline());
+                    return a.getEndMinute() > deadlineMin;
+                })
+                .penalize(HardSoftScore.ONE_HARD, a -> {
+                    int deadlineMin = (int) ChronoUnit.MINUTES.between(
+                            a.getHorizonStart().atStartOfDay(), a.getTask().getDeadline());
+                    return a.getEndMinute() - deadlineMin;
+                })
                 .asConstraint("HC4: Task must complete before deadline");
     }
 
     /**
      * HC5: Tasks with categories must be placed within at least one matching CategoryWindow.
-     * Penalty unit: count of tasks outside all their category windows.
-     * TODO: join with categoryWindows, check if task falls within any matching window
+     * A task is valid if its entire duration fits inside a window [cwStart, cwEnd].
+     * Penalty unit: count of tasks not covered by any matching window.
      */
     private Constraint hc5TaskWithinCategoryWindows(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
+                .filter(a -> a.getStartMinute() != null
+                          && a.getHorizonStart() != null
+                          && a.getTask().getCategories() != null
+                          && !a.getTask().getCategories().isEmpty())
+                .ifNotExists(CategoryWindow.class,
+                        Joiners.filtering((ta, cw) -> {
+                            if (!ta.getTask().getCategories().contains(cw.getCategory())) return false;
+                            long cwStart = ChronoUnit.MINUTES.between(
+                                    ta.getHorizonStart().atStartOfDay(), cw.getStartDateTime());
+                            long cwEnd = ChronoUnit.MINUTES.between(
+                                    ta.getHorizonStart().atStartOfDay(), cw.getEndDateTime());
+                            return ta.getStartMinute() >= cwStart && ta.getEndMinute() <= cwEnd;
+                        }))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("HC5: Task within category windows");
     }
 
     /**
-     * HC6: Repeating tasks must meet minWeekCount distinct weeks over the planning horizon.
-     * Penalty unit: deviation from minWeekCount.
-     * TODO: group occurrences by week, check count >= minWeekCount
+     * HC6a: Repeating task has ZERO scheduled occurrences in a required week.
+     * Penalty: minWeekCount (the full minimum is unmet).
      */
-    private Constraint hc6RepeatingMinWeekCount(ConstraintFactory factory) {
-        return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_HARD)
-                .asConstraint("HC6: Repeating task minimum week count");
+    private Constraint hc6aRepeatingZeroOccurrencesInWeek(ConstraintFactory factory) {
+        return factory.forEach(WeekRequirement.class)
+                .filter(wr -> wr.getMinWeekCount() > 0)
+                .ifNotExists(TaskAssignment.class,
+                        Joiners.equal(WeekRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((wr, ta) ->
+                                ta.getStartMinute() != null &&
+                                ta.getTaskDay() != null &&
+                                !ta.getTaskDay().isBefore(wr.getWeekStart()) &&
+                                !ta.getTaskDay().isAfter(wr.getWeekEnd())))
+                .penalize(HardSoftScore.ONE_HARD, WeekRequirement::getMinWeekCount)
+                .asConstraint("HC6a: Repeating task zero occurrences in week");
     }
 
     /**
-     * HC7: Repeating tasks must meet minDayCount occurrences per day.
-     * Penalty unit: deviation from minDayCount.
-     * TODO: group occurrences by day, check count >= minDayCount
+     * HC6b: Repeating task has 1..(minWeekCount-1) occurrences in a week (under minimum).
+     * Penalty: minWeekCount - actualCount.
      */
-    private Constraint hc7RepeatingMinDayCount(ConstraintFactory factory) {
-        return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_HARD)
-                .asConstraint("HC7: Repeating task minimum day count");
+    private Constraint hc6bRepeatingUnderMinWeekCount(ConstraintFactory factory) {
+        return factory.forEach(WeekRequirement.class)
+                .filter(wr -> wr.getMinWeekCount() > 0)
+                .join(TaskAssignment.class,
+                        Joiners.equal(WeekRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((wr, ta) ->
+                                ta.getStartMinute() != null &&
+                                ta.getTaskDay() != null &&
+                                !ta.getTaskDay().isBefore(wr.getWeekStart()) &&
+                                !ta.getTaskDay().isAfter(wr.getWeekEnd())))
+                .groupBy((wr, ta) -> wr, ConstraintCollectors.countBi())
+                .filter((wr, count) -> count < wr.getMinWeekCount())
+                .penalize(HardSoftScore.ONE_HARD, (wr, count) -> wr.getMinWeekCount() - count)
+                .asConstraint("HC6b: Repeating task under min week count");
+    }
+
+    /**
+     * HC6c: Repeating task has more than optWeekCount occurrences in a week (over optimal).
+     * Penalty: actualCount - optWeekCount.
+     */
+    private Constraint hc6cRepeatingOverOptWeekCount(ConstraintFactory factory) {
+        return factory.forEach(WeekRequirement.class)
+                .join(TaskAssignment.class,
+                        Joiners.equal(WeekRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((wr, ta) ->
+                                ta.getStartMinute() != null &&
+                                ta.getTaskDay() != null &&
+                                !ta.getTaskDay().isBefore(wr.getWeekStart()) &&
+                                !ta.getTaskDay().isAfter(wr.getWeekEnd())))
+                .groupBy((wr, ta) -> wr, ConstraintCollectors.countBi())
+                .filter((wr, count) -> count > wr.getOptWeekCount())
+                .penalize(HardSoftScore.ONE_HARD, (wr, count) -> count - wr.getOptWeekCount())
+                .asConstraint("HC6c: Repeating task over opt week count");
+    }
+
+    /**
+     * HC7a: Repeating task has ZERO scheduled occurrences on a required day.
+     * Penalty: minDayCount.
+     */
+    private Constraint hc7aRepeatingZeroOccurrencesInDay(ConstraintFactory factory) {
+        return factory.forEach(DayRequirement.class)
+                .filter(dr -> dr.getMinDayCount() > 0)
+                .ifNotExists(TaskAssignment.class,
+                        Joiners.equal(DayRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((dr, ta) ->
+                                ta.getStartMinute() != null &&
+                                dr.getDate().equals(ta.getTaskDay())))
+                .penalize(HardSoftScore.ONE_HARD, DayRequirement::getMinDayCount)
+                .asConstraint("HC7a: Repeating task zero occurrences in day");
+    }
+
+    /**
+     * HC7b: Repeating task has 1..(minDayCount-1) occurrences on a day (under minimum).
+     * Penalty: minDayCount - actualCount.
+     */
+    private Constraint hc7bRepeatingUnderMinDayCount(ConstraintFactory factory) {
+        return factory.forEach(DayRequirement.class)
+                .filter(dr -> dr.getMinDayCount() > 0)
+                .join(TaskAssignment.class,
+                        Joiners.equal(DayRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((dr, ta) ->
+                                ta.getStartMinute() != null &&
+                                dr.getDate().equals(ta.getTaskDay())))
+                .groupBy((dr, ta) -> dr, ConstraintCollectors.countBi())
+                .filter((dr, count) -> count < dr.getMinDayCount())
+                .penalize(HardSoftScore.ONE_HARD, (dr, count) -> dr.getMinDayCount() - count)
+                .asConstraint("HC7b: Repeating task under min day count");
+    }
+
+    /**
+     * HC7c: Repeating task has more than optDayCount occurrences on a day (over optimal).
+     * Penalty: actualCount - optDayCount.
+     */
+    private Constraint hc7cRepeatingOverOptDayCount(ConstraintFactory factory) {
+        return factory.forEach(DayRequirement.class)
+                .join(TaskAssignment.class,
+                        Joiners.equal(DayRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((dr, ta) ->
+                                ta.getStartMinute() != null &&
+                                dr.getDate().equals(ta.getTaskDay())))
+                .groupBy((dr, ta) -> dr, ConstraintCollectors.countBi())
+                .filter((dr, count) -> count > dr.getOptDayCount())
+                .penalize(HardSoftScore.ONE_HARD, (dr, count) -> count - dr.getOptDayCount())
+                .asConstraint("HC7c: Repeating task over opt day count");
     }
 
     /**
      * HC8: Assignments must not fall outside the planning horizon.
-     * Penalty unit: minutes outside horizon.
-     * TODO: check endMinute <= horizonMinutes
+     * STUB — the value range [0, horizonMinutes) already prevents any out-of-horizon
+     * assignment; this constraint can never fire.
      */
     private Constraint hc8TaskWithinPlanningHorizon(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
@@ -143,13 +304,16 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
     }
 
     /**
-     * HC9: Non-repeating tasks may appear at most once (no duplicate task IDs).
-     * Penalty unit: count of duplicated assignments for non-repeating tasks.
-     * TODO: for non-repeating tasks, ensure only one occurrence is scheduled
+     * HC9: Non-repeating tasks may appear at most once (no duplicate scheduled task IDs).
+     * In practice always 0 because ScheduleProblemBuilder creates exactly 1 TaskAssignment
+     * per non-repeating task. Implemented for correctness.
      */
     private Constraint hc9NonRepeatingTaskAtMostOnce(ConstraintFactory factory) {
-        return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
+        return factory.forEachUniquePair(TaskAssignment.class,
+                        Joiners.equal(a -> a.getTask().getId()),
+                        Joiners.filtering((a, b) ->
+                                a.getTask().getRepeating() == null &&
+                                a.getStartMinute() != null && b.getStartMinute() != null))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("HC9: Non-repeating task at most once");
     }
@@ -160,84 +324,184 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
 
     /**
      * SC1: Maximize total priority of scheduled tasks.
-     * Penalty: sum(6 - priority) for scheduled tasks. Weight ×100.
-     * TODO: penalize (6 - task.priority) * 100 for each scheduled assignment
+     * Penalty: (6 - priority) × 100 per scheduled assignment.
+     * Higher-priority tasks have a smaller penalty, so the solver prefers to schedule them.
      */
     private Constraint sc1MaximizeScheduledTaskPriority(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_SOFT)
+                .filter(a -> a.getStartMinute() != null)
+                .reward(HardSoftScore.ofSoft(100), a -> 6 - a.getTask().getPriority())
                 .asConstraint("SC1: Maximize scheduled task priority");
     }
 
     /**
      * SC2: Minimize difficulty above daily capacity.
-     * Penalty: excess difficulty per day × 500.
-     * TODO: group by day, sum difficulty, penalize excess over DifficultyCapacityEntry.capacity
+     * For each DifficultyCapacityEntry day, if the sum of difficulties of all tasks
+     * (fixed + dynamic) exceeds capacity, penalize the excess × 500.
+     * Fixed-task difficulty contributions are pre-computed in DifficultyCapacityEntry.fixedDifficulty.
      */
     private Constraint sc2MinimizeDifficultyAboveCapacity(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_SOFT)
+                .filter(ta -> ta.getStartMinute() != null && ta.getTaskDay() != null)
+                .groupBy(TaskAssignment::getTaskDay,
+                        ConstraintCollectors.sum(ta -> ta.getTask().getDifficulty()))
+                .join(DifficultyCapacityEntry.class,
+                        Joiners.equal((day, dynSum) -> day, DifficultyCapacityEntry::getDate))
+                .filter((day, dynSum, dc) -> dc.getFixedDifficulty() + dynSum > dc.getCapacity())
+                .penalize(HardSoftScore.ofSoft(500),
+                        (day, dynSum, dc) -> dc.getFixedDifficulty() + dynSum - dc.getCapacity())
                 .asConstraint("SC2: Minimize difficulty above daily capacity");
     }
 
     /**
-     * SC3: Follow Cluster strategy — difficult tasks should be grouped on fewer days.
-     * Penalty: gap sum between difficult tasks (coefficient +1 for Cluster). Weight ×1.
-     * TODO: only active when difficultTaskSchedulingStrategy == Cluster
+     * SC3 (Cluster): When strategy is Cluster, penalize gaps between difficult tasks
+     * (difficulty >= 6) on the same day. Smaller gaps mean tasks are clustered → less penalty.
      */
     private Constraint sc3ClusterDifficultTasks(ConstraintFactory factory) {
-        return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_SOFT)
-                .asConstraint("SC3: Cluster difficult tasks");
+        return factory.forEach(DifficultTaskSchedulingStrategy.class)
+                .filter(s -> s == DifficultTaskSchedulingStrategy.Cluster)
+                .join(TaskAssignment.class,
+                        Joiners.filtering((s, a) ->
+                                a.getStartMinute() != null && a.getTask().getDifficulty() >= 6))
+                .join(TaskAssignment.class,
+                        Joiners.filtering((s, a, b) ->
+                                b.getStartMinute() != null &&
+                                b.getTask().getDifficulty() >= 6 &&
+                                a.getDayOffset() == b.getDayOffset() &&
+                                a.getStartMinute() < b.getStartMinute()))
+                .penalize(HardSoftScore.ONE_SOFT,
+                        (s, a, b) -> Math.max(0, b.getStartMinute() - a.getEndMinute()))
+                .asConstraint("SC3: Cluster difficult tasks - penalize gaps");
+    }
+
+    /**
+     * SC3 (Even): When strategy is Even, reward gaps between difficult tasks
+     * (difficulty >= 6) on the same day. Larger gaps mean tasks are spread out → more reward.
+     */
+    private Constraint sc3EvenDifficultTasks(ConstraintFactory factory) {
+        return factory.forEach(DifficultTaskSchedulingStrategy.class)
+                .filter(s -> s == DifficultTaskSchedulingStrategy.Even)
+                .join(TaskAssignment.class,
+                        Joiners.filtering((s, a) ->
+                                a.getStartMinute() != null && a.getTask().getDifficulty() >= 6))
+                .join(TaskAssignment.class,
+                        Joiners.filtering((s, a, b) ->
+                                b.getStartMinute() != null &&
+                                b.getTask().getDifficulty() >= 6 &&
+                                a.getDayOffset() == b.getDayOffset() &&
+                                a.getStartMinute() < b.getStartMinute()))
+                .reward(HardSoftScore.ONE_SOFT,
+                        (s, a, b) -> Math.max(0, b.getStartMinute() - a.getEndMinute()))
+                .asConstraint("SC3: Even difficult tasks - reward gaps");
     }
 
     /**
      * SC4: Maximize user-defined task type preferences per day.
-     * Penalty: negative weighted sum of matched task types vs preferences. Weight ×1.
-     * TODO: for each assignment, look up TaskTypePreferenceEntry for that day, sum weights
+     * For each scheduled task, look up the TaskTypePreferenceEntry for its day,
+     * sum the weights of matching task types, and reward that total.
      */
     private Constraint sc4TaskTypePreferences(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_SOFT)
+                .filter(a -> a.getStartMinute() != null)
+                .join(TaskTypePreferenceEntry.class,
+                        Joiners.filtering((ta, pref) ->
+                                ta.getTaskDay() != null &&
+                                ta.getTaskDay().equals(pref.getDate())))
+                .reward(HardSoftScore.ONE_SOFT, (ta, pref) -> {
+                    if (pref.getPreferences() == null || ta.getTask().getTypes() == null) return 0;
+                    return pref.getPreferences().stream()
+                            .filter(p -> ta.getTask().getTypes().contains(p.getType()))
+                            .mapToInt(TaskTypeWeight::getWeight)
+                            .sum();
+                })
                 .asConstraint("SC4: Task type preferences");
     }
 
     /**
-     * SC5: Minimize under-scheduling of week-repeating tasks (optWeekCount target).
-     * Penalty: sum(optWeekCount - actual). Weight ×50.
-     * TODO: group by task + week, compare actual count vs optWeekCount
+     * SC5a: Week-repeating task has ZERO scheduled occurrences in a week (under optimal).
+     * Penalty (soft): optWeekCount × 50.
      */
-    private Constraint sc5WeekRepeatingOptimalCount(ConstraintFactory factory) {
-        return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_SOFT)
-                .asConstraint("SC5: Week-repeating optimal count");
+    private Constraint sc5aWeekRepeatingZeroOccurrences(ConstraintFactory factory) {
+        return factory.forEach(WeekRequirement.class)
+                .ifNotExists(TaskAssignment.class,
+                        Joiners.equal(WeekRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((wr, ta) ->
+                                ta.getStartMinute() != null &&
+                                ta.getTaskDay() != null &&
+                                !ta.getTaskDay().isBefore(wr.getWeekStart()) &&
+                                !ta.getTaskDay().isAfter(wr.getWeekEnd())))
+                .penalize(HardSoftScore.ofSoft(50), WeekRequirement::getOptWeekCount)
+                .asConstraint("SC5a: Week-repeating zero occurrences in week");
     }
 
     /**
-     * SC6: Minimize under-scheduling of day-repeating tasks (optDayCount target).
-     * Penalty: sum(optDayCount - actual). Weight ×50.
-     * TODO: group by task + day, compare actual count vs optDayCount
+     * SC5b: Week-repeating task has fewer than optWeekCount occurrences in a week.
+     * Penalty (soft): (optWeekCount - actualCount) × 50.
      */
-    private Constraint sc6DayRepeatingOptimalCount(ConstraintFactory factory) {
-        return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_SOFT)
-                .asConstraint("SC6: Day-repeating optimal count");
+    private Constraint sc5bWeekRepeatingUnderOptCount(ConstraintFactory factory) {
+        return factory.forEach(WeekRequirement.class)
+                .join(TaskAssignment.class,
+                        Joiners.equal(WeekRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((wr, ta) ->
+                                ta.getStartMinute() != null &&
+                                ta.getTaskDay() != null &&
+                                !ta.getTaskDay().isBefore(wr.getWeekStart()) &&
+                                !ta.getTaskDay().isAfter(wr.getWeekEnd())))
+                .groupBy((wr, ta) -> wr, ConstraintCollectors.countBi())
+                .filter((wr, count) -> count < wr.getOptWeekCount())
+                .penalize(HardSoftScore.ofSoft(50), (wr, count) -> wr.getOptWeekCount() - count)
+                .asConstraint("SC5b: Week-repeating under optimal week count");
     }
 
     /**
-     * SC7: Minimize difficulty imbalance between days (sum of squared deviations). Weight ×1.
-     * TODO: group by day, compute sum of difficulties, penalize squared deviation from mean
+     * SC6a: Day-repeating task has ZERO scheduled occurrences on a day (under optimal).
+     * Penalty (soft): optDayCount × 50.
+     */
+    private Constraint sc6aDayRepeatingZeroOccurrences(ConstraintFactory factory) {
+        return factory.forEach(DayRequirement.class)
+                .ifNotExists(TaskAssignment.class,
+                        Joiners.equal(DayRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((dr, ta) ->
+                                ta.getStartMinute() != null &&
+                                dr.getDate().equals(ta.getTaskDay())))
+                .penalize(HardSoftScore.ofSoft(50), DayRequirement::getOptDayCount)
+                .asConstraint("SC6a: Day-repeating zero occurrences in day");
+    }
+
+    /**
+     * SC6b: Day-repeating task has fewer than optDayCount occurrences on a day.
+     * Penalty (soft): (optDayCount - actualCount) × 50.
+     */
+    private Constraint sc6bDayRepeatingUnderOptCount(ConstraintFactory factory) {
+        return factory.forEach(DayRequirement.class)
+                .join(TaskAssignment.class,
+                        Joiners.equal(DayRequirement::getTask, TaskAssignment::getTask),
+                        Joiners.filtering((dr, ta) ->
+                                ta.getStartMinute() != null &&
+                                dr.getDate().equals(ta.getTaskDay())))
+                .groupBy((dr, ta) -> dr, ConstraintCollectors.countBi())
+                .filter((dr, count) -> count < dr.getOptDayCount())
+                .penalize(HardSoftScore.ofSoft(50), (dr, count) -> dr.getOptDayCount() - count)
+                .asConstraint("SC6b: Day-repeating under optimal day count");
+    }
+
+    /**
+     * SC7: Minimize difficulty imbalance between days.
+     * For each day, compute total difficulty (fixed + dynamic) and penalize totalDifficulty².
+     * Minimizing Σ(di²) subject to a fixed total Σ(di) = C is equivalent to minimizing
+     * variance — the minimum is achieved when all daily difficulties are equal.
      */
     private Constraint sc7MinimizeDifficultyImbalance(ConstraintFactory factory) {
         return factory.forEach(TaskAssignment.class)
-                .filter(a -> false)
-                .penalize(HardSoftScore.ONE_SOFT)
+                .filter(ta -> ta.getStartMinute() != null && ta.getTaskDay() != null)
+                .groupBy(TaskAssignment::getTaskDay,
+                        ConstraintCollectors.sum(ta -> ta.getTask().getDifficulty()))
+                .join(DayFact.class,
+                        Joiners.equal((day, dynSum) -> day, DayFact::getDate))
+                .penalize(HardSoftScore.ONE_SOFT, (day, dynSum, df) -> {
+                    int total = df.getFixedDifficulty() + dynSum;
+                    return total * total;
+                })
                 .asConstraint("SC7: Minimize difficulty imbalance between days");
     }
 }

@@ -4,7 +4,7 @@
         xsi:schemaLocation="https://timefold.ai/xsd/solver
                             https://timefold.ai/xsd/solver/solver.xsd">
 
-    <environmentMode>NO_ASSERT</environmentMode>
+    <environmentMode>REPRODUCIBLE</environmentMode>
 
     <!-- Domain model -->
     <solutionClass>com.pso.timefold.domain.ScheduleSolution</solutionClass>
@@ -15,28 +15,25 @@
         <constraintProviderClass>com.pso.timefold.solver.ScheduleConstraintProvider</constraintProviderClass>
     </scoreDirectorFactory>
 
-    <!-- Termination: used by the console runner.
-         The Spring Boot API overrides this via application.properties
-         (timefold.solver.termination.spent-limit). -->
+    <!-- Global termination: overridden programmatically by the console app (via SolverConfig)
+         and by the Spring Boot service (via application.properties).
+         This 15-second fallback is only used when neither override is provided. -->
     <termination>
         <spentLimit>PT15S</spentLimit>
     </termination>
 
-    <!-- Construction heuristic: assign higher-difficulty tasks first -->
+    <!-- Construction heuristic: greedily assigns tasks in declaration order -->
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     </constructionHeuristic>
 
-    <!-- Local search -->
+    <!-- Local search: late acceptance, robust against local optima -->
     <localSearch>
-        <termination>
-            <unimprovedSpentLimit>PT5S</unimprovedSpentLimit>
-        </termination>
         <acceptor>
-            <entityTabuSize>10</entityTabuSize>
+            <simulatedAnnealingStartingTemperature>1hard/500soft</simulatedAnnealingStartingTemperature>
         </acceptor>
         <forager>
-            <acceptedCountLimit>1000</acceptedCountLimit>
+            <acceptedCountLimit>100</acceptedCountLimit>
         </forager>
     </localSearch>
 
