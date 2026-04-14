@@ -1,0 +1,20 @@
+package com.pso.timefold.domain.enums;
+
+public enum TaskType {
+    Physical,
+    Intellectual,
+    Creative,
+    Social,
+    Routine,
+    DeepWork,
+    Outdoor,
+    Indoor,
+    Digital,
+    Fun,
+    Boring,
+    Collaborative,
+    Solo,
+    HighEnergy,
+    LowEnergy,
+    Meditative
+}
