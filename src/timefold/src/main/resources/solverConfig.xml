@@ -6,35 +6,27 @@
 
     <environmentMode>REPRODUCIBLE</environmentMode>
 
-    <!-- Domain model -->
     <solutionClass>com.pso.timefold.domain.ScheduleSolution</solutionClass>
     <entityClass>com.pso.timefold.domain.TaskAssignment</entityClass>
 
-    <!-- Scoring -->
     <scoreDirectorFactory>
         <constraintProviderClass>com.pso.timefold.solver.ScheduleConstraintProvider</constraintProviderClass>
     </scoreDirectorFactory>
 
-    <!-- Global termination: overridden programmatically by the console app (via SolverConfig)
-         and by the Spring Boot service (via application.properties).
-         This 15-second fallback is only used when neither override is provided. -->
     <termination>
         <spentLimit>PT15S</spentLimit>
     </termination>
 
-    <!-- Construction heuristic: greedily assigns tasks in declaration order -->
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     </constructionHeuristic>
 
-    <!-- Local search: late acceptance, robust against local optima -->
     <localSearch>
         <acceptor>
-            <simulatedAnnealingStartingTemperature>1hard/500soft</simulatedAnnealingStartingTemperature>
+            <simulatedAnnealingStartingTemperature>0hard/500soft</simulatedAnnealingStartingTemperature>
         </acceptor>
         <forager>
-            <acceptedCountLimit>100</acceptedCountLimit>
+            <acceptedCountLimit>1</acceptedCountLimit>
         </forager>
     </localSearch>
-
 </solver>

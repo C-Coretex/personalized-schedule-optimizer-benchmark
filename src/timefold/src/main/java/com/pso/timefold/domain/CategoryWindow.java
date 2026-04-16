@@ -15,4 +15,7 @@ public class CategoryWindow {
     private Category category;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+
+    private int startMinuteFromHorizon = -1;
+    private int endMinuteFromHorizon   = -1;
 }

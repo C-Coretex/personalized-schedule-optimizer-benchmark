@@ -8,6 +8,7 @@ import com.pso.timefold.dto.ScheduledTask;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +69,29 @@ public final class ScheduleProblemBuilder {
                 : 7L;
         int horizonMinutes = (int) horizonDays * 24 * 60;
 
+        // --- Pre-compute horizon-relative minute offsets on problem facts ---
+        LocalDateTime horizonOrigin = horizonStart.atStartOfDay();
+
+        for (FixedTask ft : fixedTasks) {
+            if (ft.getStartTime() != null && ft.getEndTime() != null) {
+                ft.setStartMinuteFromHorizon((int) ChronoUnit.MINUTES.between(horizonOrigin, ft.getStartTime()));
+                ft.setEndMinuteFromHorizon((int) ChronoUnit.MINUTES.between(horizonOrigin, ft.getEndTime()));
+            }
+        }
+
+        for (CategoryWindow cw : categoryWindows) {
+            if (cw.getStartDateTime() != null && cw.getEndDateTime() != null) {
+                cw.setStartMinuteFromHorizon((int) ChronoUnit.MINUTES.between(horizonOrigin, cw.getStartDateTime()));
+                cw.setEndMinuteFromHorizon((int) ChronoUnit.MINUTES.between(horizonOrigin, cw.getEndDateTime()));
+            }
+        }
+
+        for (DynamicTask dt : dynamicTasks) {
+            if (dt.getDeadline() != null) {
+                dt.setDeadlineMinute((int) ChronoUnit.MINUTES.between(horizonOrigin, dt.getDeadline()));
+            }
+        }
+
         // --- Pre-compute fixedDifficulty on DifficultyCapacityEntry ---
         List<DifficultyCapacityEntry> difficultyCapacities = new ArrayList<>();
         if (request.getDifficultyCapacities() != null) {
@@ -105,6 +129,7 @@ public final class ScheduleProblemBuilder {
 
         // --- Compute DayFacts (one per horizon day) ---
         List<DayFact> dayFacts = new ArrayList<>();
+        int totalFixedDifficulty = 0;
         for (int d = 0; d < horizonDays; d++) {
             LocalDate day = horizonStart.plusDays(d);
             int fixedDiffForDay = 0;
@@ -114,8 +139,12 @@ public final class ScheduleProblemBuilder {
                 }
             }
             dayFacts.add(new DayFact(day, fixedDiffForDay));
+            totalFixedDifficulty += fixedDiffForDay;
         }
         solution.setDayFacts(dayFacts);
+
+        // --- Compute PlanningHorizonFact (singleton for SC7 variance correction) ---
+        solution.setPlanningHorizonFact(new PlanningHorizonFact((int) horizonDays, totalFixedDifficulty));
 
         // --- Compute WeekRequirements and DayRequirements for repeating tasks ---
         List<WeekRequirement> weekRequirements = new ArrayList<>();

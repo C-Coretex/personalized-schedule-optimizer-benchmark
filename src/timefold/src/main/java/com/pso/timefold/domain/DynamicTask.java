@@ -26,6 +26,8 @@ public class DynamicTask extends TaskBase {
     private List<Category> categories;
     private RepeatingSchedule repeating; // nullable — null means schedule once
 
+    private int deadlineMinute = -1;  // horizon-relative minutes; -1 = no deadline
+
     /**
      * Maximum number of occurrence slots to create for this task.
      * For non-repeating tasks: 1.

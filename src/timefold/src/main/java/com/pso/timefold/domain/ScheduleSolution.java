@@ -77,6 +77,13 @@ public class ScheduleSolution {
     @ProblemFactCollectionProperty
     private List<DayFact> dayFacts;
 
+    /**
+     * Singleton fact holding horizon-level constants (numDays, totalFixedDifficulty).
+     * Used by SC7c (variance correction term T²/n).
+     */
+    @ProblemFactProperty
+    private PlanningHorizonFact planningHorizonFact;
+
     @PlanningScore
     private HardSoftScore score;
 

@@ -30,7 +30,10 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 var app = builder.Build();
 
 //internal callback
-app.UseWhen(ctx => ctx.Request.Path != "/schedule/submit", branch => branch.UseHttpsRedirection());
+if (!app.Environment.IsDevelopment())
+{
+    app.UseWhen(ctx => ctx.Request.Path != "/schedule/submit", branch => branch.UseHttpsRedirection());
+}
 
 app.UseSession();
 

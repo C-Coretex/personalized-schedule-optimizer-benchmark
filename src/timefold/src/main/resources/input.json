@@ -4,227 +4,300 @@
     "endDate": "2026-05-05"
   },
   "difficultTaskSchedulingStrategy": "Even",
-  "optimizationTimeInSeconds": 90,
+  "optimizationTimeInSeconds": 60,
   "fixedTasks": [
     {
       "name": "Doctor Appointment",
-      "startTime": "2026-04-09T10:00:00",
-      "endTime": "2026-04-09T11:00:00",
       "priority": 5,
       "difficulty": 2,
-      "types": [ "Social", "Indoor" ]
+      "types": [
+        "Social",
+        "Indoor"
+      ],
+      "startTime": "2026-04-09T10:00:00",
+      "endTime": "2026-04-09T11:00:00"
     },
     {
       "name": "Team Sprint Planning",
-      "startTime": "2026-04-14T09:00:00",
-      "endTime": "2026-04-14T10:00:00",
       "priority": 4,
       "difficulty": 3,
-      "types": [ "Collaborative", "Intellectual" ]
+      "types": [
+        "Intellectual",
+        "Collaborative"
+      ],
+      "startTime": "2026-04-14T09:00:00",
+      "endTime": "2026-04-14T10:00:00"
     },
     {
       "name": "Dentist Checkup",
-      "startTime": "2026-04-22T14:00:00",
-      "endTime": "2026-04-22T15:00:00",
       "priority": 5,
       "difficulty": 2,
-      "types": [ "Routine", "Indoor" ]
+      "types": [
+        "Routine",
+        "Indoor"
+      ],
+      "startTime": "2026-04-22T14:00:00",
+      "endTime": "2026-04-22T15:00:00"
     },
     {
       "name": "Quarterly Project Review",
-      "startTime": "2026-04-28T10:00:00",
-      "endTime": "2026-04-28T11:30:00",
       "priority": 5,
       "difficulty": 4,
-      "types": [ "Collaborative", "Intellectual" ]
+      "types": [
+        "Intellectual",
+        "Collaborative"
+      ],
+      "startTime": "2026-04-28T10:00:00",
+      "endTime": "2026-04-28T11:30:00"
     },
     {
       "name": "Dinner with Friends",
-      "startTime": "2026-05-02T19:00:00",
-      "endTime": "2026-05-02T21:00:00",
       "priority": 3,
       "difficulty": 2,
-      "types": [ "Social", "Fun" ]
+      "types": [
+        "Social",
+        "Fun"
+      ],
+      "startTime": "2026-05-02T19:00:00",
+      "endTime": "2026-05-02T21:00:00"
     }
   ],
   "dynamicTasks": [
     {
       "name": "Morning Meditation",
+      "priority": 4,
+      "difficulty": 1,
+      "types": [
+        "LowEnergy",
+        "Meditative"
+      ],
       "isRequired": false,
       "duration": 15,
       "windowStart": "06:00:00",
       "windowEnd": "09:00:00",
       "deadline": null,
-      "categories": [ "Morning" ],
+      "categories": [
+        "Morning"
+      ],
       "repeating": {
         "minDayCount": 1,
         "optDayCount": 1,
         "minWeekCount": 0,
         "optWeekCount": 7
-      },
-      "priority": 4,
-      "difficulty": 1,
-      "types": [ "Meditative", "LowEnergy" ]
+      }
     },
     {
       "name": "Evening Journal",
+      "priority": 3,
+      "difficulty": 1,
+      "types": [
+        "Creative",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 20,
       "windowStart": "20:00:00",
       "windowEnd": "22:00:00",
       "deadline": null,
-      "categories": [ "Evening" ],
+      "categories": [
+        "Evening"
+      ],
       "repeating": {
         "minDayCount": 0,
         "optDayCount": 1,
         "minWeekCount": 0,
         "optWeekCount": 7
-      },
-      "priority": 3,
-      "difficulty": 1,
-      "types": [ "Creative", "LowEnergy" ]
+      }
     },
     {
       "name": "Gym Session",
+      "priority": 4,
+      "difficulty": 5,
+      "types": [
+        "Physical",
+        "HighEnergy"
+      ],
       "isRequired": false,
       "duration": 60,
       "windowStart": null,
       "windowEnd": null,
       "deadline": null,
-      "categories": [ "Health" ],
+      "categories": [
+        "Health"
+      ],
       "repeating": {
         "minDayCount": 0,
         "optDayCount": 1,
         "minWeekCount": 2,
         "optWeekCount": 3
-      },
-      "priority": 4,
-      "difficulty": 5,
-      "types": [ "Physical", "HighEnergy" ]
+      }
     },
     {
       "name": "Weekly Work Review",
+      "priority": 3,
+      "difficulty": 3,
+      "types": [
+        "Intellectual",
+        "Routine"
+      ],
       "isRequired": false,
       "duration": 45,
       "windowStart": null,
       "windowEnd": null,
       "deadline": null,
-      "categories": [ "Work" ],
+      "categories": [
+        "Work"
+      ],
       "repeating": {
         "minDayCount": 0,
         "optDayCount": 1,
         "minWeekCount": 1,
         "optWeekCount": 1
-      },
-      "priority": 3,
-      "difficulty": 3,
-      "types": [ "Intellectual", "Routine" ]
+      }
     },
     {
       "name": "Prepare Quarterly Presentation",
+      "priority": 5,
+      "difficulty": 6,
+      "types": [
+        "Intellectual",
+        "Creative",
+        "DeepWork"
+      ],
       "isRequired": true,
       "duration": 90,
       "windowStart": null,
       "windowEnd": null,
       "deadline": "2026-04-17T17:30:00",
-      "categories": [ "Work" ],
-      "repeating": null,
-      "priority": 5,
-      "difficulty": 6,
-      "types": [ "Creative", "DeepWork", "Intellectual" ]
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
     },
     {
       "name": "Deep Work Coding Sprint",
+      "priority": 4,
+      "difficulty": 7,
+      "types": [
+        "Intellectual",
+        "DeepWork",
+        "Digital"
+      ],
       "isRequired": false,
       "duration": 120,
       "windowStart": "09:00:00",
       "windowEnd": "13:00:00",
       "deadline": "2026-04-24T17:30:00",
-      "categories": [ "Work" ],
-      "repeating": null,
-      "priority": 4,
-      "difficulty": 7,
-      "types": [ "DeepWork", "Intellectual", "Digital" ]
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
     },
     {
       "name": "Read Non-Fiction Book",
+      "priority": 3,
+      "difficulty": 2,
+      "types": [
+        "Intellectual",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 45,
       "windowStart": "20:00:00",
       "windowEnd": "22:00:00",
       "deadline": "2026-04-25T22:00:00",
-      "categories": [ "Evening" ],
-      "repeating": null,
-      "priority": 3,
-      "difficulty": 2,
-      "types": [ "Intellectual", "LowEnergy" ]
+      "categories": [
+        "Evening"
+      ],
+      "repeating": null
     },
     {
       "name": "Fix Apartment Leak",
+      "priority": 5,
+      "difficulty": 3,
+      "types": [
+        "Physical",
+        "Routine"
+      ],
       "isRequired": true,
       "duration": 120,
       "windowStart": null,
       "windowEnd": null,
       "deadline": "2026-04-30T20:00:00",
-      "categories": [ "Home" ],
-      "repeating": null,
-      "priority": 5,
-      "difficulty": 3,
-      "types": [ "Routine", "Physical" ]
+      "categories": [
+        "Home"
+      ],
+      "repeating": null
     },
     {
       "name": "Grocery Shopping",
+      "priority": 3,
+      "difficulty": 2,
+      "types": [
+        "Physical",
+        "Routine"
+      ],
       "isRequired": false,
       "duration": 60,
       "windowStart": null,
       "windowEnd": null,
       "deadline": null,
-      "categories": [ "Home" ],
+      "categories": [
+        "Home"
+      ],
       "repeating": {
         "minDayCount": 0,
         "optDayCount": 1,
         "minWeekCount": 1,
         "optWeekCount": 2
-      },
-      "priority": 3,
-      "difficulty": 2,
-      "types": [ "Routine", "Physical" ]
+      }
     },
     {
       "name": "Outdoor Walk",
+      "priority": 3,
+      "difficulty": 2,
+      "types": [
+        "Physical",
+        "Outdoor",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 45,
       "windowStart": null,
       "windowEnd": null,
       "deadline": null,
-      "categories": [ "Health" ],
+      "categories": [
+        "Health"
+      ],
       "repeating": {
         "minDayCount": 0,
         "optDayCount": 1,
         "minWeekCount": 2,
         "optWeekCount": 4
-      },
-      "priority": 3,
-      "difficulty": 2,
-      "types": [ "Physical", "Outdoor", "LowEnergy" ]
+      }
     },
     {
       "name": "Call Parents",
+      "priority": 3,
+      "difficulty": 1,
+      "types": [
+        "Social",
+        "LowEnergy"
+      ],
       "isRequired": false,
       "duration": 30,
       "windowStart": "20:00:00",
       "windowEnd": "22:00:00",
       "deadline": null,
-      "categories": [ "Evening" ],
+      "categories": [
+        "Evening"
+      ],
       "repeating": {
         "minDayCount": 0,
         "optDayCount": 1,
         "minWeekCount": 1,
         "optWeekCount": 1
-      },
-      "priority": 3,
-      "difficulty": 1,
-      "types": [ "Social", "LowEnergy" ]
+      }
     }
   ],
   "categoryWindows": [
@@ -378,7 +451,6 @@
       "startDateTime": "2026-05-05T06:00:00",
       "endDateTime": "2026-05-05T09:00:00"
     },
-
     {
       "category": "Evening",
       "startDateTime": "2026-04-06T20:00:00",
@@ -529,7 +601,6 @@
       "startDateTime": "2026-05-05T20:00:00",
       "endDateTime": "2026-05-05T22:00:00"
     },
-
     {
       "category": "Work",
       "startDateTime": "2026-04-06T09:00:00",
@@ -750,7 +821,6 @@
       "startDateTime": "2026-05-05T13:30:00",
       "endDateTime": "2026-05-05T17:30:00"
     },
-
     {
       "category": "Health",
       "startDateTime": "2026-04-06T17:30:00",
@@ -941,7 +1011,6 @@
       "startDateTime": "2026-05-05T17:30:00",
       "endDateTime": "2026-05-05T19:30:00"
     },
-
     {
       "category": "Home",
       "startDateTime": "2026-04-06T18:00:00",

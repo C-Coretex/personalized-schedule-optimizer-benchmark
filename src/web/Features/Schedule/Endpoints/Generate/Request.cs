@@ -23,7 +23,7 @@ public record Request
     {
         var days = PlanningHorizon.EndDate.DayNumber - PlanningHorizon.StartDate.DayNumber + 1;
         var defaultSeconds = days >= 30 ? 30 : 15;
-        var optimizationTime = Math.Clamp(OptimizationTimeInSeconds ?? defaultSeconds, 1, 60);
+        var optimizationTime = Math.Clamp(OptimizationTimeInSeconds ?? defaultSeconds, 1, 300);
 
         return new()
         {
