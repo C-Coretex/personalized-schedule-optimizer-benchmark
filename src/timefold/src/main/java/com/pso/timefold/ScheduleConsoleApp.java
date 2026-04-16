@@ -14,8 +14,11 @@ import com.pso.timefold.solver.ScheduleProblemBuilder;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Standalone CLI entry point for the schedule optimizer.
@@ -30,6 +33,15 @@ import java.util.List;
  * If no argument is provided, reads from ./input.json in the working directory.
  */
 public class ScheduleConsoleApp {
+
+    private static long sumThreadCpuNs(ThreadMXBean threadBean) {
+        long total = 0;
+        for (long id : threadBean.getAllThreadIds()) {
+            long t = threadBean.getThreadCpuTime(id);
+            if (t > 0) total += t;
+        }
+        return total;
+    }
 
     public static void main(String[] args) throws Exception {
         System.out.println("=== Personalized Schedule Optimizer (Timefold) ===");
@@ -69,7 +81,48 @@ public class ScheduleConsoleApp {
         int timeSeconds = request.getOptimizationTimeInSeconds() > 0
                 ? request.getOptimizationTimeInSeconds() : 15;
         System.out.printf("Solving for up to %d seconds...%n", timeSeconds);
-        long startMs = System.currentTimeMillis();
+
+        // ── Performance monitoring setup ─────────────────────────────────────────
+        Runtime      runtime     = Runtime.getRuntime();
+        ThreadMXBean threadBean  = ManagementFactory.getThreadMXBean();
+        int          logicalCores = runtime.availableProcessors();
+
+        long[]   baselineBytes = {0};
+        long[]   peakBytes     = {0};
+        long[]   totalBytes    = {0};
+        double[] peakCpu       = {0};
+        double[] totalCpu      = {0};
+        long[]   lastCpuNs     = {sumThreadCpuNs(threadBean)};
+        long[]   lastTimeNs    = {System.nanoTime()};
+        int[]    samples       = {0};
+        AtomicBoolean monitoring = new AtomicBoolean(true);
+
+        Thread monitorThread = new Thread(() -> {
+            while (monitoring.get()) {
+                try { Thread.sleep(100); }
+                catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
+                if (baselineBytes[0] == 0) continue;
+
+                long usedHeap     = runtime.totalMemory() - runtime.freeMemory();
+                long currentBytes = Math.max(0, usedHeap - baselineBytes[0]);
+                peakBytes[0] = Math.max(peakBytes[0], currentBytes);
+                totalBytes[0] += currentBytes;
+
+                long   now          = System.nanoTime();
+                long   currentCpuNs = sumThreadCpuNs(threadBean);
+                double cpuUsedNs    = currentCpuNs - lastCpuNs[0];
+                double elapsedNs    = now - lastTimeNs[0];
+                double cpuPct       = elapsedNs > 0 ? cpuUsedNs / (elapsedNs * logicalCores) * 100.0 : 0;
+                peakCpu[0]    = Math.max(peakCpu[0], cpuPct);
+                totalCpu[0]  += cpuPct;
+                lastCpuNs[0]  = currentCpuNs;
+                lastTimeNs[0] = now;
+                samples[0]++;
+            }
+        });
+        monitorThread.setDaemon(true);
+        monitorThread.start();
+        // ─────────────────────────────────────────────────────────────────────────
 
         // Override termination from request so the solver honours optimizationTimeInSeconds
         SolverConfig solverConfig = SolverConfig.createFromXmlResource("solverConfig.xml");
@@ -77,9 +130,16 @@ public class ScheduleConsoleApp {
                 new TerminationConfig().withSpentLimit(java.time.Duration.ofSeconds(timeSeconds)));
         SolverFactory<ScheduleSolution> factory = SolverFactory.create(solverConfig);
         Solver<ScheduleSolution> solver = factory.buildSolver();
-        ScheduleSolution solution = solver.solve(initialSolution);
 
+        long startMs = System.currentTimeMillis();
+        baselineBytes[0] = runtime.totalMemory() - runtime.freeMemory();  // baseline right before solve
+        ScheduleSolution solution = solver.solve(initialSolution);
         long elapsedMs = System.currentTimeMillis() - startMs;
+
+        monitoring.set(false);
+        monitorThread.interrupt();
+        monitorThread.join();
+
         System.out.printf("Solver finished in %.1f seconds%n", elapsedMs / 1000.0);
 
         // 4. Print results
@@ -113,5 +173,23 @@ public class ScheduleConsoleApp {
         if (unscheduled > 0) {
             System.out.printf("%nUnscheduled assignment slots: %d%n", unscheduled);
         }
+
+        // ── Performance report ────────────────────────────────────────────────────
+        double peakMb  = peakBytes[0] / 1024.0 / 1024.0;
+        double avgMem  = samples[0] > 0 ? totalBytes[0] / (double) samples[0] / 1024.0 / 1024.0 : 0;
+        double avgCpu  = samples[0] > 0 ? totalCpu[0] / samples[0] : 0;
+
+        System.out.println();
+        System.out.println("╔══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                      PERFORMANCE                            ║");
+        System.out.println("╚══════════════════════════════════════════════════════════════╝");
+        System.out.printf("  Elapsed time:           %02d:%02d.%03d%n",
+                elapsedMs / 60000, (elapsedMs / 1000) % 60, elapsedMs % 1000);
+        System.out.printf("  Logical cores:          %d%n", logicalCores);
+        System.out.printf("  Peak committed memory:  %.2f MB%n", peakMb);
+        System.out.printf("  Average committed mem:  %.2f MB%n", avgMem);
+        System.out.printf("  Peak CPU usage:         %.1f%%%n", peakCpu[0]);
+        System.out.printf("  Average CPU usage:      %.1f%%%n", avgCpu);
+        System.out.printf("  Samples taken:          %d (over ~%.1fs)%n", samples[0], samples[0] / 10.0);
     }
 }

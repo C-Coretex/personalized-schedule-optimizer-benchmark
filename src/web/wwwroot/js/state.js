@@ -79,8 +79,8 @@ export function renderForm(s) {
   document.getElementById('horizon-end').value   = s.planningHorizon?.endDate   ?? '';
   document.getElementById('strategy').value      = s.difficultTaskSchedulingStrategy ?? 'Cluster';
   const optTime = s.optimizationTimeInSeconds ?? 15;
-  document.getElementById('opt-time').value      = optTime;
-  document.getElementById('opt-time-value').textContent = `${optTime}s`;
+  document.getElementById('opt-time').value       = optTime;
+  document.getElementById('opt-time-value').value = optTime;
 
   document.getElementById('fixed-tasks-list').innerHTML          = '';
   document.getElementById('dynamic-tasks-list').innerHTML        = '';

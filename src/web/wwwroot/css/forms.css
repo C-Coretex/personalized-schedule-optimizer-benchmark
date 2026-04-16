@@ -66,10 +66,24 @@
   cursor: pointer;
 }
 
-#opt-time-value {
+.opt-time-number {
+  width: 3.5rem;
   font-size: 0.85rem;
-  color: #333;
-  min-width: 2.5rem;
+  text-align: right;
+  padding: 0.15rem 0.3rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  -moz-appearance: textfield;
+}
+
+.opt-time-number::-webkit-inner-spin-button,
+.opt-time-number::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.opt-time-unit {
+  font-size: 0.85rem;
+  color: #6b7280;
 }
 
 .btn-opt-reset {

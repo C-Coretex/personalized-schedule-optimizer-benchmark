@@ -490,28 +490,67 @@ export async function loadGeneratedIds() {
       const item = items[i];
       const li   = document.createElement('li');
 
+      // ── Top row ──────────────────────────────────────────────
+      const topRow = document.createElement('div');
+      topRow.className = 'ids-top-row';
+
       const idSpan = document.createElement('span');
       idSpan.className = 'ids-id';
       idSpan.textContent = item.scheduleJobMetadata.id;
-      li.appendChild(idSpan);
+      topRow.appendChild(idSpan);
 
       const optimizerKey = item.scheduleJobMetadata.optimizer;
       const optimizerBadge = document.createElement('span');
       optimizerBadge.className = 'ids-optimizer';
       optimizerBadge.textContent = OPTIMIZER_LABELS[optimizerKey] ?? optimizerKey;
-      li.appendChild(optimizerBadge);
+      topRow.appendChild(optimizerBadge);
 
       if (item.score) {
         const badge = document.createElement('span');
         badge.className = 'ids-score';
         badge.textContent = `H: ${item.score.score.hardScore} | S: ${item.score.score.softScore}`;
-        li.appendChild(badge);
+        topRow.appendChild(badge);
         attachCombinedScoreTooltip(badge, item.score);
       } else {
         const spinner = document.createElement('span');
         spinner.className = 'ids-spinner';
-        li.appendChild(spinner);
+        topRow.appendChild(spinner);
       }
+      li.appendChild(topRow);
+
+      // ── Meta row ─────────────────────────────────────────────
+      const req = item.scheduleJobMetadata.request;
+      if (req) {
+        const metaRow = document.createElement('div');
+        metaRow.className = 'ids-meta';
+
+        const fmtDate = iso => {
+          const [y, m, d] = iso.split('-').map(Number);
+          const dt = new Date(y, m - 1, d);
+          const opts = { month: 'short', day: 'numeric' };
+          if (y !== new Date().getFullYear()) opts.year = 'numeric';
+          return dt.toLocaleDateString(undefined, opts);
+        };
+
+        const horizonBadge = document.createElement('span');
+        horizonBadge.className = 'ids-meta-badge';
+        horizonBadge.textContent =
+          `${fmtDate(req.planningHorizon.startDate)} – ${fmtDate(req.planningHorizon.endDate)}`;
+        metaRow.appendChild(horizonBadge);
+
+        const timeBadge = document.createElement('span');
+        timeBadge.className = 'ids-meta-badge';
+        timeBadge.textContent = `${req.optimizationTimeInSeconds}s`;
+        metaRow.appendChild(timeBadge);
+
+        const tasksBadge = document.createElement('span');
+        tasksBadge.className = 'ids-meta-badge';
+        tasksBadge.textContent = `F:${req.fixedTasks.length} D:${req.dynamicTasks.length}`;
+        metaRow.appendChild(tasksBadge);
+
+        li.appendChild(metaRow);
+      }
+
       li.dataset.scheduleId = item.scheduleJobMetadata.id;
       li.addEventListener('click', async () => {
         activeScheduleId = item.scheduleJobMetadata.id;

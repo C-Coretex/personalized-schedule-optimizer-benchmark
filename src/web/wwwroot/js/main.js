@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const start = document.getElementById('horizon-start').value;
       const end   = document.getElementById('horizon-end').value;
       const t = calcDefaultOptTime(start, end);
-      document.getElementById('opt-time').value = t;
-      document.getElementById('opt-time-value').textContent = `${t}s`;
+      document.getElementById('opt-time').value       = t;
+      document.getElementById('opt-time-value').value = t;
     }
     syncJson();
   }
@@ -34,10 +34,22 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('horizon-end').addEventListener('input', onHorizonChange);
   document.getElementById('strategy').addEventListener('input', syncJson);
 
-  // Optimization time slider
+  // Optimization time — slider drives number input
   document.getElementById('opt-time').addEventListener('input', e => {
     const val = parseInt(e.target.value);
-    document.getElementById('opt-time-value').textContent = `${val}s`;
+    document.getElementById('opt-time-value').value = val;
+    const start = document.getElementById('horizon-start').value;
+    const end   = document.getElementById('horizon-end').value;
+    userOverrodeOptTime = val !== calcDefaultOptTime(start, end);
+    syncJson();
+  });
+
+  // Optimization time — number input drives slider
+  document.getElementById('opt-time-value').addEventListener('input', e => {
+    let val = parseInt(e.target.value);
+    if (isNaN(val)) return;
+    val = Math.max(1, Math.min(300, val));
+    document.getElementById('opt-time').value = val;
     const start = document.getElementById('horizon-start').value;
     const end   = document.getElementById('horizon-end').value;
     userOverrodeOptTime = val !== calcDefaultOptTime(start, end);
@@ -50,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const end   = document.getElementById('horizon-end').value;
     const t = calcDefaultOptTime(start, end);
     document.getElementById('opt-time').value = t;
-    document.getElementById('opt-time-value').textContent = `${t}s`;
+    document.getElementById('opt-time-value').value = t;
     userOverrodeOptTime = false;
     syncJson();
   });

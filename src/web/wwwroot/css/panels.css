@@ -88,13 +88,36 @@ button {
 
 .ids-list li {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   padding: 0.55rem 0.75rem;
   font-size: 0.78rem;
   font-family: monospace;
   border-bottom: 1px solid #f0f0f0;
   color: #374151;
   cursor: default;
+}
+
+.ids-top-row {
+  display: flex;
+  align-items: center;
+}
+
+.ids-meta {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.ids-meta-badge {
+  font-size: 0.6rem;
+  font-family: monospace;
+  background: #f3f4f6;
+  color: #6b7280;
+  border-radius: 3px;
+  padding: 1px 5px;
+  white-space: nowrap;
 }
 
 .ids-id {
