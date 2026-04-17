@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
-internal record Day
+internal sealed record Day
 {
     public DateOnly Date { get; init; }
     public int DifficultyCapacity { get; init; }
@@ -117,12 +117,12 @@ internal readonly record struct FreeTimeWindow
     }
 }
 
-internal record CategoryTimeWindow
+internal sealed record CategoryTimeWindow
 {
     public Category Category { get; init; } = null!;
     public TimeOnly Start { get; init; }
     public TimeOnly End { get; init; }
-    public Day Day { get; init; }
+    public Day Day { get; init; } = null!;
 
     public static IEnumerable<CategoryTimeWindow> FromRequest(Day day, TimeOnly start, TimeOnly end, IEnumerable<Category> categories)
     {

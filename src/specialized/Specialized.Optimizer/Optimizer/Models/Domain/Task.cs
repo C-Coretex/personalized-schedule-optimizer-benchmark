@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
-internal record Task
+internal sealed record Task
 {
     public required Guid Id { get; init; }
 

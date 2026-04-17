@@ -2,7 +2,7 @@
 
 namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
-internal record Category
+internal sealed record Category
 {
     public required Specialized.Optimizer.Models.Enums.Category CategoryType { get; init; }
     //time windows for day

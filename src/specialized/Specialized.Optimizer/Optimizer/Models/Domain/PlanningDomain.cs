@@ -3,7 +3,7 @@
 namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
 //separate from Domain to optimize snapshots
-internal partial record PlanningDomain
+internal sealed partial record PlanningDomain
 {
     public PlanningDomain(Domain domain)
     {

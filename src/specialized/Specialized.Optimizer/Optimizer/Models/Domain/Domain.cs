@@ -1,13 +1,12 @@
 ﻿using Specialized.Optimizer.Models;
 using Specialized.Optimizer.Models.Enums;
-using Specialized.Optimizer.Models.Tasks;
 using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Globalization;
 
 namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
-internal record Domain
+internal sealed record Domain
 {
     //static data
     public Day[] Days { get; init; } = [];

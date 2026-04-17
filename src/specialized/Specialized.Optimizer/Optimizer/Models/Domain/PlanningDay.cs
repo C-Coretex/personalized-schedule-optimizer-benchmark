@@ -1,6 +1,6 @@
 ﻿namespace Specialized.Optimizer.Optimizer.Models.Domain;
 
-internal partial record PlanningDay
+internal sealed partial record PlanningDay
 {
     public PlanningDay(Day day, PlanningDomain domain)
     {
