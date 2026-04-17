@@ -20,10 +20,21 @@
     <constructionHeuristic>
         <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
     </constructionHeuristic>
-
+    <localSearch>
+        <!-- Phase 1: just fix hard constraints -->
+        <termination>
+            <spentLimit>PT5S</spentLimit>
+        </termination>
+        <acceptor>
+            <simulatedAnnealingStartingTemperature>1hard/0soft</simulatedAnnealingStartingTemperature>
+        </acceptor>
+        <forager>
+            <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+    </localSearch>
     <localSearch>
         <acceptor>
-            <simulatedAnnealingStartingTemperature>0hard/500soft</simulatedAnnealingStartingTemperature>
+            <simulatedAnnealingStartingTemperature>0hard/1000soft</simulatedAnnealingStartingTemperature>
         </acceptor>
         <forager>
             <acceptedCountLimit>1</acceptedCountLimit>

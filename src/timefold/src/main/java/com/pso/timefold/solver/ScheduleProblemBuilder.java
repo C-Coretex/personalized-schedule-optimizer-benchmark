@@ -67,7 +67,6 @@ public final class ScheduleProblemBuilder {
         long horizonDays = request.getPlanningHorizon() != null
                 ? request.getPlanningHorizon().getDays()
                 : 7L;
-        int horizonMinutes = (int) horizonDays * 24 * 60;
 
         // --- Pre-compute horizon-relative minute offsets on problem facts ---
         LocalDateTime horizonOrigin = horizonStart.atStartOfDay();

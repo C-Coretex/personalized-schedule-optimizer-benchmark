@@ -97,7 +97,7 @@ public class ScheduleSolution {
     @ValueRangeProvider
     public CountableValueRange<Integer> getStartMinuteRange() {
         int horizonMinutes = computeHorizonMinutes();
-        return ValueRangeFactory.createIntValueRange(0, horizonMinutes);
+        return ValueRangeFactory.createIntValueRange(0, horizonMinutes, 5);
     }
 
     private int computeHorizonMinutes() {
