@@ -449,3 +449,35 @@ export function renderCalendar(item) {
   renderUnscheduled(item.unscheduledDynamicTasks);
   section.classList.remove('hidden');
 }
+
+// ─── Fullscreen toggle ────────────────────────────────────────────────────────
+
+function initCalFullscreen() {
+  const btn          = document.getElementById('cal-fullscreen-btn');
+  const section      = document.getElementById('calendar-section');
+  const expandIcon   = document.getElementById('cal-fs-expand-icon');
+  const collapseIcon = document.getElementById('cal-fs-collapse-icon');
+  if (!btn) return;
+
+  function enter() {
+    section.classList.add('cal-fullscreen');
+    expandIcon.classList.add('hidden');
+    collapseIcon.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function exit() {
+    section.classList.remove('cal-fullscreen');
+    expandIcon.classList.remove('hidden');
+    collapseIcon.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    section.classList.contains('cal-fullscreen') ? exit() : enter();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && section.classList.contains('cal-fullscreen')) exit();
+  });
+}
+
+initCalFullscreen();

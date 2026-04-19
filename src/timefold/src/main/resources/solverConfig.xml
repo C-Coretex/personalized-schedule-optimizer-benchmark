@@ -23,7 +23,7 @@
     <localSearch>
         <!-- Phase 1: just fix hard constraints -->
         <termination>
-            <spentLimit>PT5S</spentLimit>
+            <spentLimit>PT3S</spentLimit>
         </termination>
         <acceptor>
             <simulatedAnnealingStartingTemperature>1hard/0soft</simulatedAnnealingStartingTemperature>
@@ -33,11 +33,23 @@
         </forager>
     </localSearch>
     <localSearch>
+        <termination>
+            <bestScoreLimit>0hard/*soft</bestScoreLimit>
+        </termination>
         <acceptor>
             <simulatedAnnealingStartingTemperature>0hard/1000soft</simulatedAnnealingStartingTemperature>
         </acceptor>
         <forager>
             <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+    </localSearch>
+    <!-- Phase 3: Fine-tuning with cooler SA — runs until overall termination -->
+    <localSearch>
+        <acceptor>
+            <simulatedAnnealingStartingTemperature>0hard/300soft</simulatedAnnealingStartingTemperature>
+        </acceptor>
+        <forager>
+            <acceptedCountLimit>10</acceptedCountLimit>
         </forager>
     </localSearch>
 </solver>

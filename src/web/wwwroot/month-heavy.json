@@ -3,7 +3,7 @@
     "startDate": "2026-04-13",
     "endDate": "2026-05-10"
   },
-  "difficultTaskSchedulingStrategy": "Even",
+  "difficultTaskSchedulingStrategy": "Cluster",
   "optimizationTimeInSeconds": 5,
   "fixedTasks": [
     {

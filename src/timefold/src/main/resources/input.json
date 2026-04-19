@@ -4,7 +4,7 @@
     "endDate": "2026-05-05"
   },
   "difficultTaskSchedulingStrategy": "Even",
-  "optimizationTimeInSeconds": 25,
+  "optimizationTimeInSeconds": 30,
   "fixedTasks": [
     {
       "name": "Doctor Appointment",

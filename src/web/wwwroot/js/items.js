@@ -62,6 +62,7 @@ function refreshFixedSummary(div) {
   const start = div.querySelector('.ft-start')?.value || '';
   const end   = div.querySelector('.ft-end')?.value   || '';
   const prio  = div.querySelector('.ft-priority')?.value;
+  const diff  = div.querySelector('.ft-difficulty')?.value;
   const types = [...div.querySelectorAll('.ft-type:checked')].map(cb => cb.value);
 
   let html = `<span class="item-badge item-badge-fixed">Fixed</span>
@@ -76,8 +77,9 @@ function refreshFixedSummary(div) {
   } else if (start) {
     html += `<span class="sum-chip sum-chip-time">${fmtDateTime(start)}</span>`;
   }
-  if (prio)  html += `<span class="sum-chip">P${prio}</span>`;
-  types.slice(0, 3).forEach(t => { html += `<span class="sum-chip">${t}</span>`; });
+  if (prio) html += `<span class="sum-chip">P${prio}</span>`;
+  if (diff) html += `<span class="sum-chip sum-chip-diff">D${diff}</span>`;
+  types.forEach(t => { html += `<span class="sum-chip">${t}</span>`; });
 
   div.querySelector('.item-summary').innerHTML = html;
 }
@@ -86,10 +88,18 @@ function refreshDynamicSummary(div) {
   const name     = div.querySelector('.dt-name')?.value     || 'Unnamed';
   const dur      = div.querySelector('.dt-duration')?.value || '';
   const prio     = div.querySelector('.dt-priority')?.value;
+  const diff     = div.querySelector('.dt-difficulty')?.value;
   const required = div.querySelector('.dt-required')?.checked;
   const wStart   = div.querySelector('.dt-window-start')?.value;
   const wEnd     = div.querySelector('.dt-window-end')?.value;
+  const deadline = div.querySelector('.dt-deadline')?.value;
   const cats     = [...div.querySelectorAll('.dt-category:checked')].map(cb => cb.value);
+  const types    = [...div.querySelectorAll('.dt-type:checked')].map(cb => cb.value);
+  const isRep    = div.querySelector('.dt-repeating-toggle')?.checked;
+  const minDay   = div.querySelector('.dt-min-days')?.value  || '0';
+  const optDay   = div.querySelector('.dt-opt-days')?.value  || '0';
+  const minWeek  = div.querySelector('.dt-min-weeks')?.value || '0';
+  const optWeek  = div.querySelector('.dt-opt-weeks')?.value || '0';
 
   let html = `<span class="item-badge item-badge-dynamic">Dynamic</span>
     <span class="sum-name">${esc(name)}</span>`;
@@ -99,12 +109,16 @@ function refreshDynamicSummary(div) {
     const we = wEnd   ? wEnd.slice(0, 5)   : '–';
     html += `<span class="sum-chip sum-chip-time">${ws} – ${we}</span>`;
   }
+  if (deadline) html += `<span class="sum-chip sum-chip-deadline">⚑ ${fmtDateTime(deadline)}</span>`;
   cats.forEach(cat => {
     const color = CATEGORY_COLORS[cat] || '#9ca3af';
     html += `<span class="sum-chip sum-chip-cat" style="background:${color}">${cat}</span>`;
   });
   if (required) html += `<span class="sum-chip sum-chip-required">Required</span>`;
-  if (prio)     html += `<span class="sum-chip">P${prio}</span>`;
+  if (prio) html += `<span class="sum-chip">P${prio}</span>`;
+  if (diff) html += `<span class="sum-chip sum-chip-diff">D${diff}</span>`;
+  types.forEach(t => { html += `<span class="sum-chip">${t}</span>`; });
+  if (isRep) html += `<span class="sum-chip sum-chip-repeat">↺ day ${minDay}–${optDay} · wk ${minWeek}–${optWeek}</span>`;
 
   div.querySelector('.item-summary').innerHTML = html;
 }

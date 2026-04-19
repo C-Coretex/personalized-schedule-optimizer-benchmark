@@ -8,6 +8,55 @@
   padding: 1rem;
 }
 
+/* ── Fullscreen toggle button ──────────────────────────────── */
+
+.cal-fullscreen-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.cal-fullscreen-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* ── Fullscreen overlay ────────────────────────────────────── */
+
+#calendar-section.cal-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  margin: 0;
+  padding: 1rem;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#calendar-section.cal-fullscreen .cal-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+#calendar-section.cal-fullscreen .cal-scroll-wrapper {
+  flex: 1;
+  max-height: none;
+  min-height: 0;
+}
+
 /* ── Optimizer label ───────────────────────────────────────── */
 
 .cal-optimizer-label {

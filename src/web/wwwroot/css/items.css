@@ -103,6 +103,9 @@
 .sum-chip-cat      { color: #fff; }
 .sum-chip-required { background: #fef3c7; color: #92400e; }
 .sum-chip-time     { background: #f1f5f9; color: #475569; font-family: monospace; font-size: 0.7rem; }
+.sum-chip-diff     { background: #6366f1; color: #fff; }
+.sum-chip-deadline { background: #f59e0b; color: #fff; }
+.sum-chip-repeat   { background: #10b981; color: #fff; }
 
 .sum-date {
   font-size: 0.82rem;
