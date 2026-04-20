@@ -70,7 +70,6 @@ var monitorTask = Task.Run(async () =>
 }, cts.Token);
 
 var requestModel = request.ToScheduleOptimizationRequest();
-requestModel = requestModel with { OptimizationTimeInSeconds = 5 };
 
 var stopwatch = Stopwatch.StartNew();
 
@@ -79,7 +78,7 @@ initialBytes = proc.PrivateMemorySize64;
 solver.Solve(requestModel);
 stopwatch.Stop();
 
-cts.Cancel();
+await cts.CancelAsync();
 try { await monitorTask; } catch (OperationCanceledException) { }
 
 double peak = peakBytes / 1024.0 / 1024.0;

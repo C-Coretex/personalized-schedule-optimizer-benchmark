@@ -1,65 +1,188 @@
 {
   "planningHorizon": {
-    "startDate": "2026-04-06",
-    "endDate": "2026-05-05"
+    "startDate": "2026-04-13",
+    "endDate": "2026-05-10"
   },
-  "difficultTaskSchedulingStrategy": "Even",
+  "difficultTaskSchedulingStrategy": "Cluster",
   "optimizationTimeInSeconds": 30,
   "fixedTasks": [
     {
-      "name": "Doctor Appointment",
+      "name": "Team Standup",
       "priority": 5,
       "difficulty": 2,
       "types": [
         "Social",
-        "Indoor"
+        "Routine",
+        "Collaborative"
       ],
-      "startTime": "2026-04-09T10:00:00",
-      "endTime": "2026-04-09T11:00:00"
+      "startTime": "2026-04-13T09:00:00",
+      "endTime": "2026-04-13T09:30:00"
     },
     {
-      "name": "Team Sprint Planning",
+      "name": "All-Hands Meeting",
       "priority": 4,
       "difficulty": 3,
       "types": [
-        "Intellectual",
+        "Social",
+        "Indoor",
         "Collaborative"
       ],
-      "startTime": "2026-04-14T09:00:00",
-      "endTime": "2026-04-14T10:00:00"
+      "startTime": "2026-04-14T10:00:00",
+      "endTime": "2026-04-14T11:00:00"
     },
     {
-      "name": "Dentist Checkup",
+      "name": "Dentist Appointment",
       "priority": 5,
       "difficulty": 2,
       "types": [
         "Routine",
         "Indoor"
       ],
-      "startTime": "2026-04-22T14:00:00",
-      "endTime": "2026-04-22T15:00:00"
+      "startTime": "2026-04-15T14:00:00",
+      "endTime": "2026-04-15T15:00:00"
     },
     {
-      "name": "Quarterly Project Review",
+      "name": "Sprint Retrospective",
+      "priority": 4,
+      "difficulty": 3,
+      "types": [
+        "Intellectual",
+        "Social",
+        "Collaborative"
+      ],
+      "startTime": "2026-04-16T15:00:00",
+      "endTime": "2026-04-16T16:30:00"
+    },
+    {
+      "name": "1:1 with Manager",
+      "priority": 5,
+      "difficulty": 2,
+      "types": [
+        "Social",
+        "Indoor",
+        "Collaborative"
+      ],
+      "startTime": "2026-04-17T16:00:00",
+      "endTime": "2026-04-17T16:30:00"
+    },
+    {
+      "name": "Team Standup",
+      "priority": 5,
+      "difficulty": 2,
+      "types": [
+        "Social",
+        "Routine",
+        "Collaborative"
+      ],
+      "startTime": "2026-04-20T09:00:00",
+      "endTime": "2026-04-20T09:30:00"
+    },
+    {
+      "name": "Client Presentation",
+      "priority": 5,
+      "difficulty": 6,
+      "types": [
+        "Social",
+        "Collaborative",
+        "HighEnergy"
+      ],
+      "startTime": "2026-04-21T11:00:00",
+      "endTime": "2026-04-21T12:30:00"
+    },
+    {
+      "name": "Doctor Checkup",
+      "priority": 5,
+      "difficulty": 2,
+      "types": [
+        "Routine",
+        "Indoor"
+      ],
+      "startTime": "2026-04-22T10:00:00",
+      "endTime": "2026-04-22T11:00:00"
+    },
+    {
+      "name": "Product Demo",
+      "priority": 4,
+      "difficulty": 5,
+      "types": [
+        "Social",
+        "Digital",
+        "Collaborative"
+      ],
+      "startTime": "2026-04-23T15:00:00",
+      "endTime": "2026-04-23T16:00:00"
+    },
+    {
+      "name": "Sprint Planning",
       "priority": 5,
       "difficulty": 4,
       "types": [
         "Intellectual",
+        "Boring",
         "Collaborative"
       ],
-      "startTime": "2026-04-28T10:00:00",
-      "endTime": "2026-04-28T11:30:00"
+      "startTime": "2026-04-27T09:00:00",
+      "endTime": "2026-04-27T10:30:00"
     },
     {
-      "name": "Dinner with Friends",
-      "priority": 3,
+      "name": "Tech Interview",
+      "priority": 4,
+      "difficulty": 7,
+      "types": [
+        "Intellectual",
+        "Indoor",
+        "Collaborative"
+      ],
+      "startTime": "2026-04-29T11:00:00",
+      "endTime": "2026-04-29T12:00:00"
+    },
+    {
+      "name": "1:1 with Manager",
+      "priority": 5,
       "difficulty": 2,
       "types": [
         "Social",
-        "Fun"
+        "Indoor",
+        "Collaborative"
       ],
-      "startTime": "2026-05-02T19:00:00",
-      "endTime": "2026-05-02T21:00:00"
+      "startTime": "2026-05-01T16:00:00",
+      "endTime": "2026-05-01T16:30:00"
+    },
+    {
+      "name": "Board Meeting",
+      "priority": 5,
+      "difficulty": 5,
+      "types": [
+        "Intellectual",
+        "Social",
+        "Collaborative"
+      ],
+      "startTime": "2026-05-05T09:00:00",
+      "endTime": "2026-05-05T11:00:00"
+    },
+    {
+      "name": "Performance Review",
+      "priority": 5,
+      "difficulty": 4,
+      "types": [
+        "Intellectual",
+        "Boring",
+        "Solo"
+      ],
+      "startTime": "2026-05-06T14:00:00",
+      "endTime": "2026-05-06T15:00:00"
+    },
+    {
+      "name": "Sprint Review",
+      "priority": 4,
+      "difficulty": 3,
+      "types": [
+        "Social",
+        "Digital",
+        "Collaborative"
+      ],
+      "startTime": "2026-05-08T13:00:00",
+      "endTime": "2026-05-08T14:00:00"
     }
   ],
   "dynamicTasks": [
@@ -68,13 +191,14 @@
       "priority": 4,
       "difficulty": 1,
       "types": [
+        "Solo",
         "LowEnergy",
         "Meditative"
       ],
       "isRequired": false,
       "duration": 15,
-      "windowStart": "06:00:00",
-      "windowEnd": "09:00:00",
+      "windowStart": "06:30:00",
+      "windowEnd": "08:30:00",
       "deadline": null,
       "categories": [
         "Morning"
@@ -82,43 +206,20 @@
       "repeating": {
         "minDayCount": 1,
         "optDayCount": 1,
-        "minWeekCount": 0,
+        "minWeekCount": 1,
         "optWeekCount": 7
       }
     },
     {
-      "name": "Evening Journal",
-      "priority": 3,
-      "difficulty": 1,
-      "types": [
-        "Creative",
-        "LowEnergy"
-      ],
-      "isRequired": false,
-      "duration": 20,
-      "windowStart": "20:00:00",
-      "windowEnd": "22:00:00",
-      "deadline": null,
-      "categories": [
-        "Evening"
-      ],
-      "repeating": {
-        "minDayCount": 0,
-        "optDayCount": 1,
-        "minWeekCount": 0,
-        "optWeekCount": 7
-      }
-    },
-    {
-      "name": "Gym Session",
-      "priority": 4,
-      "difficulty": 5,
+      "name": "Daily Exercise",
+      "priority": 5,
+      "difficulty": 3,
       "types": [
         "Physical",
         "HighEnergy"
       ],
       "isRequired": false,
-      "duration": 60,
+      "duration": 20,
       "windowStart": null,
       "windowEnd": null,
       "deadline": null,
@@ -126,19 +227,68 @@
         "Health"
       ],
       "repeating": {
-        "minDayCount": 0,
+        "minDayCount": 1,
         "optDayCount": 1,
-        "minWeekCount": 2,
-        "optWeekCount": 3
+        "minWeekCount": 1,
+        "optWeekCount": 7
       }
     },
     {
-      "name": "Weekly Work Review",
+      "name": "Evening Journaling",
       "priority": 3,
-      "difficulty": 3,
+      "difficulty": 1,
+      "types": [
+        "Creative",
+        "Solo",
+        "LowEnergy"
+      ],
+      "isRequired": false,
+      "duration": 10,
+      "windowStart": "20:00:00",
+      "windowEnd": "22:00:00",
+      "deadline": null,
+      "categories": [
+        "Evening"
+      ],
+      "repeating": {
+        "minDayCount": 1,
+        "optDayCount": 1,
+        "minWeekCount": 1,
+        "optWeekCount": 7
+      }
+    },
+    {
+      "name": "Morning Coffee & News",
+      "priority": 2,
+      "difficulty": 1,
+      "types": [
+        "Routine",
+        "Digital",
+        "LowEnergy"
+      ],
+      "isRequired": false,
+      "duration": 15,
+      "windowStart": "07:00:00",
+      "windowEnd": "08:30:00",
+      "deadline": null,
+      "categories": [
+        "Morning"
+      ],
+      "repeating": {
+        "minDayCount": 1,
+        "optDayCount": 1,
+        "minWeekCount": 1,
+        "optWeekCount": 7
+      }
+    },
+    {
+      "name": "Weekly Review & Planning",
+      "priority": 4,
+      "difficulty": 4,
       "types": [
         "Intellectual",
-        "Routine"
+        "DeepWork",
+        "Solo"
       ],
       "isRequired": false,
       "duration": 45,
@@ -156,86 +306,35 @@
       }
     },
     {
-      "name": "Prepare Quarterly Presentation",
-      "priority": 5,
-      "difficulty": 6,
-      "types": [
-        "Intellectual",
-        "Creative",
-        "DeepWork"
-      ],
-      "isRequired": true,
-      "duration": 90,
-      "windowStart": null,
-      "windowEnd": null,
-      "deadline": "2026-04-17T17:30:00",
-      "categories": [
-        "Work"
-      ],
-      "repeating": null
-    },
-    {
-      "name": "Deep Work Coding Sprint",
-      "priority": 4,
-      "difficulty": 7,
-      "types": [
-        "Intellectual",
-        "DeepWork",
-        "Digital"
-      ],
-      "isRequired": false,
-      "duration": 120,
-      "windowStart": "09:00:00",
-      "windowEnd": "13:00:00",
-      "deadline": "2026-04-24T17:30:00",
-      "categories": [
-        "Work"
-      ],
-      "repeating": null
-    },
-    {
-      "name": "Read Non-Fiction Book",
+      "name": "Language Learning Session",
       "priority": 3,
-      "difficulty": 2,
+      "difficulty": 5,
       "types": [
         "Intellectual",
-        "LowEnergy"
+        "Solo"
       ],
       "isRequired": false,
-      "duration": 45,
-      "windowStart": "20:00:00",
-      "windowEnd": "22:00:00",
-      "deadline": "2026-04-25T22:00:00",
-      "categories": [
-        "Evening"
-      ],
-      "repeating": null
-    },
-    {
-      "name": "Fix Apartment Leak",
-      "priority": 5,
-      "difficulty": 3,
-      "types": [
-        "Physical",
-        "Routine"
-      ],
-      "isRequired": true,
-      "duration": 120,
+      "duration": 30,
       "windowStart": null,
       "windowEnd": null,
-      "deadline": "2026-04-30T20:00:00",
+      "deadline": null,
       "categories": [
-        "Home"
+        "Study"
       ],
-      "repeating": null
+      "repeating": {
+        "minDayCount": 0,
+        "optDayCount": 1,
+        "minWeekCount": 2,
+        "optWeekCount": 4
+      }
     },
     {
       "name": "Grocery Shopping",
-      "priority": 3,
+      "priority": 4,
       "difficulty": 2,
       "types": [
-        "Physical",
-        "Routine"
+        "Routine",
+        "Indoor"
       ],
       "isRequired": false,
       "duration": 60,
@@ -253,16 +352,39 @@
       }
     },
     {
-      "name": "Outdoor Walk",
+      "name": "Social Meetup / Coffee",
       "priority": 3,
       "difficulty": 2,
       "types": [
-        "Physical",
-        "Outdoor",
-        "LowEnergy"
+        "Social",
+        "Fun"
       ],
       "isRequired": false,
-      "duration": 45,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Social"
+      ],
+      "repeating": {
+        "minDayCount": 0,
+        "optDayCount": 1,
+        "minWeekCount": 1,
+        "optWeekCount": 2
+      }
+    },
+    {
+      "name": "Gym / Strength Training",
+      "priority": 4,
+      "difficulty": 6,
+      "types": [
+        "Physical",
+        "Solo",
+        "HighEnergy"
+      ],
+      "isRequired": false,
+      "duration": 60,
       "windowStart": null,
       "windowEnd": null,
       "deadline": null,
@@ -277,384 +399,556 @@
       }
     },
     {
-      "name": "Call Parents",
+      "name": "Fix Critical Bug #1247",
+      "priority": 5,
+      "difficulty": 8,
+      "types": [
+        "DeepWork",
+        "Digital",
+        "Solo"
+      ],
+      "isRequired": true,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-16T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Complete Q1 Report",
+      "priority": 5,
+      "difficulty": 7,
+      "types": [
+        "Intellectual",
+        "DeepWork",
+        "Solo"
+      ],
+      "isRequired": true,
+      "duration": 120,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-17T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Team Presentation Prep",
+      "priority": 5,
+      "difficulty": 6,
+      "types": [
+        "Intellectual",
+        "Creative",
+        "Solo"
+      ],
+      "isRequired": true,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-20T23:59:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Tax Filing Preparation",
+      "priority": 5,
+      "difficulty": 5,
+      "types": [
+        "Routine",
+        "Digital",
+        "Boring"
+      ],
+      "isRequired": true,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-22T17:30:00",
+      "categories": [
+        "Home"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Code Review Backlog",
+      "priority": 4,
+      "difficulty": 5,
+      "types": [
+        "Intellectual",
+        "Digital",
+        "Solo"
+      ],
+      "isRequired": true,
+      "duration": 45,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-24T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Project Proposal Draft",
+      "priority": 5,
+      "difficulty": 7,
+      "types": [
+        "Creative",
+        "DeepWork",
+        "Solo"
+      ],
+      "isRequired": true,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-25T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Setup Automated Tests",
+      "priority": 4,
+      "difficulty": 7,
+      "types": [
+        "DeepWork",
+        "Digital",
+        "Solo"
+      ],
+      "isRequired": true,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-28T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Performance Self-Review",
+      "priority": 4,
+      "difficulty": 4,
+      "types": [
+        "Intellectual",
+        "Boring",
+        "Solo"
+      ],
+      "isRequired": true,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-03T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Monthly Budget Review",
+      "priority": 4,
+      "difficulty": 3,
+      "types": [
+        "Routine",
+        "Digital",
+        "Boring"
+      ],
+      "isRequired": true,
+      "duration": 45,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-08T17:30:00",
+      "categories": [
+        "Home"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Research Competitor Products",
       "priority": 3,
+      "difficulty": 6,
+      "types": [
+        "Intellectual",
+        "Digital",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-30T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Home Office Reorganization",
+      "priority": 3,
+      "difficulty": 3,
+      "types": [
+        "Physical",
+        "Routine"
+      ],
+      "isRequired": false,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-04-26T20:00:00",
+      "categories": [
+        "Home"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Write Technical Blog Post",
+      "priority": 3,
+      "difficulty": 5,
+      "types": [
+        "Intellectual",
+        "Creative",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-02T20:00:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Architecture Review Document",
+      "priority": 4,
+      "difficulty": 8,
+      "types": [
+        "Intellectual",
+        "DeepWork",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 120,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-01T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Read Clean Architecture",
+      "priority": 3,
+      "difficulty": 4,
+      "types": [
+        "Intellectual",
+        "Indoor",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-10T20:00:00",
+      "categories": [
+        "Study"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Update Portfolio Website",
+      "priority": 3,
+      "difficulty": 5,
+      "types": [
+        "Creative",
+        "Digital",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 120,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-05T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "API Documentation Update",
+      "priority": 3,
+      "difficulty": 4,
+      "types": [
+        "Routine",
+        "Digital",
+        "Boring"
+      ],
+      "isRequired": false,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-07T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Deep Work: Algorithm Optimization",
+      "priority": 4,
+      "difficulty": 9,
+      "types": [
+        "Intellectual",
+        "DeepWork",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 120,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-06T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Team Building Activity Planning",
+      "priority": 3,
+      "difficulty": 3,
+      "types": [
+        "Creative",
+        "Social",
+        "Collaborative"
+      ],
+      "isRequired": false,
+      "duration": 45,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Code Refactoring Session",
+      "priority": 3,
+      "difficulty": 6,
+      "types": [
+        "DeepWork",
+        "Digital",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": "2026-05-09T17:30:00",
+      "categories": [
+        "Work"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Plan Summer Vacation",
+      "priority": 2,
+      "difficulty": 2,
+      "types": [
+        "Digital",
+        "Fun",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 45,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "FreeTime"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Watch Online Course Module",
+      "priority": 2,
+      "difficulty": 3,
+      "types": [
+        "Intellectual",
+        "Digital",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Study"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Photography Walk",
+      "priority": 1,
+      "difficulty": 2,
+      "types": [
+        "Outdoor",
+        "Fun",
+        "Solo"
+      ],
+      "isRequired": false,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "FreeTime",
+        "Weekend"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Try New Restaurant",
+      "priority": 1,
       "difficulty": 1,
       "types": [
         "Social",
+        "Fun"
+      ],
+      "isRequired": false,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Social"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Clean Garage / Storage Room",
+      "priority": 2,
+      "difficulty": 3,
+      "types": [
+        "Physical",
+        "Routine"
+      ],
+      "isRequired": false,
+      "duration": 90,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Home"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Read Sci-fi Novel",
+      "priority": 2,
+      "difficulty": 1,
+      "types": [
+        "Fun",
+        "Solo",
         "LowEnergy"
       ],
       "isRequired": false,
-      "duration": 30,
+      "duration": 45,
       "windowStart": "20:00:00",
       "windowEnd": "22:00:00",
       "deadline": null,
       "categories": [
         "Evening"
       ],
-      "repeating": {
-        "minDayCount": 0,
-        "optDayCount": 1,
-        "minWeekCount": 1,
-        "optWeekCount": 1
-      }
+      "repeating": null
+    },
+    {
+      "name": "Meditation Retreat Research",
+      "priority": 1,
+      "difficulty": 1,
+      "types": [
+        "Digital",
+        "Solo",
+        "LowEnergy"
+      ],
+      "isRequired": false,
+      "duration": 30,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "FreeTime"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Commute Podcast Listening",
+      "priority": 2,
+      "difficulty": 1,
+      "types": [
+        "Routine",
+        "Digital",
+        "LowEnergy"
+      ],
+      "isRequired": false,
+      "duration": 20,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Transport"
+      ],
+      "repeating": null
+    },
+    {
+      "name": "Weekend Hiking Trip Planning",
+      "priority": 2,
+      "difficulty": 2,
+      "types": [
+        "Outdoor",
+        "Digital",
+        "Fun"
+      ],
+      "isRequired": false,
+      "duration": 60,
+      "windowStart": null,
+      "windowEnd": null,
+      "deadline": null,
+      "categories": [
+        "Weekend"
+      ],
+      "repeating": null
     }
   ],
   "categoryWindows": [
     {
       "category": "Morning",
-      "startDateTime": "2026-04-06T06:00:00",
-      "endDateTime": "2026-04-06T09:00:00"
+      "startDateTime": "2026-04-13T06:30:00",
+      "endDateTime": "2026-04-13T08:30:00"
     },
     {
-      "category": "Morning",
-      "startDateTime": "2026-04-07T06:00:00",
-      "endDateTime": "2026-04-07T09:00:00"
+      "category": "Health",
+      "startDateTime": "2026-04-13T07:00:00",
+      "endDateTime": "2026-04-13T08:30:00"
     },
     {
-      "category": "Morning",
-      "startDateTime": "2026-04-08T06:00:00",
-      "endDateTime": "2026-04-08T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-09T06:00:00",
-      "endDateTime": "2026-04-09T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-10T06:00:00",
-      "endDateTime": "2026-04-10T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-11T06:00:00",
-      "endDateTime": "2026-04-11T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-12T06:00:00",
-      "endDateTime": "2026-04-12T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-13T06:00:00",
+      "category": "Transport",
+      "startDateTime": "2026-04-13T08:00:00",
       "endDateTime": "2026-04-13T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-14T06:00:00",
-      "endDateTime": "2026-04-14T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-15T06:00:00",
-      "endDateTime": "2026-04-15T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-16T06:00:00",
-      "endDateTime": "2026-04-16T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-17T06:00:00",
-      "endDateTime": "2026-04-17T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-18T06:00:00",
-      "endDateTime": "2026-04-18T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-19T06:00:00",
-      "endDateTime": "2026-04-19T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-20T06:00:00",
-      "endDateTime": "2026-04-20T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-21T06:00:00",
-      "endDateTime": "2026-04-21T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-22T06:00:00",
-      "endDateTime": "2026-04-22T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-23T06:00:00",
-      "endDateTime": "2026-04-23T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-24T06:00:00",
-      "endDateTime": "2026-04-24T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-25T06:00:00",
-      "endDateTime": "2026-04-25T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-26T06:00:00",
-      "endDateTime": "2026-04-26T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-27T06:00:00",
-      "endDateTime": "2026-04-27T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-28T06:00:00",
-      "endDateTime": "2026-04-28T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-29T06:00:00",
-      "endDateTime": "2026-04-29T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-04-30T06:00:00",
-      "endDateTime": "2026-04-30T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-05-01T06:00:00",
-      "endDateTime": "2026-05-01T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-05-02T06:00:00",
-      "endDateTime": "2026-05-02T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-05-03T06:00:00",
-      "endDateTime": "2026-05-03T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-05-04T06:00:00",
-      "endDateTime": "2026-05-04T09:00:00"
-    },
-    {
-      "category": "Morning",
-      "startDateTime": "2026-05-05T06:00:00",
-      "endDateTime": "2026-05-05T09:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-06T20:00:00",
-      "endDateTime": "2026-04-06T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-07T20:00:00",
-      "endDateTime": "2026-04-07T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-08T20:00:00",
-      "endDateTime": "2026-04-08T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-09T20:00:00",
-      "endDateTime": "2026-04-09T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-10T20:00:00",
-      "endDateTime": "2026-04-10T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-11T20:00:00",
-      "endDateTime": "2026-04-11T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-12T20:00:00",
-      "endDateTime": "2026-04-12T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-13T20:00:00",
-      "endDateTime": "2026-04-13T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-14T20:00:00",
-      "endDateTime": "2026-04-14T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-15T20:00:00",
-      "endDateTime": "2026-04-15T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-16T20:00:00",
-      "endDateTime": "2026-04-16T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-17T20:00:00",
-      "endDateTime": "2026-04-17T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-18T20:00:00",
-      "endDateTime": "2026-04-18T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-19T20:00:00",
-      "endDateTime": "2026-04-19T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-20T20:00:00",
-      "endDateTime": "2026-04-20T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-21T20:00:00",
-      "endDateTime": "2026-04-21T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-22T20:00:00",
-      "endDateTime": "2026-04-22T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-23T20:00:00",
-      "endDateTime": "2026-04-23T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-24T20:00:00",
-      "endDateTime": "2026-04-24T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-25T20:00:00",
-      "endDateTime": "2026-04-25T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-26T20:00:00",
-      "endDateTime": "2026-04-26T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-27T20:00:00",
-      "endDateTime": "2026-04-27T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-28T20:00:00",
-      "endDateTime": "2026-04-28T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-29T20:00:00",
-      "endDateTime": "2026-04-29T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-04-30T20:00:00",
-      "endDateTime": "2026-04-30T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-05-01T20:00:00",
-      "endDateTime": "2026-05-01T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-05-02T20:00:00",
-      "endDateTime": "2026-05-02T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-05-03T20:00:00",
-      "endDateTime": "2026-05-03T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-05-04T20:00:00",
-      "endDateTime": "2026-05-04T22:00:00"
-    },
-    {
-      "category": "Evening",
-      "startDateTime": "2026-05-05T20:00:00",
-      "endDateTime": "2026-05-05T22:00:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-06T09:00:00",
-      "endDateTime": "2026-04-06T12:00:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-06T13:30:00",
-      "endDateTime": "2026-04-06T17:30:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-07T09:00:00",
-      "endDateTime": "2026-04-07T12:00:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-07T13:30:00",
-      "endDateTime": "2026-04-07T17:30:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-08T09:00:00",
-      "endDateTime": "2026-04-08T12:00:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-08T13:30:00",
-      "endDateTime": "2026-04-08T17:30:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-09T09:00:00",
-      "endDateTime": "2026-04-09T12:00:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-09T13:30:00",
-      "endDateTime": "2026-04-09T17:30:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-10T09:00:00",
-      "endDateTime": "2026-04-10T12:00:00"
-    },
-    {
-      "category": "Work",
-      "startDateTime": "2026-04-10T13:30:00",
-      "endDateTime": "2026-04-10T17:30:00"
     },
     {
       "category": "Work",
       "startDateTime": "2026-04-13T09:00:00",
-      "endDateTime": "2026-04-13T12:00:00"
+      "endDateTime": "2026-04-13T12:30:00"
     },
     {
       "category": "Work",
@@ -662,9 +956,49 @@
       "endDateTime": "2026-04-13T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-13T17:30:00",
+      "endDateTime": "2026-04-13T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-13T17:30:00",
+      "endDateTime": "2026-04-13T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-13T18:30:00",
+      "endDateTime": "2026-04-13T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-13T20:00:00",
+      "endDateTime": "2026-04-13T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-13T20:00:00",
+      "endDateTime": "2026-04-13T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-14T06:30:00",
+      "endDateTime": "2026-04-14T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-14T07:00:00",
+      "endDateTime": "2026-04-14T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-14T08:00:00",
+      "endDateTime": "2026-04-14T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-14T09:00:00",
-      "endDateTime": "2026-04-14T12:00:00"
+      "endDateTime": "2026-04-14T12:30:00"
     },
     {
       "category": "Work",
@@ -672,9 +1006,49 @@
       "endDateTime": "2026-04-14T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-14T17:30:00",
+      "endDateTime": "2026-04-14T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-14T17:30:00",
+      "endDateTime": "2026-04-14T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-14T18:30:00",
+      "endDateTime": "2026-04-14T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-14T20:00:00",
+      "endDateTime": "2026-04-14T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-14T20:00:00",
+      "endDateTime": "2026-04-14T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-15T06:30:00",
+      "endDateTime": "2026-04-15T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-15T07:00:00",
+      "endDateTime": "2026-04-15T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-15T08:00:00",
+      "endDateTime": "2026-04-15T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-15T09:00:00",
-      "endDateTime": "2026-04-15T12:00:00"
+      "endDateTime": "2026-04-15T12:30:00"
     },
     {
       "category": "Work",
@@ -682,9 +1056,49 @@
       "endDateTime": "2026-04-15T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-15T17:30:00",
+      "endDateTime": "2026-04-15T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-15T17:30:00",
+      "endDateTime": "2026-04-15T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-15T18:30:00",
+      "endDateTime": "2026-04-15T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-15T20:00:00",
+      "endDateTime": "2026-04-15T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-15T20:00:00",
+      "endDateTime": "2026-04-15T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-16T06:30:00",
+      "endDateTime": "2026-04-16T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-16T07:00:00",
+      "endDateTime": "2026-04-16T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-16T08:00:00",
+      "endDateTime": "2026-04-16T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-16T09:00:00",
-      "endDateTime": "2026-04-16T12:00:00"
+      "endDateTime": "2026-04-16T12:30:00"
     },
     {
       "category": "Work",
@@ -692,9 +1106,49 @@
       "endDateTime": "2026-04-16T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-16T17:30:00",
+      "endDateTime": "2026-04-16T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-16T17:30:00",
+      "endDateTime": "2026-04-16T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-16T18:30:00",
+      "endDateTime": "2026-04-16T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-16T20:00:00",
+      "endDateTime": "2026-04-16T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-16T20:00:00",
+      "endDateTime": "2026-04-16T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-17T06:30:00",
+      "endDateTime": "2026-04-17T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-17T07:00:00",
+      "endDateTime": "2026-04-17T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-17T08:00:00",
+      "endDateTime": "2026-04-17T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-17T09:00:00",
-      "endDateTime": "2026-04-17T12:00:00"
+      "endDateTime": "2026-04-17T12:30:00"
     },
     {
       "category": "Work",
@@ -702,9 +1156,129 @@
       "endDateTime": "2026-04-17T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-17T17:30:00",
+      "endDateTime": "2026-04-17T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-17T17:30:00",
+      "endDateTime": "2026-04-17T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-17T18:30:00",
+      "endDateTime": "2026-04-17T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-17T20:00:00",
+      "endDateTime": "2026-04-17T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-17T20:00:00",
+      "endDateTime": "2026-04-17T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-18T06:30:00",
+      "endDateTime": "2026-04-18T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-18T08:30:00",
+      "endDateTime": "2026-04-18T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-04-18T09:00:00",
+      "endDateTime": "2026-04-18T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-04-18T10:00:00",
+      "endDateTime": "2026-04-18T12:00:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-18T10:00:00",
+      "endDateTime": "2026-04-18T13:00:00"
+    },
+    {
+      "category": "Social",
+      "startDateTime": "2026-04-18T13:00:00",
+      "endDateTime": "2026-04-18T17:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-18T13:00:00",
+      "endDateTime": "2026-04-18T17:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-18T19:30:00",
+      "endDateTime": "2026-04-18T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-19T06:30:00",
+      "endDateTime": "2026-04-19T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-19T08:30:00",
+      "endDateTime": "2026-04-19T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-04-19T09:00:00",
+      "endDateTime": "2026-04-19T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-04-19T10:00:00",
+      "endDateTime": "2026-04-19T12:00:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-19T10:00:00",
+      "endDateTime": "2026-04-19T13:00:00"
+    },
+    {
+      "category": "Social",
+      "startDateTime": "2026-04-19T13:00:00",
+      "endDateTime": "2026-04-19T17:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-19T13:00:00",
+      "endDateTime": "2026-04-19T17:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-19T19:30:00",
+      "endDateTime": "2026-04-19T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-20T06:30:00",
+      "endDateTime": "2026-04-20T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-20T07:00:00",
+      "endDateTime": "2026-04-20T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-20T08:00:00",
+      "endDateTime": "2026-04-20T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-20T09:00:00",
-      "endDateTime": "2026-04-20T12:00:00"
+      "endDateTime": "2026-04-20T12:30:00"
     },
     {
       "category": "Work",
@@ -712,9 +1286,49 @@
       "endDateTime": "2026-04-20T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-20T17:30:00",
+      "endDateTime": "2026-04-20T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-20T17:30:00",
+      "endDateTime": "2026-04-20T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-20T18:30:00",
+      "endDateTime": "2026-04-20T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-20T20:00:00",
+      "endDateTime": "2026-04-20T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-20T20:00:00",
+      "endDateTime": "2026-04-20T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-21T06:30:00",
+      "endDateTime": "2026-04-21T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-21T07:00:00",
+      "endDateTime": "2026-04-21T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-21T08:00:00",
+      "endDateTime": "2026-04-21T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-21T09:00:00",
-      "endDateTime": "2026-04-21T12:00:00"
+      "endDateTime": "2026-04-21T12:30:00"
     },
     {
       "category": "Work",
@@ -722,9 +1336,49 @@
       "endDateTime": "2026-04-21T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-21T17:30:00",
+      "endDateTime": "2026-04-21T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-21T17:30:00",
+      "endDateTime": "2026-04-21T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-21T18:30:00",
+      "endDateTime": "2026-04-21T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-21T20:00:00",
+      "endDateTime": "2026-04-21T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-21T20:00:00",
+      "endDateTime": "2026-04-21T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-22T06:30:00",
+      "endDateTime": "2026-04-22T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-22T07:00:00",
+      "endDateTime": "2026-04-22T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-22T08:00:00",
+      "endDateTime": "2026-04-22T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-22T09:00:00",
-      "endDateTime": "2026-04-22T12:00:00"
+      "endDateTime": "2026-04-22T12:30:00"
     },
     {
       "category": "Work",
@@ -732,9 +1386,49 @@
       "endDateTime": "2026-04-22T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-22T17:30:00",
+      "endDateTime": "2026-04-22T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-22T17:30:00",
+      "endDateTime": "2026-04-22T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-22T18:30:00",
+      "endDateTime": "2026-04-22T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-22T20:00:00",
+      "endDateTime": "2026-04-22T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-22T20:00:00",
+      "endDateTime": "2026-04-22T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-23T06:30:00",
+      "endDateTime": "2026-04-23T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-23T07:00:00",
+      "endDateTime": "2026-04-23T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-23T08:00:00",
+      "endDateTime": "2026-04-23T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-23T09:00:00",
-      "endDateTime": "2026-04-23T12:00:00"
+      "endDateTime": "2026-04-23T12:30:00"
     },
     {
       "category": "Work",
@@ -742,9 +1436,49 @@
       "endDateTime": "2026-04-23T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-23T17:30:00",
+      "endDateTime": "2026-04-23T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-23T17:30:00",
+      "endDateTime": "2026-04-23T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-23T18:30:00",
+      "endDateTime": "2026-04-23T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-23T20:00:00",
+      "endDateTime": "2026-04-23T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-23T20:00:00",
+      "endDateTime": "2026-04-23T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-24T06:30:00",
+      "endDateTime": "2026-04-24T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-24T07:00:00",
+      "endDateTime": "2026-04-24T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-24T08:00:00",
+      "endDateTime": "2026-04-24T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-24T09:00:00",
-      "endDateTime": "2026-04-24T12:00:00"
+      "endDateTime": "2026-04-24T12:30:00"
     },
     {
       "category": "Work",
@@ -752,9 +1486,129 @@
       "endDateTime": "2026-04-24T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-24T17:30:00",
+      "endDateTime": "2026-04-24T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-24T17:30:00",
+      "endDateTime": "2026-04-24T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-24T18:30:00",
+      "endDateTime": "2026-04-24T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-24T20:00:00",
+      "endDateTime": "2026-04-24T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-24T20:00:00",
+      "endDateTime": "2026-04-24T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-25T06:30:00",
+      "endDateTime": "2026-04-25T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-25T08:30:00",
+      "endDateTime": "2026-04-25T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-04-25T09:00:00",
+      "endDateTime": "2026-04-25T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-04-25T10:00:00",
+      "endDateTime": "2026-04-25T12:00:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-25T10:00:00",
+      "endDateTime": "2026-04-25T13:00:00"
+    },
+    {
+      "category": "Social",
+      "startDateTime": "2026-04-25T13:00:00",
+      "endDateTime": "2026-04-25T17:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-25T13:00:00",
+      "endDateTime": "2026-04-25T17:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-25T19:30:00",
+      "endDateTime": "2026-04-25T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-26T06:30:00",
+      "endDateTime": "2026-04-26T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-26T08:30:00",
+      "endDateTime": "2026-04-26T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-04-26T09:00:00",
+      "endDateTime": "2026-04-26T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-04-26T10:00:00",
+      "endDateTime": "2026-04-26T12:00:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-26T10:00:00",
+      "endDateTime": "2026-04-26T13:00:00"
+    },
+    {
+      "category": "Social",
+      "startDateTime": "2026-04-26T13:00:00",
+      "endDateTime": "2026-04-26T17:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-26T13:00:00",
+      "endDateTime": "2026-04-26T17:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-26T19:30:00",
+      "endDateTime": "2026-04-26T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-27T06:30:00",
+      "endDateTime": "2026-04-27T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-27T07:00:00",
+      "endDateTime": "2026-04-27T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-27T08:00:00",
+      "endDateTime": "2026-04-27T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-27T09:00:00",
-      "endDateTime": "2026-04-27T12:00:00"
+      "endDateTime": "2026-04-27T12:30:00"
     },
     {
       "category": "Work",
@@ -762,9 +1616,49 @@
       "endDateTime": "2026-04-27T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-27T17:30:00",
+      "endDateTime": "2026-04-27T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-27T17:30:00",
+      "endDateTime": "2026-04-27T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-27T18:30:00",
+      "endDateTime": "2026-04-27T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-27T20:00:00",
+      "endDateTime": "2026-04-27T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-27T20:00:00",
+      "endDateTime": "2026-04-27T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-28T06:30:00",
+      "endDateTime": "2026-04-28T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-28T07:00:00",
+      "endDateTime": "2026-04-28T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-28T08:00:00",
+      "endDateTime": "2026-04-28T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-28T09:00:00",
-      "endDateTime": "2026-04-28T12:00:00"
+      "endDateTime": "2026-04-28T12:30:00"
     },
     {
       "category": "Work",
@@ -772,9 +1666,49 @@
       "endDateTime": "2026-04-28T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-28T17:30:00",
+      "endDateTime": "2026-04-28T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-28T17:30:00",
+      "endDateTime": "2026-04-28T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-28T18:30:00",
+      "endDateTime": "2026-04-28T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-28T20:00:00",
+      "endDateTime": "2026-04-28T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-28T20:00:00",
+      "endDateTime": "2026-04-28T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-29T06:30:00",
+      "endDateTime": "2026-04-29T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-29T07:00:00",
+      "endDateTime": "2026-04-29T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-29T08:00:00",
+      "endDateTime": "2026-04-29T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-29T09:00:00",
-      "endDateTime": "2026-04-29T12:00:00"
+      "endDateTime": "2026-04-29T12:30:00"
     },
     {
       "category": "Work",
@@ -782,9 +1716,49 @@
       "endDateTime": "2026-04-29T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-29T17:30:00",
+      "endDateTime": "2026-04-29T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-29T17:30:00",
+      "endDateTime": "2026-04-29T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-29T18:30:00",
+      "endDateTime": "2026-04-29T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-29T20:00:00",
+      "endDateTime": "2026-04-29T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-29T20:00:00",
+      "endDateTime": "2026-04-29T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-04-30T06:30:00",
+      "endDateTime": "2026-04-30T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-04-30T07:00:00",
+      "endDateTime": "2026-04-30T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-30T08:00:00",
+      "endDateTime": "2026-04-30T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-04-30T09:00:00",
-      "endDateTime": "2026-04-30T12:00:00"
+      "endDateTime": "2026-04-30T12:30:00"
     },
     {
       "category": "Work",
@@ -792,9 +1766,49 @@
       "endDateTime": "2026-04-30T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-04-30T17:30:00",
+      "endDateTime": "2026-04-30T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-04-30T17:30:00",
+      "endDateTime": "2026-04-30T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-04-30T18:30:00",
+      "endDateTime": "2026-04-30T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-04-30T20:00:00",
+      "endDateTime": "2026-04-30T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-04-30T20:00:00",
+      "endDateTime": "2026-04-30T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-01T06:30:00",
+      "endDateTime": "2026-05-01T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-01T07:00:00",
+      "endDateTime": "2026-05-01T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-01T08:00:00",
+      "endDateTime": "2026-05-01T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-05-01T09:00:00",
-      "endDateTime": "2026-05-01T12:00:00"
+      "endDateTime": "2026-05-01T12:30:00"
     },
     {
       "category": "Work",
@@ -802,9 +1816,129 @@
       "endDateTime": "2026-05-01T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-05-01T17:30:00",
+      "endDateTime": "2026-05-01T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-01T17:30:00",
+      "endDateTime": "2026-05-01T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-05-01T18:30:00",
+      "endDateTime": "2026-05-01T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-01T20:00:00",
+      "endDateTime": "2026-05-01T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-01T20:00:00",
+      "endDateTime": "2026-05-01T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-02T06:30:00",
+      "endDateTime": "2026-05-02T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-02T08:30:00",
+      "endDateTime": "2026-05-02T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-05-02T09:00:00",
+      "endDateTime": "2026-05-02T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-05-02T10:00:00",
+      "endDateTime": "2026-05-02T12:00:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-05-02T10:00:00",
+      "endDateTime": "2026-05-02T13:00:00"
+    },
+    {
+      "category": "Social",
+      "startDateTime": "2026-05-02T13:00:00",
+      "endDateTime": "2026-05-02T17:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-02T13:00:00",
+      "endDateTime": "2026-05-02T17:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-02T19:30:00",
+      "endDateTime": "2026-05-02T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-03T06:30:00",
+      "endDateTime": "2026-05-03T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-03T08:30:00",
+      "endDateTime": "2026-05-03T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-05-03T09:00:00",
+      "endDateTime": "2026-05-03T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-05-03T10:00:00",
+      "endDateTime": "2026-05-03T12:00:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-05-03T10:00:00",
+      "endDateTime": "2026-05-03T13:00:00"
+    },
+    {
+      "category": "Social",
+      "startDateTime": "2026-05-03T13:00:00",
+      "endDateTime": "2026-05-03T17:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-03T13:00:00",
+      "endDateTime": "2026-05-03T17:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-03T19:30:00",
+      "endDateTime": "2026-05-03T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-04T06:30:00",
+      "endDateTime": "2026-05-04T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-04T07:00:00",
+      "endDateTime": "2026-05-04T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-04T08:00:00",
+      "endDateTime": "2026-05-04T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-05-04T09:00:00",
-      "endDateTime": "2026-05-04T12:00:00"
+      "endDateTime": "2026-05-04T12:30:00"
     },
     {
       "category": "Work",
@@ -812,9 +1946,49 @@
       "endDateTime": "2026-05-04T17:30:00"
     },
     {
+      "category": "Study",
+      "startDateTime": "2026-05-04T17:30:00",
+      "endDateTime": "2026-05-04T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-04T17:30:00",
+      "endDateTime": "2026-05-04T18:30:00"
+    },
+    {
+      "category": "Home",
+      "startDateTime": "2026-05-04T18:30:00",
+      "endDateTime": "2026-05-04T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-04T20:00:00",
+      "endDateTime": "2026-05-04T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-04T20:00:00",
+      "endDateTime": "2026-05-04T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-05T06:30:00",
+      "endDateTime": "2026-05-05T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-05T07:00:00",
+      "endDateTime": "2026-05-05T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-05T08:00:00",
+      "endDateTime": "2026-05-05T09:00:00"
+    },
+    {
       "category": "Work",
       "startDateTime": "2026-05-05T09:00:00",
-      "endDateTime": "2026-05-05T12:00:00"
+      "endDateTime": "2026-05-05T12:30:00"
     },
     {
       "category": "Work",
@@ -822,496 +1996,458 @@
       "endDateTime": "2026-05-05T17:30:00"
     },
     {
-      "category": "Health",
-      "startDateTime": "2026-04-06T17:30:00",
-      "endDateTime": "2026-04-06T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-07T17:30:00",
-      "endDateTime": "2026-04-07T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-08T17:30:00",
-      "endDateTime": "2026-04-08T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-09T17:30:00",
-      "endDateTime": "2026-04-09T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-10T17:30:00",
-      "endDateTime": "2026-04-10T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-11T09:00:00",
-      "endDateTime": "2026-04-11T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-11T15:00:00",
-      "endDateTime": "2026-04-11T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-12T09:00:00",
-      "endDateTime": "2026-04-12T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-12T15:00:00",
-      "endDateTime": "2026-04-12T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-13T17:30:00",
-      "endDateTime": "2026-04-13T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-14T17:30:00",
-      "endDateTime": "2026-04-14T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-15T17:30:00",
-      "endDateTime": "2026-04-15T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-16T17:30:00",
-      "endDateTime": "2026-04-16T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-17T17:30:00",
-      "endDateTime": "2026-04-17T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-18T09:00:00",
-      "endDateTime": "2026-04-18T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-18T15:00:00",
-      "endDateTime": "2026-04-18T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-19T09:00:00",
-      "endDateTime": "2026-04-19T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-19T15:00:00",
-      "endDateTime": "2026-04-19T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-20T17:30:00",
-      "endDateTime": "2026-04-20T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-21T17:30:00",
-      "endDateTime": "2026-04-21T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-22T17:30:00",
-      "endDateTime": "2026-04-22T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-23T17:30:00",
-      "endDateTime": "2026-04-23T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-24T17:30:00",
-      "endDateTime": "2026-04-24T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-25T09:00:00",
-      "endDateTime": "2026-04-25T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-25T15:00:00",
-      "endDateTime": "2026-04-25T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-26T09:00:00",
-      "endDateTime": "2026-04-26T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-26T15:00:00",
-      "endDateTime": "2026-04-26T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-27T17:30:00",
-      "endDateTime": "2026-04-27T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-28T17:30:00",
-      "endDateTime": "2026-04-28T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-29T17:30:00",
-      "endDateTime": "2026-04-29T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-04-30T17:30:00",
-      "endDateTime": "2026-04-30T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-05-01T17:30:00",
-      "endDateTime": "2026-05-01T19:30:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-05-02T09:00:00",
-      "endDateTime": "2026-05-02T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-05-02T15:00:00",
-      "endDateTime": "2026-05-02T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-05-03T09:00:00",
-      "endDateTime": "2026-05-03T11:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-05-03T15:00:00",
-      "endDateTime": "2026-05-03T17:00:00"
-    },
-    {
-      "category": "Health",
-      "startDateTime": "2026-05-04T17:30:00",
-      "endDateTime": "2026-05-04T19:30:00"
-    },
-    {
-      "category": "Health",
+      "category": "Study",
       "startDateTime": "2026-05-05T17:30:00",
       "endDateTime": "2026-05-05T19:30:00"
     },
     {
-      "category": "Home",
-      "startDateTime": "2026-04-06T18:00:00",
-      "endDateTime": "2026-04-06T21:00:00"
+      "category": "Transport",
+      "startDateTime": "2026-05-05T17:30:00",
+      "endDateTime": "2026-05-05T18:30:00"
     },
     {
       "category": "Home",
-      "startDateTime": "2026-04-07T18:00:00",
-      "endDateTime": "2026-04-07T21:00:00"
+      "startDateTime": "2026-05-05T18:30:00",
+      "endDateTime": "2026-05-05T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-05T20:00:00",
+      "endDateTime": "2026-05-05T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-05T20:00:00",
+      "endDateTime": "2026-05-05T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-06T06:30:00",
+      "endDateTime": "2026-05-06T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-06T07:00:00",
+      "endDateTime": "2026-05-06T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-06T08:00:00",
+      "endDateTime": "2026-05-06T09:00:00"
+    },
+    {
+      "category": "Work",
+      "startDateTime": "2026-05-06T09:00:00",
+      "endDateTime": "2026-05-06T12:30:00"
+    },
+    {
+      "category": "Work",
+      "startDateTime": "2026-05-06T13:30:00",
+      "endDateTime": "2026-05-06T17:30:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-05-06T17:30:00",
+      "endDateTime": "2026-05-06T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-06T17:30:00",
+      "endDateTime": "2026-05-06T18:30:00"
     },
     {
       "category": "Home",
-      "startDateTime": "2026-04-08T18:00:00",
-      "endDateTime": "2026-04-08T21:00:00"
+      "startDateTime": "2026-05-06T18:30:00",
+      "endDateTime": "2026-05-06T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-06T20:00:00",
+      "endDateTime": "2026-05-06T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-06T20:00:00",
+      "endDateTime": "2026-05-06T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-07T06:30:00",
+      "endDateTime": "2026-05-07T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-07T07:00:00",
+      "endDateTime": "2026-05-07T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-07T08:00:00",
+      "endDateTime": "2026-05-07T09:00:00"
+    },
+    {
+      "category": "Work",
+      "startDateTime": "2026-05-07T09:00:00",
+      "endDateTime": "2026-05-07T12:30:00"
+    },
+    {
+      "category": "Work",
+      "startDateTime": "2026-05-07T13:30:00",
+      "endDateTime": "2026-05-07T17:30:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-05-07T17:30:00",
+      "endDateTime": "2026-05-07T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-07T17:30:00",
+      "endDateTime": "2026-05-07T18:30:00"
     },
     {
       "category": "Home",
-      "startDateTime": "2026-04-09T18:00:00",
-      "endDateTime": "2026-04-09T21:00:00"
+      "startDateTime": "2026-05-07T18:30:00",
+      "endDateTime": "2026-05-07T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-07T20:00:00",
+      "endDateTime": "2026-05-07T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-07T20:00:00",
+      "endDateTime": "2026-05-07T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-08T06:30:00",
+      "endDateTime": "2026-05-08T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-08T07:00:00",
+      "endDateTime": "2026-05-08T08:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-08T08:00:00",
+      "endDateTime": "2026-05-08T09:00:00"
+    },
+    {
+      "category": "Work",
+      "startDateTime": "2026-05-08T09:00:00",
+      "endDateTime": "2026-05-08T12:30:00"
+    },
+    {
+      "category": "Work",
+      "startDateTime": "2026-05-08T13:30:00",
+      "endDateTime": "2026-05-08T17:30:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-05-08T17:30:00",
+      "endDateTime": "2026-05-08T19:30:00"
+    },
+    {
+      "category": "Transport",
+      "startDateTime": "2026-05-08T17:30:00",
+      "endDateTime": "2026-05-08T18:30:00"
     },
     {
       "category": "Home",
-      "startDateTime": "2026-04-10T18:00:00",
-      "endDateTime": "2026-04-10T21:00:00"
+      "startDateTime": "2026-05-08T18:30:00",
+      "endDateTime": "2026-05-08T20:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-08T20:00:00",
+      "endDateTime": "2026-05-08T22:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-08T20:00:00",
+      "endDateTime": "2026-05-08T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-09T06:30:00",
+      "endDateTime": "2026-05-09T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-09T08:30:00",
+      "endDateTime": "2026-05-09T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-05-09T09:00:00",
+      "endDateTime": "2026-05-09T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-05-09T10:00:00",
+      "endDateTime": "2026-05-09T12:00:00"
     },
     {
       "category": "Home",
-      "startDateTime": "2026-04-11T10:00:00",
-      "endDateTime": "2026-04-11T18:00:00"
+      "startDateTime": "2026-05-09T10:00:00",
+      "endDateTime": "2026-05-09T13:00:00"
+    },
+    {
+      "category": "Social",
+      "startDateTime": "2026-05-09T13:00:00",
+      "endDateTime": "2026-05-09T17:00:00"
+    },
+    {
+      "category": "FreeTime",
+      "startDateTime": "2026-05-09T13:00:00",
+      "endDateTime": "2026-05-09T17:00:00"
+    },
+    {
+      "category": "Evening",
+      "startDateTime": "2026-05-09T19:30:00",
+      "endDateTime": "2026-05-09T22:00:00"
+    },
+    {
+      "category": "Morning",
+      "startDateTime": "2026-05-10T06:30:00",
+      "endDateTime": "2026-05-10T08:30:00"
+    },
+    {
+      "category": "Health",
+      "startDateTime": "2026-05-10T08:30:00",
+      "endDateTime": "2026-05-10T10:30:00"
+    },
+    {
+      "category": "Weekend",
+      "startDateTime": "2026-05-10T09:00:00",
+      "endDateTime": "2026-05-10T18:00:00"
+    },
+    {
+      "category": "Study",
+      "startDateTime": "2026-05-10T10:00:00",
+      "endDateTime": "2026-05-10T12:00:00"
     },
     {
       "category": "Home",
-      "startDateTime": "2026-04-12T10:00:00",
-      "endDateTime": "2026-04-12T18:00:00"
+      "startDateTime": "2026-05-10T10:00:00",
+      "endDateTime": "2026-05-10T13:00:00"
     },
     {
-      "category": "Home",
-      "startDateTime": "2026-04-13T18:00:00",
-      "endDateTime": "2026-04-13T21:00:00"
+      "category": "Social",
+      "startDateTime": "2026-05-10T13:00:00",
+      "endDateTime": "2026-05-10T17:00:00"
     },
     {
-      "category": "Home",
-      "startDateTime": "2026-04-14T18:00:00",
-      "endDateTime": "2026-04-14T21:00:00"
+      "category": "FreeTime",
+      "startDateTime": "2026-05-10T13:00:00",
+      "endDateTime": "2026-05-10T17:00:00"
     },
     {
-      "category": "Home",
-      "startDateTime": "2026-04-15T18:00:00",
-      "endDateTime": "2026-04-15T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-16T18:00:00",
-      "endDateTime": "2026-04-16T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-17T18:00:00",
-      "endDateTime": "2026-04-17T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-18T10:00:00",
-      "endDateTime": "2026-04-18T18:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-19T10:00:00",
-      "endDateTime": "2026-04-19T18:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-20T18:00:00",
-      "endDateTime": "2026-04-20T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-21T18:00:00",
-      "endDateTime": "2026-04-21T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-22T18:00:00",
-      "endDateTime": "2026-04-22T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-23T18:00:00",
-      "endDateTime": "2026-04-23T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-24T18:00:00",
-      "endDateTime": "2026-04-24T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-25T10:00:00",
-      "endDateTime": "2026-04-25T18:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-26T10:00:00",
-      "endDateTime": "2026-04-26T18:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-27T18:00:00",
-      "endDateTime": "2026-04-27T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-28T18:00:00",
-      "endDateTime": "2026-04-28T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-29T18:00:00",
-      "endDateTime": "2026-04-29T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-04-30T18:00:00",
-      "endDateTime": "2026-04-30T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-05-01T18:00:00",
-      "endDateTime": "2026-05-01T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-05-02T10:00:00",
-      "endDateTime": "2026-05-02T18:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-05-03T10:00:00",
-      "endDateTime": "2026-05-03T18:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-05-04T18:00:00",
-      "endDateTime": "2026-05-04T21:00:00"
-    },
-    {
-      "category": "Home",
-      "startDateTime": "2026-05-05T18:00:00",
-      "endDateTime": "2026-05-05T21:00:00"
+      "category": "Evening",
+      "startDateTime": "2026-05-10T19:30:00",
+      "endDateTime": "2026-05-10T22:00:00"
     }
   ],
   "difficultyCapacities": [
     {
-      "date": "2026-04-06",
-      "capacity": 15
-    },
-    {
-      "date": "2026-04-07",
-      "capacity": 15
-    },
-    {
-      "date": "2026-04-08",
-      "capacity": 16
-    },
-    {
-      "date": "2026-04-09",
-      "capacity": 14
-    },
-    {
-      "date": "2026-04-10",
-      "capacity": 15
-    },
-    {
-      "date": "2026-04-11",
-      "capacity": 13
-    },
-    {
-      "date": "2026-04-12",
-      "capacity": 12
-    },
-    {
       "date": "2026-04-13",
-      "capacity": 15
+      "capacity": 33
     },
     {
       "date": "2026-04-14",
-      "capacity": 16
+      "capacity": 30
     },
     {
       "date": "2026-04-15",
-      "capacity": 15
+      "capacity": 28
     },
     {
       "date": "2026-04-16",
-      "capacity": 15
+      "capacity": 34
     },
     {
       "date": "2026-04-17",
-      "capacity": 17
+      "capacity": 30
     },
     {
       "date": "2026-04-18",
-      "capacity": 13
+      "capacity": 22
     },
     {
       "date": "2026-04-19",
-      "capacity": 12
+      "capacity": 22
     },
     {
       "date": "2026-04-20",
-      "capacity": 15
+      "capacity": 35
     },
     {
       "date": "2026-04-21",
-      "capacity": 16
+      "capacity": 32
     },
     {
       "date": "2026-04-22",
-      "capacity": 14
+      "capacity": 30
     },
     {
       "date": "2026-04-23",
-      "capacity": 15
+      "capacity": 36
     },
     {
       "date": "2026-04-24",
-      "capacity": 18
+      "capacity": 32
     },
     {
       "date": "2026-04-25",
-      "capacity": 13
+      "capacity": 24
     },
     {
       "date": "2026-04-26",
-      "capacity": 12
+      "capacity": 18
     },
     {
       "date": "2026-04-27",
-      "capacity": 15
+      "capacity": 31
     },
     {
       "date": "2026-04-28",
-      "capacity": 17
+      "capacity": 28
     },
     {
       "date": "2026-04-29",
-      "capacity": 15
+      "capacity": 26
     },
     {
       "date": "2026-04-30",
-      "capacity": 15
+      "capacity": 32
     },
     {
       "date": "2026-05-01",
-      "capacity": 14
+      "capacity": 28
     },
     {
       "date": "2026-05-02",
-      "capacity": 13
+      "capacity": 20
     },
     {
       "date": "2026-05-03",
-      "capacity": 12
+      "capacity": 23
     },
     {
       "date": "2026-05-04",
-      "capacity": 15
+      "capacity": 36
     },
     {
       "date": "2026-05-05",
-      "capacity": 15
+      "capacity": 33
+    },
+    {
+      "date": "2026-05-06",
+      "capacity": 31
+    },
+    {
+      "date": "2026-05-07",
+      "capacity": 37
+    },
+    {
+      "date": "2026-05-08",
+      "capacity": 33
+    },
+    {
+      "date": "2026-05-09",
+      "capacity": 25
+    },
+    {
+      "date": "2026-05-10",
+      "capacity": 19
     }
   ],
   "taskTypePreferences": [
     {
-      "date": "2026-04-11",
+      "date": "2026-04-13",
       "preferences": [
         {
-          "type": "Physical",
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
           "weight": 2
         },
         {
-          "type": "Outdoor",
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-14",
+      "preferences": [
+        {
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
+          "weight": 2
+        },
+        {
+          "type": "Digital",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-15",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Intellectual",
+          "weight": 2
+        },
+        {
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-16",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Digital",
+          "weight": 2
+        },
+        {
+          "type": "Intellectual",
           "weight": 2
         }
       ]
     },
     {
-      "date": "2026-04-12",
+      "date": "2026-04-17",
       "preferences": [
         {
-          "type": "Physical",
-          "weight": 1
-        },
-        {
-          "type": "Outdoor",
-          "weight": 1
-        },
-        {
-          "type": "Meditative",
+          "type": "Routine",
           "weight": 2
+        },
+        {
+          "type": "Fun",
+          "weight": 1
+        },
+        {
+          "type": "Social",
+          "weight": 1
         }
       ]
     },
@@ -1319,12 +2455,16 @@
       "date": "2026-04-18",
       "preferences": [
         {
-          "type": "Physical",
+          "type": "Meditative",
+          "weight": 3
+        },
+        {
+          "type": "LowEnergy",
           "weight": 2
         },
         {
-          "type": "Outdoor",
-          "weight": 2
+          "type": "Fun",
+          "weight": 1
         }
       ]
     },
@@ -1333,15 +2473,100 @@
       "preferences": [
         {
           "type": "Physical",
-          "weight": 1
+          "weight": 3
+        },
+        {
+          "type": "Fun",
+          "weight": 2
         },
         {
           "type": "Outdoor",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-04-20",
+      "preferences": [
+        {
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
+          "weight": 2
+        },
+        {
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-21",
+      "preferences": [
+        {
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
+          "weight": 2
+        },
+        {
+          "type": "Digital",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-22",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Intellectual",
+          "weight": 2
+        },
+        {
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-23",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Digital",
+          "weight": 2
+        },
+        {
+          "type": "Intellectual",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-04-24",
+      "preferences": [
+        {
+          "type": "Routine",
+          "weight": 2
+        },
+        {
+          "type": "Fun",
           "weight": 1
         },
         {
-          "type": "Meditative",
-          "weight": 2
+          "type": "Social",
+          "weight": 1
         }
       ]
     },
@@ -1349,12 +2574,16 @@
       "date": "2026-04-25",
       "preferences": [
         {
-          "type": "Physical",
+          "type": "Meditative",
+          "weight": 3
+        },
+        {
+          "type": "LowEnergy",
           "weight": 2
         },
         {
-          "type": "Outdoor",
-          "weight": 2
+          "type": "Fun",
+          "weight": 1
         }
       ]
     },
@@ -1363,15 +2592,100 @@
       "preferences": [
         {
           "type": "Physical",
-          "weight": 1
+          "weight": 3
+        },
+        {
+          "type": "Fun",
+          "weight": 2
         },
         {
           "type": "Outdoor",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-04-27",
+      "preferences": [
+        {
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
+          "weight": 2
+        },
+        {
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-28",
+      "preferences": [
+        {
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
+          "weight": 2
+        },
+        {
+          "type": "Digital",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-29",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Intellectual",
+          "weight": 2
+        },
+        {
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-30",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Digital",
+          "weight": 2
+        },
+        {
+          "type": "Intellectual",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-01",
+      "preferences": [
+        {
+          "type": "Routine",
+          "weight": 2
+        },
+        {
+          "type": "Fun",
           "weight": 1
         },
         {
-          "type": "Meditative",
-          "weight": 2
+          "type": "Social",
+          "weight": 1
         }
       ]
     },
@@ -1379,12 +2693,16 @@
       "date": "2026-05-02",
       "preferences": [
         {
-          "type": "Physical",
+          "type": "Meditative",
+          "weight": 3
+        },
+        {
+          "type": "LowEnergy",
           "weight": 2
         },
         {
-          "type": "Outdoor",
-          "weight": 2
+          "type": "Fun",
+          "weight": 1
         }
       ]
     },
@@ -1393,14 +2711,133 @@
       "preferences": [
         {
           "type": "Physical",
-          "weight": 1
+          "weight": 3
+        },
+        {
+          "type": "Fun",
+          "weight": 2
         },
         {
           "type": "Outdoor",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-04",
+      "preferences": [
+        {
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
+          "weight": 2
+        },
+        {
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-05",
+      "preferences": [
+        {
+          "type": "Intellectual",
+          "weight": 3
+        },
+        {
+          "type": "DeepWork",
+          "weight": 2
+        },
+        {
+          "type": "Digital",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-06",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Intellectual",
+          "weight": 2
+        },
+        {
+          "type": "Routine",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-07",
+      "preferences": [
+        {
+          "type": "DeepWork",
+          "weight": 3
+        },
+        {
+          "type": "Digital",
+          "weight": 2
+        },
+        {
+          "type": "Intellectual",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-08",
+      "preferences": [
+        {
+          "type": "Routine",
+          "weight": 2
+        },
+        {
+          "type": "Fun",
           "weight": 1
         },
         {
+          "type": "Social",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-09",
+      "preferences": [
+        {
           "type": "Meditative",
+          "weight": 3
+        },
+        {
+          "type": "LowEnergy",
+          "weight": 2
+        },
+        {
+          "type": "Fun",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-10",
+      "preferences": [
+        {
+          "type": "Physical",
+          "weight": 3
+        },
+        {
+          "type": "Fun",
+          "weight": 2
+        },
+        {
+          "type": "Outdoor",
           "weight": 2
         }
       ]

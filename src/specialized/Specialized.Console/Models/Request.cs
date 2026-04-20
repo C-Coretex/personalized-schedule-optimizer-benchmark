@@ -7,6 +7,8 @@ namespace Specialized.Console.Models;
 
 internal record Request
 {
+    public int? OptimizationTimeInSeconds { get; init; }
+    public int NumSearchWorkers { get; init; } = 1;
     public required IReadOnlyList<FixedTask> FixedTasks { get; init; }
     public required IReadOnlyList<DynamicTask> DynamicTasks { get; init; }
     public required PlanningHorizon PlanningHorizon { get; init; }
@@ -17,6 +19,7 @@ internal record Request
 
     public GenerateScheduleRequest ToScheduleOptimizationRequest() => new()
     {
+        OptimizationTimeInSeconds = OptimizationTimeInSeconds ?? 15,
         FixedTasks = FixedTasks.Select(t => t.ToProviderModel()).ToList(),
         DynamicTasks = DynamicTasks.Select(t => t.ToProviderModel()).ToList(),
         PlanningHorizon = PlanningHorizon.ToProviderModel(),

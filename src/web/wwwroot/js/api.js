@@ -280,7 +280,7 @@ export async function copyPromptToClipboard(e) {
 }
 
 async function loadSampleJsonFromFile(filename) {
-  const res  = await fetch(`/${filename}`);
+  const res  = await fetch(`/${filename}`, { cache: 'no-store' });
   const data = await res.json();
   const ta   = document.getElementById('json-preview');
   ta.value = JSON.stringify(data, null, 2);
@@ -329,7 +329,10 @@ export async function submit() {
     return;
   }
 
-  payload.optimizer = document.getElementById('optimizer-select')?.value ?? 'Specialized';
+  const optimizerRaw = document.getElementById('optimizer-select')?.value ?? 'Specialized';
+  const [optimizerKey, workersPart] = optimizerRaw.split('-');
+  payload.optimizer = optimizerKey;
+  payload.numSearchWorkers = workersPart ? parseInt(workersPart) : 1;
 
   try {
     const res = await fetch('/schedule/generate', {

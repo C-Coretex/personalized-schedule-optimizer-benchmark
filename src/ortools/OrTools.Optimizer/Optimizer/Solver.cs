@@ -66,7 +66,7 @@ public class Solver
 
         var solver = new CpSolver
         {
-            StringParameters = $"num_search_workers:1, max_time_in_seconds:{request.OptimizationTimeInSeconds}"
+            StringParameters = $"num_search_workers:{request.NumSearchWorkers}, max_time_in_seconds:{request.OptimizationTimeInSeconds}"
         };
         var status = solver.Solve(model);
 

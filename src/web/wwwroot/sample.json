@@ -4,6 +4,7 @@
     "endDate": "2026-04-05"
   },
   "difficultTaskSchedulingStrategy": "Even",
+  "optimizationTimeInSeconds": 5,
   "fixedTasks": [
     {
       "name": "Team Standup",

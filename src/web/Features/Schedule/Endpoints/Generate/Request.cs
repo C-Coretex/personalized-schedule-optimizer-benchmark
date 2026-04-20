@@ -17,6 +17,7 @@ public record Request
     public IReadOnlyList<DifficultyCapacityEntry> DifficultyCapacities { get; init; } = [];
     public IReadOnlyList<TaskTypePreferenceEntry> TaskTypePreferences { get; init; } = [];
     public int? OptimizationTimeInSeconds { get; init; }
+    public int NumSearchWorkers { get; init; } = 1;
     public OptimizationClients Optimizer { get; init; } = OptimizationClients.Specialized;
 
     public GenerateScheduleRequest ToScheduleOptimizationRequest()
@@ -34,7 +35,8 @@ public record Request
             DifficultTaskSchedulingStrategy = DifficultTaskSchedulingStrategy.ToProviderModel(),
             DifficultyCapacities = DifficultyCapacities.Select(d => d.ToProviderModel()).ToList(),
             TaskTypePreferences = TaskTypePreferences.Select(p => p.ToProviderModel()).ToList(),
-            OptimizationTimeInSeconds = optimizationTime
+            OptimizationTimeInSeconds = optimizationTime,
+            NumSearchWorkers = NumSearchWorkers
         };
     }
 }

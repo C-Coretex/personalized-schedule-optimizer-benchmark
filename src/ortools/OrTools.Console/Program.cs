@@ -56,7 +56,6 @@ var monitorTask = Task.Run(async () =>
 }, cts.Token);
 
 var requestModel = request.ToScheduleOptimizationRequest();
-requestModel = requestModel with { OptimizationTimeInSeconds = 5 };
 
 var stopwatch = Stopwatch.StartNew();
 var solver = new Solver();
@@ -124,7 +123,7 @@ Console.WriteLine("\n  Hard Constraints:");
 foreach (var c in score.HardConstraints)
     Console.WriteLine($"    {c.Id,-4}  {(c.Score == 0 ? "✓" : "✗")}  {c.Score,6}  {c.Name}");
 
-Console.WriteLine($"\n  Total Hard Score: {score.TotalHard}  {(score.TotalHard == 0 ? "← FEASIBLE" : "← VIOLATIONS")}");
+Console.WriteLine($"\n  Total Hard Score: {score.TotalHard}  {(score.TotalHard == 0 ? "- FEASIBLE" : "- VIOLATIONS")}");
 
 Console.WriteLine("\n  Soft Constraints:");
 foreach (var c in score.SoftConstraints)
