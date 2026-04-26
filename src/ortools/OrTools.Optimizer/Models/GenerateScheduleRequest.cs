@@ -14,4 +14,5 @@ public record GenerateScheduleRequest
     public IReadOnlyList<DifficultyCapacityEntry> DifficultyCapacities { get; init; } = [];
     public IReadOnlyList<TaskTypePreferenceEntry> TaskTypePreferences { get; init; } = [];
     public int OptimizationTimeInSeconds { get; init; } = 15;
+    public int NumSearchWorkers { get; init; } = 1;
 }
