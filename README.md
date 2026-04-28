@@ -9,7 +9,7 @@ Comparative benchmark of universal optimization tools (OR-Tools, Timefold) versu
 | # | Step | Preview |
 |---|------|---------|
 | 1 | Click **Load Sample - Week Heavy** | <img width="600" src="https://github.com/user-attachments/assets/cf09b20f-2b36-4d12-b581-602fe87add08"/> |
-| 2 | Click **Generate Schedule** and wait ~5 seconds | <img width="600" src="https://github.com/user-attachments/assets/541a5ed7-49b1-4b37-87fa-ed23c046f47d"/> |
+| 2 | Click **Generate Schedule** and wait ~5 seconds (if red exception appears - click the button again, the service is waking up) | <img width="600" src="https://github.com/user-attachments/assets/541a5ed7-49b1-4b37-87fa-ed23c046f47d"/> |
 | 3 | Click an item in **Generated Schedules** when it stops spinning | <img width="600" src="https://github.com/user-attachments/assets/e79ee0d5-2fb0-4aa0-8e2f-156c0559e6b2"/> |
 | 4 | The calendar appears at the top | <img width="600" src="https://github.com/user-attachments/assets/4a9f41ac-156c-40de-b32a-53045954d2a4"/> |
 
